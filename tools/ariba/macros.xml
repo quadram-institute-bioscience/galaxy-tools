@@ -1,8 +1,8 @@
 <macros>
-    <token name="@VERSION@">0.1.0</token>
+    <token name="@VERSION@">2.13.2</token>
     <xml name="requirements">
         <requirements>
-            <requirement type="package" version="2.13.2">ariba</requirement>
+            <requirement type="package" version="@VERSION@">ariba</requirement>
         </requirements>
     </xml>
 
