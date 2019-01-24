@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<tool id="ariba_database_builder" name="ARIBA build database" tool_type="manage_data" version="@VERSION@">
+    <description>Download and prepare database for use with ARIBA</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+     <expand macro="requirements" />
+    <version_command>ariba version | head head -n 1</version_command>
+    <command detect_errors="exit_code">
+    <![CDATA[
+        #if str($library.lib_type) == "curated"
+            #set $library_list = str($library.curated).split(',')
+            #for $library_ in $library_list:
+                #if str($library_) != 'None':
+                    ariba getref '$library_' _tmp_db && ariba prepareref -f _tmp_db.fa -m _tmp_db.tsv '$library_' &&
+                #end if
+            #end for
+        #end if
+        
+        #if str($library.lib_type) == "fasta"
+            #if str($library).fasta != 'None':
+                ariba prepareref --all_coding '$coding' -f '$library.fasta' '$library.db_name'
+            #end if
+        #end if
+
+        python '$__tool_directory__/ariba_database_builder.py'  --out '${out_file}'
+    ]]>
+    </command>
+     <inputs>
+        <conditional name="library">
+        <param name="lib_type" type="select" label="Input reads type or collection" help="Select a curated database or a fasta from the history">
+                <option value="curated" selected="true">Curated Database</option>
+                <option value="fasta">A fasta file</option>
+        </param>
+        <when value="curated">
+        <param name="curated" type="select" multiple="true" label="Select partial library to download">
+            <option value="card">CARD</option>
+            <option value="resfinder">Resfinder</option>
+            <option value="plasmidfinder">Plasmidfinder</option>
+            <option value="megares">Megares</option>
+            <option value="argannot">Argannot</option>
+            <option value="vfdb_core">vfdb_core</option>
+            <option value="vfdb_full">vfdb_full</option>
+            <option value="virulencefinder">virulencefinder</option>
+        </param>
+        </when>
+         <when value="fasta">
+            <param name="fasta" type="data" format="fasta" optional="false" />
+            <param name="db_name" type="text" label="DB name" help = "The DB name should include no space and special characters" />
+            <param name="coding" type="boolean" truevalue="yes" falsevalue="no" checked="False" label="Coding sequence?" />
+         </when>
+         </conditional>
+    </inputs>
+    <outputs>
+        <data name="out_file" format="data_manager_json" />
+    </outputs>
+    <help>
+    </help>
+    <citations>
+        <citation type="doi">110.1099/mgen.0.000131</citation>
+    </citations>
+</tool>
