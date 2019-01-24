@@ -1,0 +1,306 @@
+<tool id="nullarbor" name="Nullarbor" version="0.1.0">
+    <description>Pipeline to generate complete public health microbiology reports from sequenced isolates</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <expand macro="env" />
+    <command detect_errors="exit_code"><![CDATA[
+        
+        nullarbor.pl
+        --run
+        --cpus $opt.cpus
+
+        #if $opt.verbose
+            $opt.verbose
+        #end if
+        
+        --gcode $adv_opt.gcode 
+
+        #if $opt.trim
+            $opt.trim
+        #end if
+
+        #if str($adv_opt.mlst) != "auto"
+            --mlst '$adv_opt.mlst'
+        #end if
+        
+        #if str($adv_opt.snippy_opt) != ""
+        --snippy_opt $adv_opt.snippy_opt
+        #end if
+        
+        #if str($adv_opt.roary_opt) != ""
+        --roary_opt $adv_opt.roary_opt
+        #end if
+
+        #if str($adv_opt.mask) != "AUTO"
+        --mask $adv_opt.mask
+        #end if
+
+        --assembler $plugins.assembler
+        
+        #if str($plugins.assembler-opt) != ""
+        --assembler-opt $plugins.assembler-opt
+        #end if
+       
+        --treebuilder $plugins.treebuilder
+        
+        #if str($plugins.treebuilder-opt) != ""
+        --treebuilder-opt $plugins.treebuilder-opt
+        #end if
+
+        --taxoner $plugins.taxoner
+        
+        #if str($plugins.taxoner-opt) != ""
+        --taxoner-opt $plugins.taxoner-opt
+        #end if
+
+        --annotator $plugins.annotator
+        
+        #if str($plugins.annotator-opt) != ""
+        --annotator-opt $plugins.annotator-opt
+        #end if
+
+        --name $name 
+        --ref $ref 
+        --input $tab_file 
+        --outdir out 
+
+    ]]></command>
+
+    <inputs>
+        <param name="tab_file" format="txt" type="data" label="Tab file generated from nullarbor_prepare" help="You need to run nullarbor_test for generating a tab file of reads before running this tool"/>
+        <param name="ref" type="data" format="fasta" label="Reference genome " help="Reference file in FASTA or GBK format"/>
+        <param name="name" type="text" optional="False" label="Job name" help="" />
+    
+        <section name='opt' title = "Options">
+        <param name="cpus" argument="--cpus" type="integer" value="8" label="CPUs" help="Maximum number of CPUs to use in total (Default: 8)" />
+        <param name="verbose" argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" label="Verbose" help="More screen output" />
+        </section>
+
+        <section name="adv_opt" title="Advanced Options">
+        <param name="gcode" argument="--gcode" type="integer" value="11" label="Genetic code for prokka" help="(Default: 11)" />
+        <param name="trim" argument="--trim" type="boolean" truevalue="--trim" falsevalue="" checked="False" label="Trim reads of adaptors" help="(Default: NO)" />
+        <param name="mlst" argument="--mlst" type="select" label="Force this MLST scheme" help="(Default: AUTO)">
+            <option value="auto">AUTO</option>
+            <option value="abaumannii">Acinetobacter baumannii</option>
+            <option value="abaumannii_2">Acinetobacter baumannii 2</option>
+            <option value="achromobacter">Achromobacter</option>
+            <option value="aeromonas">Aeromonas</option>
+            <option value="afumigatus">Aspergillus afumigatus</option>
+            <option value="aphagocytophilum">Anaplasma aphagocytophilum</option>
+            <option value="arcobacter">Arcobacter</option>
+            <option value="bburgdorferi">Borrelia  burgdorferi</option>
+            <option value="bcc">Burkholderia cepacia</option>
+            <option value="bcereus">Bacillus cereus</option>
+            <option value="bhampsonii">Brachyspira hampsonii</option>
+            <option value="bhenselae">Bartonella henselae</option>
+            <option value="bhyodysenteriae">Brachyspira hyodysenteriae</option>
+            <option value="bifidobacterium">Bifidobacterium bifidobacterium</option>
+            <option value="bintermedia">Brachyspira intermedia</option>
+            <option value="blicheniformis">Bacillus licheniformis</option>
+            <option value="bordetella">Bordetella pertussis</option>
+            <option value="borrelia">Borrelia</option>
+            <option value="bpilosicoli">Brachyspira pilosicoli</option>
+            <option value="bpseudomallei">Burkholderia pseudomallei</option>
+            <option value="brachyspira">Brachyspira</option>
+            <option value="bsubtilis">Bacillus subtilis</option>
+            <option value="calbicans">Candida albicans</option>
+            <option value="campylobacter">Campylobacter coli</option>
+            <option value="campylobacter">Campylobacter jejuni</option>
+            <option value="cbotulinum">Clostridium botulinum</option>
+            <option value="cconcisus">Campylobacter concisus</option>
+            <option value="cdifficile">Clostridium difficile</option>
+            <option value="cdifficile">Peptoclostridium difficile</option>
+            <option value="cdifficile_2">Clostridium difficile 2</option>
+            <option value="cdiphtheriae">Corynebacterium diphtheriae</option>
+            <option value="cfetus">Campylobacter fetus</option>
+            <option value="cfreundii">Citrobacter freundii</option>
+            <option value="cglabrata">Candida glabrata</option>
+            <option value="chelveticus">Campylobacter helveticus</option>
+            <option value="chlamydiales">Chlamydia</option>
+            <option value="chyointestinalis">Campylobacter hyointestinalis</option>
+            <option value="cinsulaenigrae">Campylobacter insulaenigrae</option>
+            <option value="ckrusei">Candida krusei</option>
+            <option value="clanienae">Campylobacter lanienae</option>
+            <option value="clari">Campylobacter lari</option>
+            <option value="cmaltaromaticum">Carnobacterium maltaromaticum</option>
+            <option value="cneoformans">Cryptococcus neoformans</option>
+            <option value="cronobacter">Cronobacter</option>
+            <option value="csepticum">Clostridium septicum</option>
+            <option value="csinensis">Clonorchis sinensis</option>
+            <option value="csputorum">Campylobacter sputorum</option>
+            <option value="ctropicalis">Candida tropicalis</option>
+            <option value="cupsaliensis">Campylobacter upsaliensis</option>
+            <option value="ecloacae">Enterobacter cloacae</option>
+            <option value="ecoli">Escherichia</option>
+            <option value="ecoli">Shigella</option>
+            <option value="ecoli_2">Escherichia 2</option>
+            <option value="edwardsiella">Edwardsiella tarda</option>
+            <option value="efaecalis">Enterococcus faecalis</option>
+            <option value="efaecium">Enterococcus faecium</option>
+            <option value="fpsychrophilum">Flavobacterium psychrophilum</option>
+            <option value="haemophilus">Haemophilus</option>
+            <option value="hcinaedi">Helicobacter cinaedi</option>
+            <option value="hinfluenzae">Haemophilus influenzae</option>
+            <option value="hparasuis">Haemophilus parasuis</option>
+            <option value="hpylori">Helicobacter pylori</option>
+            <option value="hsuis">Haematopinus suis</option>
+            <option value="kkingae">Kingella kingae</option>
+            <option value="koxytoca">Klebsiella oxytoca</option>
+            <option value="kpneumoniae">Klebsiella pneumoniae</option>
+            <option value="kseptempunctata">Kudoa septempunctata</option>
+            <option value="lcasei">Lactobacillus casei</option>
+            <option value="legionella">Legionella</option>
+            <option value="leptospira">Leptospira</option>
+            <option value="leptospira_2">Leptospira 2</option>
+            <option value="leptospira_3">Leptospira 3</option>
+            <option value="lmonocytogenes">Listeria monocytogenes</option>
+            <option value="lsalivarius">Lactobacillus salivarius</option>
+            <option value="mabscessus">Mycobacterium abscessus</option>
+            <option value="magalactiae">Mycoplasma agalactiae</option>
+            <option value="mbovis">Mycoplasma bovis</option>
+            <option value="mcatarrhalis">Moraxells catarrhalis</option>
+            <option value="mhaemolytica">Mannheimia haemolytica</option>
+            <option value="mhyorhinis">Mycoplasma hyorhinis</option>
+            <option value="mmassiliense">Mycobacterium massiliense</option>
+            <option value="mplutonius">Melissococcus plutonius</option>
+            <option value="neisseria">Neisseria</option>
+            <option value="orhinotracheale">Ornithobacterium rhinotracheale</option>
+            <option value="otsutsugamushi">Orientia tsutsugamushi</option>
+            <option value="pacnes">Propionibacterium acnes</option>
+            <option value="paeruginosa">Pseudomonas aeruginosa</option>
+            <option value="pagglomerans">Pantoea agglomerans</option>
+            <option value="pfluorescens">Pseudomonas fluorescens</option>
+            <option value="pfreudenreichii">Propionibacterium freudenreichii</option>
+            <option value="pgingivalis">Porphyromonas gingivalis</option>
+            <option value="plarvae">Paenibacillus larvae</option>
+            <option value="pmultocida_multihost">Pasteurella multocida</option>
+            <option value="pmultocida_rirdc">Pasteurella multocida</option>
+            <option value="ppentosaceus">Pediococcus pentosaceus</option>
+            <option value="pshigelloides">Plesiomonas shigelloides</option>
+            <option value="ranatipestifer">Riemerella anatipestifer</option>
+            <option value="sagalactiae">Streptococcus agalactiae</option>
+            <option value="saureus">Staphylococcus aureus</option>
+            <option value="scanis">Streptococcus canis</option>
+            <option value="sdysgalactiae">Streptococcus dysgalactiae</option>
+            <option value="senterica">Salmonella  enterica</option>
+            <option value="sepidermidis">Staphylococcus  epidermidis</option>
+            <option value="sgallolyticus">Streptococcus gallolyticus</option>
+            <option value="shaemolyticus">Staphylococcus  haemolyticus</option>
+            <option value="shominis">Stapylococcus hominis</option>
+            <option value="sinorhizobium">Sinorhizobium</option>
+            <option value="slugdunensis">Staphylococcus  lugdunensis</option>
+            <option value="smaltophilia">Stenotrophomonas  maltophilia</option>
+            <option value="soralis">Streptococcus oralis</option>
+            <option value="spneumoniae">Streptococcus pneumoniae</option>
+            <option value="spseudintermedius">Staphylococcus  pseudintermedius</option>
+            <option value="spyogenes">Streptococcus pyogenes</option>
+            <option value="ssuis">Streptococcus suis</option>
+            <option value="sthermophilus">Streptococcus thermophilus</option>
+            <option value="sthermophilus_2">Streptococcus thermophilus 2</option>
+            <option value="streptomyces">Streptomyces</option>
+            <option value="suberis">Streptococcus uberis</option>
+            <option value="szooepidemicus">Streptococcus equi</option>
+            <option value="taylorella">Taylorella</option>
+            <option value="tenacibaculum">Tenacibaculum</option>
+            <option value="tvaginalis">Trichomonas vaginalis</option>
+            <option value="vcholerae">Vibrio  cholerae</option>
+            <option value="vibrio">Vibrio</option>
+            <option value="vparahaemolyticus">Vibrio  parahaemolyticus</option>
+            <option value="vtapetis">Vibrio tapetis</option>
+            <option value="vvulnificus">Vibrio  vulnificus</option>
+            <option value="wolbachia">Wolbachia</option>
+            <option value="xfastidiosa">Xylella fastidiosa</option>
+            <option value="yersinia">Yersinia</option>
+            <option value="ypseudotuberculosis">Yersinia pseudotuberculosis</option>
+            <option value="yruckeri">Yersinia ruckeri</option>
+        </param>
+
+        <param name="snippy_opt" argument="--snippy_opt" type="text" value="" label="Snippy options" help="Options to pass to snippy eg. '--mincov 10 --ram 32'" /> 
+        <param name="roary_opt" argument="--roary_opt" type="text" value="" label="Roary options" help="Options to pass to roary eg. '-iv 1.75 -s -cd 97'" /> 
+        <param name="mask" argument="--mask" type="text" value="AUTO" label="Mask regions (BED)" help="Mask core SNPS in these regions or 'auto'" /> 
+        </section>
+
+        <section name="plugins" title="Plugins">
+        <param name="treebuilder" argument="--assembler" type="select" label="Assembler to use" help="Which assembler would you like shovill to use, default is skesa">
+            <option value="skesa" selected="True">skesa</option>
+            <option value="skesa_fast">skesa fast</option>
+            <option value="megahit">megahit</option>
+            <option value="shovill">shovill</option>
+            <option value="spades">Spades</option>
+        </param>
+        <param name="assembler-opt" argument="--assembler-opt" type="text" value="" label="Extra assembler options to pass" help="" /> 
+        <param name="treebuilder" argument="--treebuilder" type="select" label="Tree-builder to use" help="Which tree builder would you like to use, default is iqtree_fast">
+            <option value="fasttree">fasttree</option>
+            <option value="iqtree">iqtree</option>
+            <option value="iqtree_fast" selected="True">iqtree_fast</option>
+            <option value="iqtree_slow">iqtree_slow</option>
+        </param>
+        <param name="treebuilder-opt" argument="--treebuilder-opt" type="text" value="" label="Extra tree-builder options to pass" help="" /> 
+        <param name="taxoner" argument="--taxoner" type="select" label="Species ID tool to use" help="Which taxoner would you like to use, default is kraken">
+            <option value="kraken" selected="True">kraken</option>
+            <option value="centrifuge">centrifuge</option>
+        </param>
+        <param name="taxoner-opt" argument="--taxoner-opt" type="text" value="" label="Extra taxoner options to pass" help="" /> 
+        <param name="annotator" argument="--annotator" type="select" label="Genome annotator to use" help="Which genome annotator would you like to use, default is prokka_fast">
+            <option value="prokka_fast" selected="True">prokka_fast</option>
+        </param>
+        <param name="annotator-opt" argument="--annotator-opt" type="text" value="" label="Extra annotator options to pass" help="" /> 
+        </section>
+
+     </inputs>
+
+    <outputs>
+        <data name="nullarbor_log" format="txt" label="${tool.name} on ${on_string} Log file" from_work_dir="out/nullarbor.log" >
+            <filter>log</filter>
+        </data>
+        <data name="report" format="html"  label="${tool.name} on ${on_string}: Report" from_work_dir="out/report/index.html"/>
+        <data name="jobinfo" format="txt"  label="${tool.name} on ${on_string}: jobinfo.csv" from_work_dir="out/report/jobinfo.csv"/>
+        <data name="seqdata" format="txt"  label="${tool.name} on ${on_string}: seqdata.csv" from_work_dir="out/report/seqdata.csv"/>
+        <data name="identification" format="txt"  label="${tool.name} on ${on_string}: identification.csv" from_work_dir="out/report/identification.csv"/>
+        <data name="mlst" format="tabular"  label="${tool.name} on ${on_string}: mlst.csv" from_work_dir="out/report/mlst.csv"/>
+        <data name="resitome" format="tabular"  label="${tool.name} on ${on_string}: resitome.csv" from_work_dir="out/report/resitome.csv"/>
+        <data name="virulome" format="tabular"  label="${tool.name} on ${on_string}: virulome.csv" from_work_dir="out/report/virulome.csv"/>
+        <data name="assembly" format="txt"  label="${tool.name} on ${on_string}: assembly.csv" from_work_dir="out/report/assembly.csv"/>
+        <data name="reference" format="txt"  label="${tool.name} on ${on_string}: reference.csv" from_work_dir="out/report/reference.csv"/>
+        <data name="core" format="txt"  label="${tool.name} on ${on_string}: core.csv" from_work_dir="out/report/core.csv"/>
+        <data name="core_newick" format="txt"  label="${tool.name} on ${on_string}: core.newick" from_work_dir="out/report/core.newick"/>
+        <data name="snpdist" format="tabular"  label="${tool.name} on ${on_string}: snpdist.csv" from_work_dir="out/report/snpdist.csv"/>
+        <data name="pan" format="txt"  label="${tool.name} on ${on_string}: pan.csv" from_work_dir="out/report/pan.csv"/>
+    </outputs>
+
+    <tests>
+        <test>
+        </test>
+    </tests>
+    
+    <help><![CDATA[
+        NAME
+            nullarbor.pl 2.0.20181010
+        SYNOPSIS
+            Reads to reports for public health microbiology
+        AUTHOR
+            Torsten Seemann
+        USAGE
+            nullarbor.pl [options] --name NAME --ref REF.FA/GBK --input INPUT.TAB --outdir DIR
+        
+        DOCUMENTATION
+            https://github.com/tseemann/nullarbor
+
+    ]]></help>
+
+    <citations>
+        <citation type="bibtex">
+@UNPUBLISHED{Seemann2018,
+    author = {Seemann, Torsten},
+    title = {Nullarbor: Pipeline to generate complete public health microbiology reports from sequenced isolates},
+    year = {2018},
+    url = {https://github.com/tseemann/nullarbor},
+}
+        </citation>
+    </citations>
+
+</tool>

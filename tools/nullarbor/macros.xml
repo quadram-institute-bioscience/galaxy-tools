@@ -1,0 +1,25 @@
+<macros>
+    <token name="@VERSION@">2.0.20181010</token>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="@VERSION@">nullarbor</requirement>
+            <!-- <container type="docker">quay.io/thanhleviet/nullarbor</container> -->
+        </requirements>
+    </xml>
+
+    <xml name="version_command">
+        <version_command>nullarbor.pl --version</version_command>
+    </xml>
+    
+    <xml name="env">
+    <environment_variables>
+        <environment_variable name="KRAKEN_DEFAULT_DB">${GALAXY_DATA_MANAGER_DATA_PATH}/taxonomy/minikraken_20171013_4GB</environment_variable>
+        <environment_variable name="CENTRIFUGE_DEFAULT_DB">${GALAXY_DATA_MANAGER_DATA_PATH}/taxonomy/p_compressed+h+v</environment_variable>
+    </environment_variables>
+    </xml>
+    <!-- <xml name="citations">
+        <citations>
+            <citation type="doi">fill_here</citation>
+        </citations>
+    </xml> -->
+</macros>
