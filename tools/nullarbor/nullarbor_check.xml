@@ -1,4 +1,4 @@
-<tool id="nullarbor_check" name="Nullarbor check" version="0.1.0">
+<tool id="nullarbor_check" name="Nullarbor check" version="@VERSION@">
     <description>Run check command to ensure that the system meets dependency requirements</description>
     <macros>
         <import>macros.xml</import>

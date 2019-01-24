@@ -1,4 +1,4 @@
-<tool id="nullarbor" name="Nullarbor" version="0.1.0">
+<tool id="nullarbor" name="Nullarbor" version="@VERSION@">
     <description>Pipeline to generate complete public health microbiology reports from sequenced isolates</description>
     <macros>
         <import>macros.xml</import>
