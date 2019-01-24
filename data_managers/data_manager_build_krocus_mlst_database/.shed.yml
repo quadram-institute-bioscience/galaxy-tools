@@ -1,7 +1,7 @@
 categories:
 - Data Managers
 - Sequence Analysis
-description: Contains a data manager that defines and populates the ARIBA database
+description: Contains a data manager that defines and populates the MLST database for krocus
   tool data table.
 homepage_url: https://github.com/thanhleviet/galaxy-tools
 long_description: |
@@ -14,5 +14,5 @@ long_description: |
   The software is written in Python and is available under the open source license GNU GPL version 3.
 name: data_manager_build_krocus_database
 owner: thanhlv
-remote_repository_url: tbd
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/data_managers/data_manager_build_krocus_mlst_database
 type: unrestricted

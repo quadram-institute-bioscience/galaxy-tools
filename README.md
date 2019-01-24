@@ -1,4 +1,4 @@
-## A collection of bioinformatics tools for use with [Galaxy platform](https://galaxyproject.org/) written at Quadram Institute
+### A collection of bioinformatics tools for use with [Galaxy](https://galaxyproject.org/) written at Quadram Institute
 
 - **[nullarbor](https://github.com/tseemann/nullarbor)** Pipeline to generate complete public health microbiology reports from sequenced isolates
 - **[ariba](https://github.com/sanger-pathogens/ariba)** Antimicrobial Resistance Identification By Assembly
