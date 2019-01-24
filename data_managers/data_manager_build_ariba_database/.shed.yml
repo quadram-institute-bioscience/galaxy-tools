@@ -1,0 +1,15 @@
+categories:
+- Data Managers
+- Sequence Analysis
+description: Contains a data manager that defines and populates the ARIBA database
+  tool data table.
+homepage_url: https://github.com/thanhleviet/galaxy-tools
+long_description: |
+  ARIBA is a tool that identifies antibiotic resistance genes by running local assemblies. It can also be used for MLST calling.
+  The input is a FASTA file of reference sequences (can be a mix of genes and noncoding sequences)
+  and paired sequencing reads. ARIBA reports which of the reference sequences were found, plus detailed 
+  information on the quality of the assemblies and any variants between the sequencing reads and the reference sequences.
+name: data_manager_build_ariba_database
+owner: thanhlv
+remote_repository_url: tbd
+type: unrestricted
