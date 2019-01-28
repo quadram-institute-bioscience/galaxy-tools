@@ -3,7 +3,7 @@ categories:
 - Sequence Analysis
 description: Contains a data manager that defines and populates the MLST database for krocus
   tool data table.
-homepage_url: https://github.com/thanhleviet/galaxy-tools
+homepage_url: https://github.com/quadram-institute-bioscience/galaxy-tools
 long_description: |
   Genome sequencing is rapidly being adopted in reference labs and hospitals for bacterial outbreak investigation and diagnostics where time is critical.
   Seven gene multi-locus sequence typing is a standard tool for broadly classifying samples into sequence types, allowing, in many cases, to rule a sample in or out of an outbreak, or allowing for general characteristics about a bacterial strain to be inferred.
