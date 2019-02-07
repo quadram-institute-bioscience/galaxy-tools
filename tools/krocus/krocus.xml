@@ -29,7 +29,7 @@
             --verbose
         #end if
 
-        '$krocus_mlst_databases.fields.path' '$fastq_file'
+        '$krocus_mlst_databases.fields.path' '$fastq'
     ]]></command>
     
     <inputs>
@@ -40,7 +40,7 @@
             </options>
         </param>
         <section name="opt_args" title="Optional Arguments">
-        <param argument="--filtered_reads_file" type="text" value="" label="Filename to save matching reads to" help="Default: None" />
+        <param argument="--filtered_reads_file" type="text" value="" optional="True" label="Filename to save matching reads to" help="Default: None" />
         <param argument="--max_gap" type="integer" value="4" label="Maximum gap for blocks to be contigous, measured in
                         multiples of the k-mer size" help="Default:4" />
         <param argument="--margin" type="integer" value="10" label="Flanking region around a block to use for mapping" help="Default:10" />
@@ -51,7 +51,7 @@
         <param argument="--print_interval" type="integer" value="10" label="Print ST every this number of reads" help="(Default:500)" />
         <param argument="--kmer" type="integer" value="10" label="k-mer size" help="(Default:11)" />
         <param argument="--divisible_by_3" type="boolean" truevalue="--divisible_by_3" falsevalue="" checked="false" label="Genes which are not divisible by 3 are excluded" help="(Default:No)" />
-        <param argument="--target_st" type="integer" value="" label="For performance testing print time to find given ST" help="(Default:None)" />
+        <param argument="--target_st" type="integer" value="" optional="True" label="For performance testing print time to find given ST" help="(Default:None)" />
         <param argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
         </section>
     </inputs>
@@ -64,7 +64,7 @@
         <test>
         <param name="fastq" value="pacbio.fastq.gz" ftype="fastqsanger" />
         <param name="krocus_mlst_databases" value="mlst_db"/>
-        <output name="output_file" ftype="tabular" file="mlst_output_pacbio.tsv" />
+        <output name="output_file" ftype="tabular" file="mlst_output_pacbio.tsv" compare="contains" />
         </test>
     </tests>
 
