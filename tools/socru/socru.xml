@@ -6,6 +6,10 @@
     <expand macro="requirements" />
     <expand macro="version_command" />
     <command detect_errors="exit_code"><![CDATA[
+
+        #set $_input_file = "'{}'".format($assembly.element_identifier)
+        ln -s '${assembly}' ${_input_file} &&
+
         socru 
 
         --threads \${GALAXY_SLOTS:-4}
@@ -13,7 +17,7 @@
         --top_blast_hits top_blast_hits.tsv
         
         #if str($opt_args.max_bases_from_ends) != ""
-            --max_bases_from_ends $max_bases_from_ends
+            --max_bases_from_ends $$opt_args.max_bases_from_ends
         #end if
         
         --not_circular $opt_args.not_circular
@@ -23,7 +27,7 @@
         #if $opt_args.verbose
             $opt_args.verbose
         #end if
-        $species $assembly
+        $species ${_input_file}
         > $output
     ]]></command>
     
