@@ -33,10 +33,9 @@
     </outputs>
 
     <help><![CDATA[
-            **Usage**: ariba run [options] <prepareref_dir><reads1.fq><reads2.fq><outdir>
+            **Usage**: ariba summary out in.report.1.tsv in.report.2.tsv ...
 
-            Runs the local assembly pipeline. Input is dir made by prepareref, and paired
-            reads
+            This tool summarises the results from one or more runs of ARIBA.
            
     ]]>    </help>
 
