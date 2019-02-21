@@ -1,0 +1,41 @@
+<tool id="albatradis-annotation" name="albatradis-annotation" version="@VERSION@">
+    <description>Create scatter plot of controls vs conditions</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        albatradis-annotation 
+        --feature_size $feature_size
+        -v 
+        $control_input_files $condition_input_files
+        > $log
+    
+    ]]></command>
+    
+    <inputs>
+        <param name="embl" type="data" format="embl" label="Select EMBLfile" help=""/>
+        <param argument="--feature_size" type="integer" value="198" label="Feature size" help="When you --use_annotation 5' and 3' features are created around each gene. This controls the size of those features in bases.(Default: 50)" />
+        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
+    </inputs>
+
+    <outputs>
+        <data name="log" format="txt" label="${tool.name} on ${on_string}: Log"/>
+        <data name="output" format="embl" label="${tool.name} on ${on_string}: Output embl file" from_work_dir="output.embl"/>
+    </outputs>
+
+
+    <help><![CDATA[
+        usage: albatradis-scatterplot [options] --control control1.plot --control control2.plot --condition condition1.plot --condition condition2.plot 
+        
+        Take in an EMBL file and add flanking 3 prime and 5 prime annotation
+
+        Take in an EMBL file and add flanking 3 prime and 5 prime annotation.
+        It is used as part of the albatradis --use_annotation feature, so you may not need it,
+        as the annotated file is saved in the output directory.
+        
+        Documentation can be found at `<https://github.com/quadram-institute-bioscience/albatradis>`_.
+    ]]></help>
+ <!-- <expand macro="citations" /> -->
+</tool>

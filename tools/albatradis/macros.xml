@@ -1,0 +1,18 @@
+<macros>
+    <token name="@VERSION@">1.0.1</token>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="@VERSION@">albatradis</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="version_command">
+        <version_command>albatradis --version</version_command>
+    </xml>
+
+    <!-- <xml name="citations">
+        <citations>
+            <citation type="doi">10.1101/543702</citation>
+        </citations>
+    </xml> -->
+</macros>

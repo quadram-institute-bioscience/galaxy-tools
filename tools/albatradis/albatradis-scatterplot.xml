@@ -1,0 +1,71 @@
+<tool id="albatradis-scatterplot" name="albatradis-scatterplot" version="@VERSION@">
+    <description>Create scatter plot of controls vs conditions</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+
+        ## Creates symlinks for each input file based on the Galaxy 'element_identifier'
+        ## Used so that a human-readable name appears in the output table (instead of 'dataset_xyz.dat')
+        #set $control_input_files = ''
+        #for $control_input_file in $control
+            ## Add single quotes around each input file identifier
+            #set $control_input_file = "'{}'".format($input_file.element_identifier)
+            ln -s '${control_input_file}' ${c_input_file} &&
+            #set $control_input_files = $control_input_files + ' --control ' + $c_input_file
+        #end for
+
+        #set $condition_input_files = ''
+        #for $condition_input_file in $condition
+            ## Add single quotes around each input file identifier
+            #set $_input_file = "'{}'".format($input_file.element_identifier)
+            ln -s '${condition_input_file}' ${d_input_file} &&
+            #set $condition_input_files = $condition_input_files + ' --condition ' + $d_input_file
+        #end for
+        
+        #if $normalise
+            $normalise
+        #end if
+
+        #if $debug
+            $debug
+        #end if
+
+        albatradis-scatterplot
+        -v 
+        $control_input_files $condition_input_files
+        > $log
+    
+    ]]></command>
+    
+    <inputs>
+        <param name="control" type="data" format="txt" multiple="True" label="Select control files" help="The insert site plots of the controls, where you must have 2 or more (Default: None)"/>
+        <param name="condition" type="data" format="txt" multiple="True" label="Select condition files" help="The insert site plots of the conditions, where you must have 2 or more (Default: None)"/>
+        <param argument="--window_size" type="integer" value="50" label="Window size" help=" (Default: 50)" />
+        <param argument="--normalise" type="boolean" truevalue="--normalise" falsevalue="" checked="false" label="Normalise the files" help="(Default:No)" />
+        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
+    </inputs>
+
+    <outputs>
+        <data name="log" format="txt" label="${tool.name} on ${on_string}: Log" />
+        <data name="output" format="embl" label="${tool.name} on ${on_string}: Output file" from_work_dir="output.embl"/>
+    </outputs>
+
+
+    <help><![CDATA[
+        usage: albatradis-scatterplot [options] --control control1.plot --control control2.plot --condition condition1.plot --condition condition2.plot
+        
+        Create scatter plot of controls vs conditions
+
+        This script produces scatterplots of your input data plotted against itself and the controls.
+        It is useful as a QC metric to see if the data is biased. Basically you take sliding windows,
+        count the number of reads in each window, then plot those values against the other condition and against the others.
+        This is on a log scale and the outliers are the interesting points.
+
+        Documentation can be found at `<https://github.com/quadram-institute-bioscience/albatradis>`_.
+    ]]></help>
+ <!-- <expand macro="citations" /> -->
+</tool>

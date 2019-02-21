@@ -1,0 +1,45 @@
+<tool id="albatradis_presence_absence" name="albatradis presence-absence" version="@VERSION@">
+    <description>Take in gene report files and produce a heatmap</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+
+        albatradis-presence_absence
+        -v 
+        $embl $gene_reports
+        > $log
+    
+    ]]></command>
+    
+    <inputs>
+        <param name="embl" type="data" format="embl" label="Select EMBLfile" help=""/>
+        <param name="gene_reports" type="data" format="tabular" label="Select Gene report spreadsheets" help=""/>
+        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
+    </inputs>
+
+    <outputs>
+        <data name="log" format="txt" label="${tool.name} on ${on_string}: Log"/>
+        <data name="all_logfc" format="txt" label="${tool.name} on ${on_string}: all_logfc" from_work_dir="output/all_logfc.csv"/>
+        <data name="filtered_logfc" format="tabular" label="${tool.name} on ${on_string}: filtered_logfc" from_work_dir="output/filtered_logfc.csv"/>
+        <data name="full_heatmap" format="png" label="${tool.name} on ${on_string}: full_heatmap" from_work_dir="output/full_heatmap.png"/>      
+        <data name="filtered_heatmap" format="png" label="${tool.name} on ${on_string}: filtered_heatmap" from_work_dir="output/filtered_heatmap.png"/>
+        <data name="distance_matrix_dendrogram" format="png" label="${tool.name} on ${on_string}: distance_matrix_dendrogram" from_work_dir="output/distance_matrix_dendrogram.png"/>
+        <data name="nj_newick_tree" format="txt" label="${tool.name} on ${on_string}: nj_newick_tree" from_work_dir="output/nj_newick_tree.tre"/>
+        <data name="logfc" format="txt" label="${tool.name} on ${on_string}: logfc" from_work_dir="output/logfc.dot"/>
+        <data name="union_gene_report" format="tabular" label="${tool.name} on ${on_string}: union_gene_report" from_work_dir="output/union_gene_report.csv"/>
+        <data name="intersection_gene_report" format="tabular" label="${tool.name} on ${on_string}: intersection_gene_report" from_work_dir="output/intersection_gene_report.csv"/>
+    </outputs>
+
+    <help><![CDATA[
+        usage: albatradis-presence_absence [options] EMBLfile gene_reports
+
+        Take in gene report files and produce a heatmap
+        This script performs comparitive analysis and outputs heatmaps, combined spreadsheets, figures and trees (dendrograms).
+        
+        Documentation can be found at `<https://github.com/quadram-institute-bioscience/albatradis>`_.
+    ]]></help>
+ <!-- <expand macro="citations" /> -->
+</tool>
