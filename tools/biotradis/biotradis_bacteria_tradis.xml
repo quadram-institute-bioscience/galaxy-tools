@@ -1,0 +1,96 @@
+<tool id="add_tradis_tags" name="add tradis tags" version="@VERSION@">
+    <description>Generates a BAM file with tags added to read strings.</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+
+        ## Creates symlinks for each input file based on the Galaxy 'element_identifier'
+        ## Used so that a human-readable name appears in the output table (instead of 'dataset_xyz.dat')
+        #set $named_input_files = ''
+        #for $input_file in $input_files
+            ## Add single quotes around each input file identifier
+            #set $_input_file = "'{}'".format($input_file.element_identifier)
+            ln -s '${input_file}' ${_input_file} &&
+            echo ${_input_file} >> fq.list &&
+        #end for    
+
+        bacteria_tradis -f fq.list
+                        -t $tag
+                        -r $ref
+                        -td $tag_dir
+                        -mm $mm
+                        -m $m
+                    #if str($smalt_k)!=""
+                        --smalt_k $smalt_k
+                    #end if
+                    #if str($smalt_s)!=""
+                        --smalt_s $smalt_s
+                    #end if
+                        --smalt_y $smalt_y
+                        --smalt_r $smalt_r
+                        -n "\${GALAXY_SLOTS:-2}"
+                    #if $verbose
+                        --verbose
+                    #end if
+                    && tar cvzf insert_site_plot.tar.gz *insert_site_plot.gz
+                    && tar cvzf mapped.tar.gz *mapped.bam*
+    ]]></command>
+    <inputs>
+        <param name="input_files" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" multiple="true" />
+        <param name="tag" type="text" label="Tag" help="Tag to search for" />
+        <param name="ref" type="data" format="fasta" label="Reference geome" help="Fasta format" />
+        <param name="tag_dir" type="select" label="Tag direction" help="3 or 5(optional. default = 3)" >
+            <option value="3" selected="true">3</option>
+            <option value="5">5</option>
+        </param>
+        <param name="mm" type="integer" value="0" label="Number of mismatches allowed when matching tag" help="(optional. default = 0)" />
+        <param name="m" type="integer" value="30" label="Mapping quality cutoff score" help="(optional. default = 30)" />
+        <param argument="--smalt_k" type="integer" value="" optional="True" label="Custom k-mer value for SMALT mapping" help="(optional)" />
+        <param argument="--smalt_s" type="integer" value="" optional="True" label="Custom step size for SMALT mapping" help="(optional)" />
+        <param argument="--smalt_y" type="integer" value="0.96" label="Custom y parameter for SMALT" help="(optional. default = 0.96)" />
+        <param argument="--smalt_r" type="integer" value="-1" label="custom r parameter for SMALT" help="(optional. default = -1)" />
+        <param argument="--verbose" type="boolean" truevalue="-v" falsevalue="" checked="false" label="verbose debugging output" help="(Default:No)" />
+    </inputs>
+
+    <outputs>
+        <data name="insert_size_plots" format="archive" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="insert_site_plot.tar.gz"/>>   
+        <data name="mapped_bam" format="archive" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="mapped.tar.gz"/>>   
+        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/>>   
+    </outputs>
+
+    <!-- <tests>
+    </tests> -->
+    
+    <help>
+    <![CDATA[
+        Run a TraDIS analysis. This involves:
+        1: filtering the data with tags matching that passed via -t option
+        2: removing the tags from the sequences
+        3: mapping
+        4: creating an insertion site plot
+        5: creating a stats summary
+
+        Usage: bacteria_tradis [options]
+
+        Options:
+        -f        : text file listing fastq files with tradis tags attached
+        -t        : tag to search for
+        -r        : reference genome in fasta format (.fa)
+        -td       : tag direction - 3 or 5 (optional. default = 3)
+        -mm       : number of mismatches allowed when matching tag (optional. default = 0)
+        -m        : mapping quality cutoff score (optional. default = 30)
+        --smalt_k : custom k-mer value for SMALT mapping (optional)
+        --smalt_s : custom step size for SMALT mapping (optional)
+        --smalt_y : custom y parameter for SMALT (optional. default = 0.96)
+        --smalt_r : custom r parameter for SMALT (optional. default = -1)
+        -n        : number of threads to use for SMALT and samtools sort (optional. default = 1)
+        -e        : set defaults for essentiality experiment (smalt_r = 0, -m = 0)
+        -v        : verbose debugging output
+
+        Documentation can be found at `site <https://github.com/sanger-pathogens/Bio-Tradis>`_.
+    ]]></help>
+
+</tool>

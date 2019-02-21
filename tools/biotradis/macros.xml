@@ -1,0 +1,14 @@
+<macros>
+    <token name="@VERSION@">1.4.1</token>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="@VERSION@">biotradis</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="citations">
+        <citations>
+            <citation type="doi">10.1093/bioinformatics/btw022</citation>
+        </citations>
+    </xml>
+</macros>

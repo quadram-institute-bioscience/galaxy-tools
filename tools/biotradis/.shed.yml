@@ -1,0 +1,11 @@
+categories: [Sequence Analysis]
+description: A set of tools to analyse the output from TraDIS analyses
+long_description: |
+  The Bio::TraDIS pipeline provides software utilities for the processing, mapping, and analysis of transposon insertion sequencing data.
+  The pipeline was designed with the data from the TraDIS sequencing protocol in mind, but should work with a variety of transposon insertion sequencing protocols as long as they produce data in the expected format.
+  For more information on the TraDIS method, see http://bioinformatics.oxfordjournals.org/content/32/7/1109 and http://genome.cshlp.org/content/19/12/2308.
+homepage_url: https://github.com/quadram-institute-bioscience/galaxy-tools
+name: biotradis
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/biotradis
+type: unrestricted
