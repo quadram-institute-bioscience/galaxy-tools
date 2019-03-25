@@ -1,0 +1,133 @@
+<tool id="metabat2" name="metabat2" version="@VERSION@">
+    <description>Metagenome Binning based on Abundance and Tetranucleotide frequency</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        metabat2
+        --inFile $in_file
+        --outFile out_file
+        #if $abd_file
+            --abdFile $abd_file
+        #end if
+        --minContig $min_contig
+        --maxP $max_p
+        --minS $min_s
+        --pTNF $ptnf
+        #if $noAdd
+            $noAdd
+        #end if
+        --minCV $min_cv
+        --minCVSum $min_cv_sum
+        --minClsSize $min_cls_size
+        --numThreads \${GALAXY_SLOTS:-0}
+        #if $onlyLabel
+            $onlyLabel
+        #end if
+        #if $saveCls
+            $saveCls
+            --noBinOut
+        #end if
+        --seed $seed
+        #if $debug
+            $debug
+        #end if
+        --verbose > $log
+    ]]></command>
+    
+    <inputs>
+        <param name="in_file" type="data" format="fasta" label="Contigs in (gzipped) fasta file format" help="(Mandatory)"/>
+        <param name="abd_file" type="data" format="tabular" optional="True" label="A file having mean and variance of base coverage depth" help="(tab delimited;
+                                    the first column should be contig names, and the first row will be considered as the header and be skipped) (Optional)"/>
+        <param name="min_contig" type="integer" value="2500" label="Minimum size of a contig for binning (should be >=1500)" help="(Default: 2500)"/>
+        <param name="max_p" type="integer" value="95" label="Percentage of 'good' contigs considered for binning decided by connection
+                                    among contigs" help="The greater, the more sensitive. (Default: 95)"/>
+        <param name="min_s" type="integer" value="60" label="Minimum score of a edge for binning (should be between 1 and 99)" help="The
+                                    greater, the more specific. (Default: 60)"/>
+        <param name="maxEdges" type="integer" value="200" label="Maximum number of edges per node." help="The greater, the more sensitive. (Default: 200)"/>
+        <param name="ptnf" type="integer" value="0" label="TNF probability cutoff for building TNF graph" help="Use it to skip the
+                                    preparation step. (Default: 0)"/>
+        <param argument="--noAdd" type="boolean" truevalue="--noAdd" falsevalue="" checked="false" label="Turning off additional binning for lost or small contigs." help="Default:No" />    
+        <param name="min_cv" type="integer" value="1" label="Minimum mean coverage of a contig in each library for binning" help="(Default: 1)"/>
+        <param name="min_cv_sum" type="integer" value="1" label="Minimum total effective mean coverage of a contig (sum of depth over
+                                    minCV) for binning" help="(Default: 1)"/>
+        <param name="min_cls_size" type="integer" value="200000" label="Minimum size of a bin as the output" help="(Default: 200000)"/>
+        <param argument="--onlyLabel" type="boolean" truevalue="--onlyLabel" falsevalue="" checked="false" label="Output only sequence labels as a list in a column without sequences." help="Default:No" />    
+        <param argument="--saveCls" type="boolean" truevalue="--saveCls" falsevalue="" checked="false" label="Save cluster memberships as a matrix format" help="Default:No" />    
+        <param argument="--unbinned" type="boolean" truevalue="--unbinned" falsevalue="" checked="false" label="Generate [outFile].unbinned.fa file for unbinned contigs" help="Default:No" />    
+        <param name="seed" type="integer" value="0" label="For exact reproducibility." help="(Default: 0 use random seed)"/>
+        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Debug output" help="Default:No" />   
+    </inputs>
+
+    <outputs>
+        <data name="out_file" format="fasta" from_work_dir="*.fasta" label="${tool.name} on ${on_string}: Output file"/>
+        <data name="log" format="tabular" label="${tool.name} on ${on_string} report file" />
+    </outputs>
+
+    <tests>
+        <test>
+        </test>
+    </tests>
+    <help><![CDATA[
+    MetaBAT: Metagenome Binning based on Abundance and Tetranucleotide frequency
+    
+    Allowed options:
+    -h [ --help ]                     produce help message
+    -i [ --inFile ] arg               Contigs in (gzipped) fasta file format [Mandatory]
+    -o [ --outFile ] arg              Base file name and path for each bin. The default output is fasta format.
+                                        Use -l option to output only contig names [Mandatory].
+    -a [ --abdFile ] arg              A file having mean and variance of base coverage depth (tab delimited; 
+                                        the first column should be contig names, and the first row will be 
+                                        considered as the header and be skipped) [Optional].
+    -m [ --minContig ] arg (=2500)    Minimum size of a contig for binning (should be >=1500).
+    --maxP arg (=95)                  Percentage of 'good' contigs considered for binning decided by connection
+                                        among contigs. The greater, the more sensitive.
+    --minS arg (=60)                  Minimum score of a edge for binning (should be between 1 and 99). The 
+                                        greater, the more specific.
+    --maxEdges arg (=200)             Maximum number of edges per node. The greater, the more sensitive.
+    --pTNF arg (=0)                   TNF probability cutoff for building TNF graph. Use it to skip the 
+                                        preparation step. (0: auto).
+    --noAdd                           Turning off additional binning for lost or small contigs.
+    --cvExt                           When a coverage file without variance (from third party tools) is used 
+                                        instead of abdFile from jgi_summarize_bam_contig_depths.
+    -x [ --minCV ] arg (=1)           Minimum mean coverage of a contig in each library for binning.
+    --minCVSum arg (=1)               Minimum total effective mean coverage of a contig (sum of depth over 
+                                        minCV) for binning.
+    -s [ --minClsSize ] arg (=200000) Minimum size of a bin as the output.
+    -t [ --numThreads ] arg (=0)      Number of threads to use (0: use all cores).
+    -l [ --onlyLabel ]                Output only sequence labels as a list in a column without sequences.
+    --saveCls                         Save cluster memberships as a matrix format
+    --unbinned                        Generate [outFile].unbinned.fa file for unbinned contigs
+    --noBinOut                        No bin output. Usually combined with --saveCls to check only contig 
+                                        memberships
+    --seed arg (=0)                   For exact reproducibility. (0: use random seed)
+    -d [ --debug ]                    Debug output
+    -v [ --verbose ]                  Verbose output
+
+    Choice of Options:
+
+    In MetaBAT 2, parameter optimization will be unnecessary, though we allowed a few parameters so that advanced users might play with them.
+    You can decrease -m (--minContig) when the qualities of both assembly and formed bins with default value are very good.
+    You can decrease --maxP and --maxEdges when the qualities of both assembly and formed bins are very bad.
+    You can increase --maxEdges when the completeness level is low, for many datasets we typically use 500.
+    You can increase --minS when the qualities of both assembly and formed bins are very bad.
+    Set --noAdd when added small or leftover contigs cause too much contamination.
+    Set --pTNF positive numbers (1-99) to skip the TNF graph building preparation step. Otherwise, it will be automatically decided based on --maxP. Use this to reproduce previous result.
+    Set --seed positive numbers to reproduce the result exactly. Otherwise, random seed will be set each time.
+
+    Documentation can be found at `<https://bitbucket.org/berkeleylab/metabat>`_.
+
+    ]]></help>
+    <citations>
+        <citation type="bibtex">
+            @ARTICLE{Dong2017,
+            author = {Dong Kang, Feng Li, Jeff Froula, Rob Egan, Zhong Wang},
+            title = {MetaBAT: Metagenome Binning based on Abundance and Tetranucleotide frequency},
+            year = {2017},
+            url = {https://bitbucket.org/berkeleylab/metabat},
+        }
+        </citation>
+    </citations>
+</tool>

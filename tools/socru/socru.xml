@@ -17,7 +17,7 @@
         --top_blast_hits top_blast_hits.tsv
         
         #if str($opt_args.max_bases_from_ends) != ""
-            --max_bases_from_ends $$opt_args.max_bases_from_ends
+            --max_bases_from_ends $opt_args.max_bases_from_ends
         #end if
         
         --not_circular $opt_args.not_circular
@@ -499,5 +499,5 @@
     
     Documentation can be found at `<https://github.com/quadram-institute-bioscience/socru>`_.
     ]]></help>
- <!-- <expand macro="citations" /> -->
+ <expand macro="citations" />
 </tool>

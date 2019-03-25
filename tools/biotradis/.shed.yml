@@ -9,3 +9,5 @@ name: biotradis
 owner: thanhlv
 remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/biotradis
 type: unrestricted
+exclude:
+- test-data

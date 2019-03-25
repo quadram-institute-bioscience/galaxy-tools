@@ -15,7 +15,7 @@
             #set $_input_file = "'{}'".format($input_file.element_identifier)
             ln -s '${input_file}' ${_input_file} &&
             echo ${_input_file} >> fq.list &&
-        #end for    
+        #end for
 
         bacteria_tradis -f fq.list
                         -t $tag
