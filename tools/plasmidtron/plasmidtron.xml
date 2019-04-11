@@ -7,7 +7,20 @@
     <expand macro="version_command" />
 
     <command detect_errors="exit_code"><![CDATA[
-        
+        #for $counter, $input in enumerate($fot_list):
+            #set $new_name = $input.element_identifier
+            ln -sf '$input' ./$new_name &&
+            echo  ./$new_name >> fot.tmp &&
+        #end for
+        python $__tool_directory__/tidy.py fot.tmp fot.list &&
+
+        #for $counter, $input in enumerate($font_list):
+            #set $new_name = $input.element_identifier
+            ln -sf '$input' ./$new_name &&
+            echo  ./$new_name >> font.tmp &&
+        #end for 
+        python $__tool_directory__/tidy.py font.tmp font.list &&
+
         plasmidtron 
         --action $opt_args.action
         #if $opt_args.keep_files
@@ -31,15 +44,15 @@
 
         output
 
-        $fot_list
-        $font_list 
+        fot.list
+        font.list 
         > $result &&
         tar -cvzf output.tar.gz output
     ]]></command>
 
     <inputs>
-    <param name="fot_list" format="txt" type="data" label="Tab file generated from nullarbor_prepare" help="You need to run nullarbor_test for generating a tab file of reads before running this tool"/>
-    <param name="font_list" format="txt" type="data" label="Tab file generated from nullarbor_prepare" help="You need to run nullarbor_test for generating a tab file of reads before running this tool"/>
+    <param name="fot_list" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Files of trait (case) FASTQs"  help="Select multiple files including fasta file, PE files, single fastq file for creating a file of file name of case" />
+    <param name="font_list" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Files of nontrait (control) FASTQs" help="Select multiple files including fasta file, PE files, single fastq file for creating a file of file name of control" />
     <section name="opt_args" title="Optional Arguments">
         <param name="action" argument="--action" type="select" label="Action" help="There are two fundamental methods of operation. The default is 'union', where kmers which occur in ANY trait sample, but are absent from the nontrait samples, get used to filter the reads. So in effect you are assembling the whole accessory genome of the trait samples. This leads to larger end assemblies and more false positives, but will capture greater regions of the accessory genome. It is tolerant to situations where you have a plasmid which can vary substantially with different backbones or payloads. The next is 'intersection', where kmers must occur in ALL trait samples and not in the nontrait samples. This leads to smaller end assemblies and more fragmentation, with less false positives. It is less tolerant to variation.">
             <option value="intersection">intersection</option>
@@ -64,13 +77,13 @@
 
     <outputs>
         <data name="result" format="txt"  label="${tool.name} on ${on_string}: Result" />
-        <data name="output_tar" format="archive" label="Plasmidtron Output Compressed (tar.gz) file" from_work_dir="output.tar.gz" />
+        <data name="output_tar" format="tar.gz" label="Plasmidtron Output Compressed (tar.gz) file" from_work_dir="output.tar.gz" />
     </outputs>
 
     <tests>
     <test>
-        <param name="fot_list" value="traits.csv" ftype="txt" />
-        <param name="font_list" value="nontraits.csv" ftype="txt" />
+        <param name="fot_list" value="S_typhi_CT18_chromosome_pHCM2_1.fastq.gz,S_typhi_CT18_chromosome_pHCM2_2.fastq.gz" ftype="fastq.gz" />
+        <param name="font_list" value="S_typhi_CT18_chromosome_1.fastq.gz,S_typhi_CT18_chromosome_2.fastq.gz" ftype="fastq.gz" />
         <output name="result" file="result.txt" ftype="txt" />
     </test>
     </tests>
