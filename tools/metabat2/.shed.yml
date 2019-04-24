@@ -6,9 +6,10 @@ long_description: |
   On synthetic datasets MetaBAT on average achieves 98percent precision and 90percent recall at the strain level with 281 near complete unique genomes.
   Applying MetaBAT to a human gut microbiome data set we recovered 176 genome bins with 92percent precision and 80percent recall. Further analyses suggest MetaBAT is able to recover genome fragments missed in reference genomes up to 19percent, while 53 genome bins are novel.
   In summary, we believe MetaBAT is a powerful tool to facilitate comprehensive understanding of complex microbial communities.
-homepage_url: https://github.com/quadram-institute-bioscience/galaxy-tools
+homepage_url: https://bitbucket.org/berkeleylab/metabat
 name: metabat2
 owner: thanhlv
 remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/metabat2
 type: unrestricted
-
+exclude:
+  - jgi_summarize_bam_contig_depths.xml
