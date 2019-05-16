@@ -1,0 +1,8 @@
+categories: [Sequence Analysis]
+description: Filtering and trimming of long read sequencing data
+long_description: |
+  Filtering on quality and/or read length, and optional trimming after passing filters.
+name: nanofilt
+owner: leomrtns
+homepage_url: https://github.com/wdecoster/nanofilt
+type: unrestricted
