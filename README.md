@@ -12,3 +12,5 @@
 - **[plasmidtron](https://github.com/sanger-pathogens/plasmidtron)** A kmer based approach for identifying plasmids
 - **[socru](https://github.com/quadram-institute-bioscience/socru)** Order and orientation of complete bacterial genomes
 - **[tiptoft](https://github.com/quadram-institute-bioscience/tiptoft)** Predict plasmids from uncorrected long read data
+- **[nanofilt](https://github.com/wdecoster/nanofilt)** Filtering and trimming of long read sequencing data
+- **[nanostat](https://github.com/wdecoster/nanostat)** Create statistic summary of an Oxford Nanopore read dataset
