@@ -55,7 +55,7 @@
     </conditional>
   </inputs>
   <outputs>
-    <data name="output1" format="fastq" />
+    <data name="output1" format="fastqsanger" />
     <data name="logfile" format="tabular" label="Log file" from_work_dir="logfile.txt" />
   </outputs>
   <tests>
