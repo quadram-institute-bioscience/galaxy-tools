@@ -10,9 +10,21 @@
     ## Galaxy creates xyz.dat but nanostat relies on suffix to detect compressed fasta/fastq; otoh Galaxy provides 'element_identifier'
     #if str($input_type.type) == "fastq" or str($input_type.type) == "fasta"
       #set $named_input_files = ''
-      #for $i_file in $input_type.file
-        ## Add single quotes around each input file identifier
-        #set $_input_file = "'{}'".format($i_file.element_identifier)
+      #for $counter, $i_file in enumerate($input_type.file):
+        #if $i_file.is_of_type('fastqsanger', 'fastq'):
+            #set $ext = 'fastq'
+        #elif $i_file.is_of_type('fastqsanger.gz', 'fastq.gz'):
+            #set $ext = 'fastq.gz'
+        #elif $i_file.is_of_type('fastqsanger.bz2', 'fastq.bz2'):
+            #set $ext = 'fastq.bz2'
+        #elif $i_file.is_of_type('fasta'):
+            #set $ext = 'fasta'
+        #elif $i_file.is_of_type('fasta.gz'):
+            #set $ext = 'fasta.gz'
+        #elif $i_file.is_of_type('fasta.bz2'):
+            #set $ext = 'fasta.bz2'
+        #end if
+        #set $_input_file = "./input_" + str($counter) + "." + $ext
         #set $named_input_files = $named_input_files + ' ' + $_input_file
         ln -s '${i_file}' ${_input_file} &&
       #end for
