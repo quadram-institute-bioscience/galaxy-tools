@@ -20,7 +20,10 @@
             --max_bases_from_ends $opt_args.max_bases_from_ends
         #end if
         
-        --not_circular $opt_args.not_circular
+        #if $opt_args.not_circular
+            --not_circular
+        #end if
+
         --min_bit_score $opt_args.min_bit_score
         --min_alignment_length $opt_args.min_alignment_length
 
