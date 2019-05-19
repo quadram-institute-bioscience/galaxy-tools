@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<tool id="ariba_database_builder" name="ARIBA build database" tool_type="manage_data" version="@VERSION@">
-    <description>Download and prepare database for use with ARIBA</description>
+<tool id="ariba_database_builder" name="ARIBA" tool_type="manage_data" version="@VERSION@">
+    <description>database builder</description>
     <macros>
         <import>macros.xml</import>
     </macros>
@@ -8,45 +8,180 @@
     <version_command>ariba version | head head -n 1</version_command>
     <command detect_errors="exit_code">
     <![CDATA[
-        #if str($library.lib_type) == "curated"
-            #set $library_list = str($library.curated).split(',')
-            #for $library_ in $library_list:
-                #if str($library_) != 'None':
-                    ariba getref '$library_' _tmp_db && ariba prepareref -f _tmp_db.fa -m _tmp_db.tsv '$library_' &&
-                #end if
-            #end for
+        #if str($library.lib_type) != "fasta"
+                python '$__tool_directory__/ariba_database_builder.py' '${out_file}' -t $library.lib_type -d $library.db
+        #else
+                python '$__tool_directory__/ariba_database_builder.py' '${out_file}' -t $library.lib_type -d $library.db -c $library.coding -f $library.fasta
         #end if
-        
-        #if str($library.lib_type) == "fasta"
-            #if str($library).fasta != 'None':
-                ariba prepareref --all_coding '$coding' -f '$library.fasta' '$library.db_name'
-            #end if
-        #end if
-
-        python '$__tool_directory__/ariba_database_builder.py'  --out '${out_file}'
     ]]>
     </command>
      <inputs>
         <conditional name="library">
         <param name="lib_type" type="select" label="Input reads type or collection" help="Select a curated database or a fasta from the history">
                 <option value="curated" selected="true">Curated Database</option>
+                <option value="mlst" selected="true">MLST</option>
                 <option value="fasta">A fasta file</option>
         </param>
         <when value="curated">
-        <param name="curated" type="select" multiple="true" label="Select partial library to download">
-            <option value="card">CARD</option>
-            <option value="resfinder">Resfinder</option>
-            <option value="plasmidfinder">Plasmidfinder</option>
-            <option value="megares">Megares</option>
-            <option value="argannot">Argannot</option>
-            <option value="vfdb_core">vfdb_core</option>
-            <option value="vfdb_full">vfdb_full</option>
-            <option value="virulencefinder">virulencefinder</option>
-        </param>
+            <param name="db" type="select" multiple="false" label="Select partial library to download">
+                <option value="card">CARD</option>
+                <option value="resfinder">Resfinder</option>
+                <option value="plasmidfinder">Plasmidfinder</option>
+                <option value="megares">Megares</option>
+                <option value="argannot">Argannot</option>
+                <option value="vfdb_core">vfdb_core</option>
+                <option value="vfdb_full">vfdb_full</option>
+                <option value="virulencefinder">virulencefinder</option>
+            </param>
+        </when>
+        <when value="mlst">
+            <param name="db" type="select" multiple="false" label="Select a species">
+                <option value="achs">Achromobacter spp.</option>
+                <option value="acib1">Acinetobacter baumannii#1</option>
+                <option value="acib2">Acinetobacter baumannii#2</option>
+                <option value="aers">Aeromonas spp.</option>
+                <option value="anap">Anaplasma phagocytophilum</option>
+                <option value="arcs">Arcobacter spp.</option>
+                <option value="aspf">Aspergillus fumigatus</option>
+                <option value="bacc">Bacillus cereus</option>
+                <option value="bacl">Bacillus licheniformis</option>
+                <option value="bacs">Bacillus subtilis</option>
+                <option value="barb">Bartonella bacilliformis</option>
+                <option value="barh">Bartonella henselae</option>
+                <option value="bors">Bordetella spp.</option>
+                <option value="borr">Borrelia spp.</option>
+                <option value="brah">Brachyspira hampsonii</option>
+                <option value="brach">Brachyspira hyodysenteriae</option>
+                <option value="brai">Brachyspira intermedia</option>
+                <option value="brap">Brachyspira pilosicoli</option>
+                <option value="bras">Brachyspira spp.</option>
+                <option value="brus">Brucella spp.</option>
+                <option value="bucc">Burkholderia cepacia complex</option>
+                <option value="burp">Burkholderia pseudomallei</option>
+                <option value="camc">Campylobacter concisus/curvus</option>
+                <option value="camf">Campylobacter fetus</option>
+                <option value="camh">Campylobacter helveticus</option>
+                <option value="rlis">Campylobacter hyointestinalis</option>
+                <option value="cami">Campylobacter insulaenigrae</option>
+                <option value="camj">Campylobacter jejuni</option>
+                <option value="caml">Campylobacter lanienae</option>
+                <option value="rari">Campylobacter lari</option>
+                <option value="cams">Campylobacter sputorum</option>
+                <option value="camu">Campylobacter upsaliensis</option>
+                <option value="cana">Candida albicans</option>
+                <option value="cang">Candida glabrata</option>
+                <option value="cank">Candida krusei</option>
+                <option value="cant">Candida tropicalis</option>
+                <option value="cals">Candidatus Liberibacter solanacearum</option>
+                <option value="carm">Carnobacterium maltaromaticum</option>
+                <option value="chls">Chlamydiales spp.</option>
+                <option value="citf">Citrobacter freundii</option>
+                <option value="clos">Clonorchis sinensis</option>
+                <option value="clob">Clostridium botulinum</option>
+                <option value="clod">Clostridium difficile</option>
+                <option value="mcum">Clostridium septicum</option>
+                <option value="cord">Corynebacterium diphtheriae</option>
+                <option value="cros">Cronobacter spp.</option>
+                <option value="dicn">Dichelobacter nodosus</option>
+                <option value="edws">Edwardsiella spp.</option>
+                <option value="entc">Enterobacter cloacae</option>
+                <option value="entf">Enterococcus faecalis</option>
+                <option value="sium">Enterococcus faecium</option>
+                <option value="escc1">Escherichia coli#1</option>
+                <option value="escc2">Escherichia coli#2</option>
+                <option value="flap">Flavobacterium psychrophilum</option>
+                <option value="gala">Gallibacterium anatis</option>
+                <option value="haei">Haemophilus influenzae</option>
+                <option value="haep">Haemophilus parasuis</option>
+                <option value="helc">Helicobacter cinaedi</option>
+                <option value="help">Helicobacter pylori</option>
+                <option value="hels">Helicobacter suis</option>
+                <option value="kink">Kingella kingae</option>
+                <option value="klea">Klebsiella aerogenes</option>
+                <option value="kleo">Klebsiella oxytoca</option>
+                <option value="klep">Klebsiella pneumoniae</option>
+                <option value="kuds">Kudoa septempunctata</option>
+                <option value="lacs">Lactobacillus salivarius</option>
+                <option value="leps">Leptospira spp.</option>
+                <option value="leps2">Leptospira spp.#2</option>
+                <option value="leps3">Leptospira spp.#3</option>
+                <option value="lism">Listeria monocytogenes</option>
+                <option value="macc">Macrococcus canis</option>
+                <option value="scus">Macrococcus caseolyticus</option>
+                <option value="manh">Mannheimia haemolytica</option>
+                <option value="melp">Melissococcus plutonius</option>
+                <option value="morc">Moraxella catarrhalis</option>
+                <option value="mycs">Mycobacteria spp.</option>
+                <option value="myca">Mycobacterium abscessus</option>
+                <option value="mycm">Mycobacterium massiliense</option>
+                <option value="mycoa">Mycoplasma agalactiae</option>
+                <option value="mycb">Mycoplasma bovis</option>
+                <option value="mych">Mycoplasma hyopneumoniae</option>
+                <option value="anis">Mycoplasma hyorhinis</option>
+                <option value="myci">Mycoplasma iowae</option>
+                <option value="mycp">Mycoplasma pneumoniae</option>
+                <option value="mycos">Mycoplasma synoviae</option>
+                <option value="neis">Neisseria spp.</option>
+                <option value="orit">Orientia tsutsugamushi</option>
+                <option value="ornr">Ornithobacterium rhinotracheale</option>
+                <option value="pael">Paenibacillus larvae</option>
+                <option value="pasm1">Pasteurella multocida#1</option>
+                <option value="pasm2">Pasteurella multocida#2</option>
+                <option value="pedp">Pediococcus pentosaceus</option>
+                <option value="phod">Photobacterium damselae</option>
+                <option value="piss">Piscirickettsia salmonis</option>
+                <option value="porg">Porphyromonas gingivalis</option>
+                <option value="proa">Propionibacterium acnes</option>
+                <option value="psea">Pseudomonas aeruginosa</option>
+                <option value="psef">Pseudomonas fluorescens</option>
+                <option value="psep">Pseudomonas putida</option>
+                <option value="rhos">Rhodococcus spp.</option>
+                <option value="riea">Riemerella anatipestifer</option>
+                <option value="sale">Salmonella enterica</option>
+                <option value="sapp">Saprolegnia parasitica</option>
+                <option value="sins">Sinorhizobium spp.</option>
+                <option value="staa">Staphylococcus aureus</option>
+                <option value="stae">Staphylococcus epidermidis</option>
+                <option value="stah">Staphylococcus haemolyticus</option>
+                <option value="snis">Staphylococcus hominis</option>
+                <option value="stal">Staphylococcus lugdunensis</option>
+                <option value="stap">Staphylococcus pseudintermedius</option>
+                <option value="stem">Stenotrophomonas maltophilia</option>
+                <option value="stra">Streptococcus agalactiae</option>
+                <option value="sbcx">Streptococcus bovis/equinus complex (SBSEC)</option>
+                <option value="strc">Streptococcus canis</option>
+                <option value="stde">Streptococcus dysgalactiae equisimilis</option>
+                <option value="strg">Streptococcus gallolyticus</option>
+                <option value="stro">Streptococcus oralis</option>
+                <option value="strp">Streptococcus pneumoniae</option>
+                <option value="snes">Streptococcus pyogenes</option>
+                <option value="strs">Streptococcus suis</option>
+                <option value="strt">Streptococcus thermophilus</option>
+                <option value="strt2">Streptococcus thermophilus#2</option>
+                <option value="stru">Streptococcus uberis</option>
+                <option value="strz">Streptococcus zooepidemicus</option>
+                <option value="sspp">Streptomyces spp</option>
+                <option value="tays">Taylorella spp.</option>
+                <option value="tens">Tenacibaculum spp.</option>
+                <option value="trep">Treponema pallidum</option>
+                <option value="triv">Trichomonas vaginalis</option>
+                <option value="ures">Ureaplasma spp.</option>
+                <option value="vibc">Vibrio cholerae</option>
+                <option value="vibc2">Vibrio cholerae#2</option>
+                <option value="vibp">Vibrio parahaemolyticus</option>
+                <option value="vibs">Vibrio spp.</option>
+                <option value="vibt">Vibrio tapetis</option>
+                <option value="vibv">Vibrio vulnificus</option>
+                <option value="wolb">Wolbachia</option>
+                <option value="xylf">Xylella fastidiosa</option>
+                <option value="yerp">Yersinia pseudotuberculosis</option>
+                <option value="yerr">Yersinia ruckeri</option>
+                <option value="yers">Yersinia spp.</option>
+            </param>
         </when>
          <when value="fasta">
-            <param name="fasta" type="data" format="fasta" optional="false" />
-            <param name="db_name" type="text" label="DB name" help = "The DB name should include no space and special characters" />
+            <param name="fasta" type="data" format="fasta,fasta.gz" optional="false" />
+            <param name="db" type="text" label="DB name" help = "The DB name should include no space, special characters, and must be uniquely different to the name predefined in curated and mlst list" />
             <param name="coding" type="boolean" truevalue="yes" falsevalue="no" checked="False" label="Coding sequence?" />
          </when>
          </conditional>
