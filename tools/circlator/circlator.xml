@@ -1,0 +1,128 @@
+<tool id="circlator" name="Circlator: A tool to circularize genome assemblies" version="0.1.0">
+  <description>
+     This task runs the complete Circlator pipeline. It runs the tasks: progcheck, mapreads, bam2reads, assemble, merge, clean, fixstart.
+  </description>
+  <requirements>
+    <requirement type="package" version="1.5.5=py_2">circlator</requirement>
+    <requirement type="package" version="3.23">mummer</requirement>
+    <requirement type="package" version="1.6">canu</requirement>
+  </requirements>
+  <command detect_errors="exit_code"><![CDATA[
+    circlator all 
+    --threads \${GALAXY_SLOTS:-4}
+    #if str($assembly.canu_or_spades.assembler) == "spades"
+      --assembler spades
+      ${assembly.canu_or_spades.not_careful}
+      ${assembly.canu_or_spades.not_only_assembler}
+    #else if str($assembly.canu_or_spades.assembler) == "canu"
+      --assembler canu 
+      --data_type ${assembly.canu_or_spades.datatype}
+    #end if
+    ${assembly.split_all_reads}
+    ${assembly.assemble_spades_use_first}
+    #if str($mapreads.bwa_opts) != ""
+      --bwa_opts "$mapreads.bwa_opts"
+    #end if
+    ${bam2read.b2r_discard}
+    #if str($bam2read.b2r_length_cutoff) != ""
+      --b2r_length_cutoff ${bam2read.b2r_length_cutoff}
+    #end if
+    #if str($bam2read.b2r_min_read_length) != ""
+      --b2r_min_read_length ${bam2read.b2r_min_read_length}
+    #end if
+    #if str($fix.fixstart_mincluster) != ""
+      --fixstart_mincluster $fix.fixstart_mincluster
+    #end if
+    #if str($fix.fixstart_min_id) != ""
+      --fixstart_min_id $fix.fixstart_min_id
+    #end if
+    $file_contigs $file_reads outdir
+    ]]></command>
+  <environment_variables>
+    <environment_variable name="LC_ALL">C</environment_variable>
+  </environment_variables>
+  <inputs>
+    <param type="data" name="file_reads" label="Reads to be mapped to contig, in any format BWA MEM accepts" format="fastqsanger,fastqsanger.gz,fasta, fasta.gz" />
+    <param type="data" name="file_contigs" label="Assembly (contigs)" format="fasta" />
+
+    <section name="assembly" title="Assembly">
+      <conditional name="canu_or_spades">
+        <param name="assembler" type="select" label="Assembler to use for reassemblies" >
+          <option value="spades" selected="true">SPAdes</option>
+          <option value="canu">Canu</option>
+        </param>
+        <when value="canu">
+          <param name="datatype" type="select" label="one of the 4 types of data analysed" >
+            <option value="pacbio-corrected" selected="true">pacbio corrected</option>
+            <option value="pacbio-raw">pacbio raw</option>
+            <option value="nanopore-corrected">nanopore corrected</option>
+            <option value="nanopore-raw">nanopore raw</option>
+          </param>
+        </when>
+        <when value="spades">
+          <param name="not_careful" argument="--assemble_not_careful" type="boolean" truevalue="--assemble_not_careful" falsevalue="" checked="false" 
+            label="Do not use the --careful option with SPAdes" help="note that this circlator option is to NOT use an option from SPAdes; if unsure, leave it unchekced" />
+          <param name="not_only_assembler" argument="--assemble_not_only_assembler" truevalue="--assemble_not_only_assembler" falsevalue=""
+            type="boolean" checked="false" label="Do not use the --assemble-only option with SPAdes. Important: with this option, the input reads must 
+            be in FASTQ format, otherwise SPAdes will crash because it needs quality scores to correct the reads." 
+            help="note that this circlator option is to NOT use an option from SPAdes; if unsure, leave it unchecked"/>
+        </when>
+      </conditional>
+      <param name="split_all_reads" argument="--split_all_reads" type="boolean" truevalue="--split_all_reads" falsevalue="" checked="false" 
+        label="By default, reads mapped to shorter contigs are left unchanged. This option splits them into two, broken at the middle of the 
+        contig to try to force circularization. May help if the assembler does not detect circular contigs (eg canu)" />
+      <param name="assemble_spades_use_first" argument="--assemble_spades_use_first" truevalue="--assemble_spades_use_first" falsevalue=""
+        checked="false" type="boolean" label="Use the first successful SPAdes assembly. Default is to try all kmers and use the assembly with 
+        the largest N50" />
+
+    </section>
+    <section name="mapreads" title="mapreads options">
+      <param name="bwa_opts" type="text" label="text with BWA options (exactly as used by BWA MEM)"/>
+    </section>
+
+    <section name="bam2read" title="bam2reads options">
+      <param name="b2r_discard" argument="--b2r_discard_unmapped" truevalue="--b2r_discard_unmapped" falsevalue="" checked="false" type="boolean"
+        label="Check this to not keep unmapped reads" />
+      <param name="b2r_length_cutoff" type="integer" label="All reads mapped to contigs shorter than this will be kept (default=100000)" optional="true"/>
+      <param name="b2r_min_read_length" type="integer" label="Minimum length of read to output (defaul=250)" optional="true"/>
+    </section>
+
+    <section name="fix" title="fixstart options">
+      <param name="fixstart_mincluster" type="integer" label="The -c|mincluster option of promer. Overrides promer's default value" optional="true"/>
+      <param name="fixstart_min_id" type="float" label="Minimum percent identity of promer match between contigs and gene(s) to use as start point (dafault=70)" optional="true"/>
+    </section>
+
+  </inputs>
+  <outputs>
+    <data name="output_fasta" label="Output file of rearranged contigs" format="fasta" from_work_dir="outdir/06.fixstart.fasta" />
+    <data name="output_log" label="Log information" format="tabular" from_work_dir="outdir/06.fixstart.log" />
+  </outputs>
+  <tests>
+    <test>
+      <param name="file_contigs" value="test_contigs.fa"/>
+      <param name="file_reads" value="test_reads.fq.gz"/>
+      <output name="output_log" file="06.fixstart.log"/>
+    </test>
+  </tests>
+  <help><![CDATA[
+    The input is a genome assembly in FASTA format and corrected PacBio or nanopore reads in FASTA or FASTQ format. 
+    Circlator will attempt to identify each circular sequence and output a linearised version of it. 
+    It does this by assembling all reads that map to contig ends and comparing the resulting contigs with the input assembly.  
+
+    The input assembly must not be too fragmented. Although Circlator will join contigs together, whenever it can identify contigs that can be 
+    unambiguously joined, its main aim is to circularize the core genome and plasmids.
+
+    Any contigs that were identified as circular then have their start position changed.
+
+    Currently it does not download the uniprot database and it does not run the minimus2 pipeline. Even when running canu it may give warning messages about the SPAdes version, 
+    you can safely ignore those.
+    ]]></help>
+  <citations>
+    <citation type="bibtex">
+      @misc{github,
+      publisher = {GitHub},
+      journal = {GitHub repository},
+      url = {https://github.com/sanger-pathogens/circlator/},
+      }</citation>
+  </citations>
+</tool>
