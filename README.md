@@ -14,3 +14,5 @@
 - **[tiptoft](https://github.com/quadram-institute-bioscience/tiptoft)** Predict plasmids from uncorrected long read data
 - **[nanofilt](https://github.com/wdecoster/nanofilt)** Filtering and trimming of long read sequencing data
 - **[nanostat](https://github.com/wdecoster/nanostat)** Create statistic summary of an Oxford Nanopore read dataset
+- **[circlator](https://sanger-pathogens.github.io/circlator/)** A tool to circularize genome assemblies 
+- **[iqtree](http://www.iqtree.org/)** A fast and effective stochastic algorithm to infer phylogenetic trees by maximum likelihood
