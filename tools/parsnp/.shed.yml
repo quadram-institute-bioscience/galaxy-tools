@@ -1,0 +1,8 @@
+categories: [Sequence Analysis]
+description: Rapid core genome multi-alignment
+long_description: Parsnp takes both draft and finished genomes of closely related strains as input, performs conservative core genome alignment and as output returns multi-alignments (XMFA), variants (VCF), core genome phylogeny (Newick) and Gingr input format (GGR).
+homepage_url: https://harvest.readthedocs.io
+name: parsnp
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/parsnp
+type: unrestricted

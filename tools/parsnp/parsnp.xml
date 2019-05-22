@@ -1,0 +1,102 @@
+<tool id="parsnp" name="Parsnp" version="@VERSION@">
+    <description>Rapid core genome multi-alignment</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <version_command>flye --version</version_command>
+    <command detect_errors="exit_code">
+    <![CDATA[
+    mkdir genomes &&
+    #for $counter, $input in enumerate($inputs):
+        ln -s '$input' genomes/'${input.element_identifier}' &&
+    #end for
+
+    parsnp 
+    -r $reference
+    -d genomes
+    -p \${GALAXY_SLOTS:-1}
+    
+    #if str($mumi.u) != "0"
+        -U str($mumi.u)
+    #end if
+    
+    #if $mumi.m
+        $mumi.m
+    #end if
+
+    #if str($mumi.u) != "0"
+        -i str($mumi.u)
+    #end if
+
+    #if str($mum_search.a) != "0"
+        -a str($mum_search.u)
+    #end if
+
+    #if str($mum_search.c) != "100"
+        -C str($mum_search.c)
+    #end if
+
+    #if str($mum_search.z) != "25"
+        -z str($mum_search.c)
+    #end if
+
+    #if str($lcb_alignment.d) != "0.12"
+        -z str($lcb_alignment.d)
+    #end if
+
+    #if $lcb_alignment.e
+        $lcb_alignment.e
+    #end if
+
+    #if $lcb_alignment.u
+        $lcb_alignment.u
+    #end if
+
+    #if $x
+        $x
+    #end if
+
+    -o out_dir
+    
+    > $parsnplog
+
+    ]]></command>
+    <inputs>
+        <param name="inputs" type="data" format="fasta,fasta.gz" multiple="true" label="Input fasta" />
+        <param name="reference" type="data" format="fasta,fasta.gz" multiple="false" label="Reference" />
+        <section name="mumi" title="MUMi options" expanded="false">
+            <param name="u" type="float" value="0" label="max MUMi distance value for MUMi distribution" help="" />
+            <param name="m" type="boolean" truevalue="-M" falsevalue="" checked="false" label=" calculate MUMi and exit?" help="" />
+            <param name="i" type="float" value="0" label="max MUM(i) distance" help="" />
+        </section>
+        <section name="mum_search" title="MUM search" expanded="false">
+            <param name="a" type="integer" value="0" label="min (a)NCHOR length" help="(default = 1.1*Log(S))" />
+            <param name="c" type="integer" value="100" label="maximal cluster D value?" help="(default=100)" />
+            <param name="z" type="integer" value="25" label="min LCB si(z)e?" help="(default=25)" />
+        </section>
+        <section name="lcb_alignment" title="LCB alignment" expanded="false">
+            <param name="d" type="integer" value="0" label="maximal diagonal difference? Either percentage (e.g. 0.2) or bp (e.g. 100bp)" help="(default = 0.12)"/>
+            <param name="e" type="boolean" truevalue="-e" falsevalue="" checked="false" label="greedily extend LCBs?" help="experimental! (default = NO)"/>
+            <param name="u" type="boolean" truevalue="-u" falsevalue="" checked="false" label="output unaligned regions? .unaligned" help="(default: NO)"/>
+        </section>
+        <param name="x" type="boolean" truevalue="-x" falsevalue="" checked="false" label="enable filtering of SNPs located in PhiPack identified regions of recombination?" help="(default = NO)"/>
+    </inputs>
+    <outputs>
+        <data name="tree" format="fasta" from_work_dir="out_dir/parsnp.tree" label="${tool.name} on ${on_string} (tree)"/>
+        <data name="snps" format="tabular" from_work_dir="out_dir/parsnp.vcf" label="${tool.name} on ${on_string} (SNPs)"/>
+        <data name="gingr" format="graph_dot" from_work_dir="out_dir/parsnp.ggr" label="${tool.name} on ${on_string} (Gingr)"/>
+        <data name="xmfa" format="txt" from_work_dir="out_dir/parsnp.xmfa" label="${tool.name} on ${on_string} (XMFA formatted multiple alignment)"/>
+        <data name="parsnplog" format="txt" label="${tool.name} on ${on_string} Log"/>
+    </outputs>
+    
+    <tests>       
+    </tests>
+    <help><![CDATA[
+
+        Parsnp takes both draft and finished genomes of closely related strains as input, performs conservative core genome alignment and as output returns multi-alignments (XMFA), variants (VCF), core genome phylogeny (Newick) and Gingr input format (GGR).
+        https://harvest.readthedocs.io/en/latest/content/parsnp/faq.html
+
+    ]]></help>
+    <expand macro="citations" />
+</tool>
