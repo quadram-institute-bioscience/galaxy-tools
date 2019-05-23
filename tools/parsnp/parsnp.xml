@@ -4,12 +4,13 @@
         <import>macros.xml</import>
     </macros>
     <expand macro="requirements" />
-    <version_command>flye --version</version_command>
+    <expand macro="version_command" />
     <command detect_errors="exit_code">
     <![CDATA[
+    
     mkdir genomes &&
     #for $counter, $input in enumerate($inputs):
-        ln -s '$input' genomes/'${input.element_identifier}' &&
+        ln -s '$input' 'genomes/${input.element_identifier}' &&
     #end for
 
     parsnp 
@@ -17,32 +18,32 @@
     -d genomes
     -p \${GALAXY_SLOTS:-1}
     
-    #if str($mumi.u) != "0"
-        -U str($mumi.u)
+    #if str($mumi.u) != "0.0"
+        -U $mumi.u
     #end if
     
     #if $mumi.m
         $mumi.m
     #end if
 
-    #if str($mumi.u) != "0"
-        -i str($mumi.u)
+    #if str($mumi.u) != "0.0"
+        -i $mumi.u
     #end if
 
     #if str($mum_search.a) != "0"
-        -a str($mum_search.u)
+        -a $mum_search.u
     #end if
 
     #if str($mum_search.c) != "100"
-        -C str($mum_search.c)
+        -C $mum_search.c
     #end if
 
     #if str($mum_search.z) != "25"
-        -z str($mum_search.c)
+        -z $mum_search.c
     #end if
 
     #if str($lcb_alignment.d) != "0.12"
-        -z str($lcb_alignment.d)
+        -z $lcb_alignment.d
     #end if
 
     #if $lcb_alignment.e
@@ -76,7 +77,7 @@
             <param name="z" type="integer" value="25" label="min LCB si(z)e?" help="(default=25)" />
         </section>
         <section name="lcb_alignment" title="LCB alignment" expanded="false">
-            <param name="d" type="integer" value="0" label="maximal diagonal difference? Either percentage (e.g. 0.2) or bp (e.g. 100bp)" help="(default = 0.12)"/>
+            <param name="d" type="float" value="0.12" label="maximal diagonal difference? Either percentage (e.g. 0.2) or bp (e.g. 100bp)" help="(default = 0.12)"/>
             <param name="e" type="boolean" truevalue="-e" falsevalue="" checked="false" label="greedily extend LCBs?" help="experimental! (default = NO)"/>
             <param name="u" type="boolean" truevalue="-u" falsevalue="" checked="false" label="output unaligned regions? .unaligned" help="(default: NO)"/>
         </section>
