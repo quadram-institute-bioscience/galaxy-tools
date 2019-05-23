@@ -6,10 +6,12 @@
     <expand macro="requirements" />
     <expand macro="version_command" />
     <command detect_errors="exit_code"><![CDATA[
-
-        #set $_input_file = "'{}'".format($assembly.element_identifier)
-        ln -s '${assembly}' ${_input_file} &&
-
+        #import re
+        #import os.path
+        
+        #set $_input_file = re.sub(r'(\s|\(|\)|:|!)', '_', str($assembly.element_identifier))
+        ln -s '${assembly}' $_input_file && 
+        
         socru 
 
         --threads \${GALAXY_SLOTS:-4}
@@ -21,7 +23,7 @@
         #end if
         
         #if $opt_args.not_circular
-            --not_circular
+            $opt_args.not_circular
         #end if
 
         --min_bit_score $opt_args.min_bit_score
@@ -35,7 +37,7 @@
     ]]></command>
     
     <inputs>
-        <param name="assembly" type="data" format="fasta" label="Select fasta dataset" help=""/>
+        <param name="assembly" type="data" format="fasta,fasta.gz" label="Select fasta dataset" help=""/>
         <param name="species" type="select" label="Select a species" >
             <option value="Acetobacter_ascendens">Acetobacter_ascendens</option>
             <option value="Acetobacter_pasteurianus">Acetobacter_pasteurianus</option>
