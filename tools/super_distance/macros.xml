@@ -1,0 +1,17 @@
+<macros>
+  <token name="@VERSION@">1.1.0</token>
+  <xml name="requirements">
+    <requirements>
+      <requirement type="package" version="@VERSION@">super_distance</requirement>
+      <yield/>
+    </requirements>
+  </xml>
+  <xml name="version_command">
+    <version_command>super_distance --version</version_command>
+  </xml>
+  <xml name="citations">
+    <citations>
+      <yield />
+    </citations>
+  </xml>
+</macros>

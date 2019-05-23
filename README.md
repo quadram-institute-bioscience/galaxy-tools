@@ -17,3 +17,4 @@
 - **[nanostat](https://github.com/wdecoster/nanostat)** Create statistic summary of an Oxford Nanopore read dataset
 - **[circlator](https://sanger-pathogens.github.io/circlator/)** A tool to circularize genome assemblies 
 - **[iqtree](http://www.iqtree.org/)** A fast and effective stochastic algorithm to infer phylogenetic trees by maximum likelihood
+- **[super_distance](https://github.com/quadram-institute-bioscience/super_distance)** Matrix Representation with Distances: calculates pairwise distances between gene leaves, and estimates species
