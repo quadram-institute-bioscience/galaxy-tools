@@ -28,7 +28,7 @@
 
     ]]></command>
   <inputs>
-    <param name="inputtre" multiple="true" type="data" format="txt,nhx" label="input (gene) trees in newick format (can have more than one tree per file)"/>
+    <param name="inputtre" multiple="true" type="data" format="nhx" label="input (gene) trees in newick format (can have more than one tree per file)"/>
 
     <param name="spnames" type="data" format="txt,tabular" label="File with list of species names" optional="true">
       <help><![CDATA[
@@ -71,17 +71,18 @@
     </test>
   </tests>
     <help><![CDATA[
-      Matrix Representation with Distances: calculates pairwise distances between gene leaves, and estimates species trees from summary distance matrices <br/>
+      Matrix Representation with Distances: calculates pairwise distances between gene leaves, and estimates species trees from summary distance matrices 
       This software implements a class of methods called Matrix Representation with Distances (MRD), with emphasis on whole 
-      gene families (i.e. gene trees that may contain paralogs) for species tree inference. <br/>
-      The two main output trees are the <b>Nodal</b> and the <b>Average</b> supertrees. If the "--fast" option was not selected, then the file <b>All</b> 
-      supertrees will have several other estimates (otherwise it will have only the two main supertrees).<br/><br/>
+      gene families (i.e. gene trees that may contain paralogs) for species tree inference. 
+      The two main output trees are the *Nodal* and the *Average* supertrees. If the "--fast" option was not selected, then the file *All* 
+      supertrees will have several other estimates (otherwise it will have only the two main supertrees).
+
       
       The "Nodal" supertree is estimated from nodal distances betweeen gene tree leaves (equivalent to assuming equal branch lengths), but its final branch lengths 
       are estimated by least squares using the average branch lengths. The "Average" supertree uses this information directly, and both supertrees are estimated by 
-      UPGMA.<br/>
-      <hr>
-      <br/>
+      UPGMA.
+      
+
       super_distance  [-h|--help] [-v|--version] [-F|--fast] [-e|--epsilon=<double>] [-s|--species=<species names>] [-o|--output=<newick>] <file> [<file>]...
 
       Based on several rescaled patristic distances, the program takes the average matrix between genes and estimates
