@@ -1,0 +1,9 @@
+categories: [Phylogenetics] 
+description: 'Matrix Representation with Distances: calculates pairwise distances between gene leaves, and estimates species trees from summary distance matrices'
+long_description: |
+  This software implements a class of methods called Matrix Representation with Distances (MRD), with emphasis on whole
+  gene families (i.e. gene trees that may contain paralogs) for species tree inference.
+homepage_url: https://github.com/quadram-institute-bioscience/super_distance 
+type: unrestricted
+name: super_distance
+owner: leomrtns

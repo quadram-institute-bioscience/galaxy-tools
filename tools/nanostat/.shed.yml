@@ -1,0 +1,8 @@
+categories: [Sequence Analysis]
+description: Calculate various statistics from a long read sequencing dataset in fastq, bam or albacore sequencing summary format
+long_description: |
+  Create statistic summary of an Oxford Nanopore read dataset
+homepage_url: https://github.com/wdecoster/nanostat
+name: nanostat
+owner: leomrtns
+type: unrestricted

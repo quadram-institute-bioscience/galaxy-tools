@@ -1,0 +1,113 @@
+<tool id="super_distance" name="Super_distance" version="@VERSION@">
+  <description>Supertree estimation using matrix representation with distances </description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+      #set $spaced_input = ''
+      #for $i_file in $inputtre:
+        #set $_input_file = "'{}'".format($i_file)
+        #set $spaced_input = $spaced_input + ' ' + $_input_file
+      #end for
+
+      super_distance $fast
+      #if str($spnames) != ""
+      -s $spnames
+      #end if
+      -o ./all.tre 
+      ${spaced_input} &&
+      #if str($fast) != ""
+        sed -n '1p' ./all.tre > ./nodal.tre &&
+        sed -n '2p' ./all.tre > ./average.tre
+      #else
+        sed -n '3p' ./all.tre > ./nodal.tre &&
+        sed -n '9p' ./all.tre > ./average.tre
+      #end if
+
+    ]]></command>
+  <inputs>
+    <param name="inputtre" multiple="true" type="data" format="nhx" label="input (gene) trees in newick format (can have more than one tree per file)"/>
+
+    <param name="spnames" type="data" format="txt,tabular" label="File with list of species names" optional="true">
+      <help><![CDATA[
+        This file is optional, but highly recommended unless all trees came from same dataset (leaves have same names etc.). 
+        This list will define leaves in species tree, and allow for paralogs (i.e. several leaves in gene tree with same label).
+        ]]></help>
+    </param>
+
+    <param name="fast" type="boolean" truevalue="--fast" falsevalue="" checked="true" label="Fast estimation (for large supertrees)">
+      <help><![CDATA[
+        If you don't chose fast estimation, a lot of trees will be output to same file, which must then  be inspected by user. 
+        The first two trees from this file are collected as individual tree files. The fast option is in theory 18x faster than the regular run, since 
+        it estimates only 2 instead of 36 species trees (assuming UPGMA/NJ is the overwhelming step). 
+        ]]></help>
+    </param>
+
+    <param name="epslon" type="float" label="polytomy tolerance" min="0.0" optional="true">
+      <help><![CDATA[ 
+        Small value, below which a branch length is considered zero for nodal distances. Default is 1e-7. 
+        ]]></help>
+    </param>
+  </inputs>
+  <outputs>
+     <data name="alltrees" format="nhx" label="All supertrees" from_work_dir="all.tre" />
+     <data name="nodaltree" format="nhx" label="Nodal supertree" from_work_dir="nodal.tre" />
+     <data name="averagetree" format="nhx" label="Average supertree" from_work_dir="average.tre" />
+
+  </outputs>
+  <tests>
+    <test>
+      <param name="spnames" value="species_names.txt"/>
+      <param name="fast" value="true"/>
+      <param name="inputtre" value="HOG1.tre,HOG2.tre,HOG3.tre,HOG4.tre,HOG5.tre"/>
+      <output name='nodaltree'>
+        <assert_contents><has_text_matching expression="[F00]"/></assert_contents>
+      </output>
+      <output name='averagetree'>
+        <assert_contents><has_text_matching expression="[F01]"/></assert_contents>
+      </output>
+    </test>
+  </tests>
+    <help><![CDATA[
+      Matrix Representation with Distances: calculates pairwise distances between gene leaves, and estimates species trees from summary distance matrices 
+      This software implements a class of methods called Matrix Representation with Distances (MRD), with emphasis on whole 
+      gene families (i.e. gene trees that may contain paralogs) for species tree inference. 
+      The two main output trees are the *Nodal* and the *Average* supertrees. If the "--fast" option was not selected, then the file *All* 
+      supertrees will have several other estimates (otherwise it will have only the two main supertrees).
+
+      
+      The "Nodal" supertree is estimated from nodal distances betweeen gene tree leaves (equivalent to assuming equal branch lengths), but its final branch lengths 
+      are estimated by least squares using the average branch lengths. The "Average" supertree uses this information directly, and both supertrees are estimated by 
+      UPGMA.
+      
+
+      super_distance  [-h|--help] [-v|--version] [-F|--fast] [-e|--epsilon=<double>] [-s|--species=<species names>] [-o|--output=<newick>] <file> [<file>]...
+
+      Based on several rescaled patristic distances, the program takes the average matrix between genes and estimates
+      the species tree using bioNJ, UPGMA and single-linkage after scaling back to the original values (more below). The program 
+      also uses a distance matrix to project branch lengths on species trees missing lengths; 
+
+      The branch length rescaling per gene can be the minimum, the average, the total sum, etc. and at the end these values
+      averaged over trees are scaled back in the final distance matrix, such that lengths in the supertree (species tree) are interpretable.
+      One exception is the nodal distance, which is based on the number of nodes between two leaves (e.g. NJst). In this case it may make
+      more sense to use another distance matrix to infer the branch lengths. Option 'F' uses averages distances projected on nodal-estimated tree; 
+      it uses fewer scalings/options, providing a fast estimation. We avoid using individual gene trees since they may have 
+      missing information (missing species or species pairs). For missing comparisons (when two species are never seen in the same gene tree)
+      we use the ultrametric condition (comparison to a common species) to estimate its value.
+
+      If a file with species names is given, the program allows for paralogs; otherwise it assumes orthology and that _at_least_ one tree has no missing data:
+      * Paralogy: the species names will be mapped to individual gene tree leaves (e.g. `ECOLI_a` and `ECOLI_b` will both map to species `ECOLI`).
+      Each gene tree can therefore have several copies of each species, and can also have missing species.
+      * Orthology: if a file with species names is not given, however, it is assumed that each species is represented at most once per gene, and
+      furthermore that the leaf names represent the species, and are thus identical across trees. This mode is the underlying assumption behind
+      most tree comparison software, although here missing data for some trees (not all) is allowed. I.e. as long as one tree has full information
+      (for all species), then others can have some absent species.
+      With paralogs or not, it is not recommended to have missing entries in the distance matrix (e.g. when a species pair does not appear in any tree),
+      and matrix representation with distances methods work better with more 'complete' gene trees. If there are no paralogs, many supertrees will be equivalent, 
+      as well as if the input trees lack lengths (only topological information).
+
+    ]]></help>
+    <expand macro="citations" />
+</tool>
