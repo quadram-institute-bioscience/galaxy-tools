@@ -1,0 +1,9 @@
+categories: [Sequence Analysis]
+description: Pipeline to generate complete public health microbiology reports from sequenced isolates
+long_description: Pipeline to generate complete public health microbiology reports from sequenced isolates
+homepage_url: https://github.com/tseemann/nullarbor
+name: nullarbor
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/nullarbor
+type: unrestricted
+

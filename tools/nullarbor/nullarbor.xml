@@ -11,16 +11,16 @@
         
         nullarbor.pl
         --run
-        --cpus $opt.cpus
+        --cpus '$opt.cpus'
 
-        #if $opt.verbose
-            $opt.verbose
+        #if '$opt.verbose'
+            '$opt.verbose'
         #end if
         
         --gcode $adv_opt.gcode 
 
-        #if $opt.trim
-            $opt.trim
+        #if $adv_opt.trim
+            $adv_opt.trim
         #end if
 
         #if str($adv_opt.mlst) != "auto"
@@ -41,26 +41,26 @@
 
         --assembler $plugins.assembler
         
-        #if str($plugins.assembler-opt) != ""
-        --assembler-opt $plugins.assembler-opt
+        #if str($plugins.assembler_opt) != ""
+        --assembler_opt $plugins.assembler_opt
         #end if
        
         --treebuilder $plugins.treebuilder
         
-        #if str($plugins.treebuilder-opt) != ""
-        --treebuilder-opt $plugins.treebuilder-opt
+        #if str($plugins.treebuilder_opt) != ""
+        --treebuilder_opt $plugins.treebuilder_opt
         #end if
 
         --taxoner $plugins.taxoner
         
-        #if str($plugins.taxoner-opt) != ""
-        --taxoner-opt $plugins.taxoner-opt
+        #if str($plugins.taxoner_opt) != ""
+        --taxoner_opt $plugins.taxoner_opt
         #end if
 
         --annotator $plugins.annotator
         
-        #if str($plugins.annotator-opt) != ""
-        --annotator-opt $plugins.annotator-opt
+        #if str($plugins.annotator_opt) != ""
+        --annotator_opt $plugins.annotator_opt
         #end if
 
         --name $name 
@@ -75,9 +75,9 @@
         <param name="ref" type="data" format="fasta" label="Reference genome " help="Reference file in FASTA or GBK format"/>
         <param name="name" type="text" optional="False" label="Job name" help="" />
     
-        <section name='opt' title = "Options">
-        <param name="cpus" argument="--cpus" type="integer" value="8" label="CPUs" help="Maximum number of CPUs to use in total (Default: 8)" />
-        <param name="verbose" argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" label="Verbose" help="More screen output" />
+        <section name="opt" title="Options">
+            <param name="cpus" argument="--cpus" type="integer" value="8" label="CPUs" help="Maximum number of CPUs to use in total (Default: 8)" />
+            <param name="verbose" argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" label="Verbose" help="More screen output" />
         </section>
 
         <section name="adv_opt" title="Advanced Options">
@@ -225,30 +225,30 @@
         </section>
 
         <section name="plugins" title="Plugins">
-        <param name="treebuilder" argument="--assembler" type="select" label="Assembler to use" help="Which assembler would you like shovill to use, default is skesa">
+        <param name="assembler" argument="--assembler" type="select" label="Assembler to use" help="Which assembler would you like shovill to use, default is skesa">
             <option value="skesa" selected="True">skesa</option>
             <option value="skesa_fast">skesa fast</option>
             <option value="megahit">megahit</option>
             <option value="shovill">shovill</option>
             <option value="spades">Spades</option>
         </param>
-        <param name="assembler-opt" argument="--assembler-opt" type="text" value="" label="Extra assembler options to pass" help="" /> 
+        <param name="assembler_opt" argument="--assembler_opt" type="text" value="" label="Extra assembler options to pass" help="" /> 
         <param name="treebuilder" argument="--treebuilder" type="select" label="Tree-builder to use" help="Which tree builder would you like to use, default is iqtree_fast">
             <option value="fasttree">fasttree</option>
             <option value="iqtree">iqtree</option>
             <option value="iqtree_fast" selected="True">iqtree_fast</option>
             <option value="iqtree_slow">iqtree_slow</option>
         </param>
-        <param name="treebuilder-opt" argument="--treebuilder-opt" type="text" value="" label="Extra tree-builder options to pass" help="" /> 
+        <param name="treebuilder_opt" argument="--treebuilder_opt" type="text" value="" label="Extra tree-builder options to pass" help="" /> 
         <param name="taxoner" argument="--taxoner" type="select" label="Species ID tool to use" help="Which taxoner would you like to use, default is kraken">
             <option value="kraken" selected="True">kraken</option>
             <option value="centrifuge">centrifuge</option>
         </param>
-        <param name="taxoner-opt" argument="--taxoner-opt" type="text" value="" label="Extra taxoner options to pass" help="" /> 
+        <param name="taxoner_opt" argument="--taxoner_opt" type="text" value="" label="Extra taxoner options to pass" help="" /> 
         <param name="annotator" argument="--annotator" type="select" label="Genome annotator to use" help="Which genome annotator would you like to use, default is prokka_fast">
             <option value="prokka_fast" selected="True">prokka_fast</option>
         </param>
-        <param name="annotator-opt" argument="--annotator-opt" type="text" value="" label="Extra annotator options to pass" help="" /> 
+        <param name="annotator_opt" argument="--annotator_opt" type="text" value="" label="Extra annotator options to pass" help="" /> 
         </section>
 
      </inputs>

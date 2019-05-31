@@ -5,18 +5,17 @@
     </macros>
     <expand macro="requirements" />
     <command detect_errors="exit_code"><![CDATA[
-    est_abundance.py \
-    -i $input \
-    -k $kmer_distr \
-    -l $level \
-    -t $threshold \
-    -o $report
+    est_abundance.py 
+    -i '$input' 
+    -k $kmer_distr 
+    -l $level 
+    -t $threshold 
+    -o '$report'
     ]]>
     </command>
     
     <inputs>
         <param name="input" type="data" format="tabular" label="Kraken report file" />
-        <!-- DATABASE INPUT-->
         <param label="Select a Kmer distribution" name="kmer_distr" type="select">
             <options from_data_table="bracken_databases">
                 <validator message="No database is available" type="no_options" />
