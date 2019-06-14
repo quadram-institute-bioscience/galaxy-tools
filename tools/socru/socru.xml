@@ -487,6 +487,7 @@
         <data name="new_fragments" format="fasta" label="${tool.name} on ${on_string}: New fragments" from_work_dir="novel_fragments.fa"/>
         <data name="top_blast_hits" format="tabular" label="${tool.name} on ${on_string}: Top blast hits" from_work_dir="top_blast_hits.tsv"/>      
         <data name="output" format="tabular" label="${tool.name} on ${on_string}: Output"/>
+        <data name="plot" format="pdf" label="${tool.name} on ${on_string}: Plot" from_work_dir="genome_structure.pdf"/>
     </outputs>
 
     <tests>
