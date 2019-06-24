@@ -7,7 +7,7 @@
     <command detect_errors="exit_code"><![CDATA[
     est_abundance.py 
     -i '$input' 
-    -k $kmer_distr 
+    -k '$kmer_distr.fields.path' 
     -l $level 
     -t $threshold 
     -o '$report'
