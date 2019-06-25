@@ -16,7 +16,8 @@
         #set $named_input_files = ''
         #for $input_file in $ariba_reports
             ## Add single quotes around each input file identifier
-            #set $_input_file = "'{}'".format($input_file.element_identifier)
+            ##set $_input_file = "'{}'".format($input_file.element_identifier)
+            #set $_input_file = re.sub('[^\w\-_\.]', '_', $input_file.element_identifier)
             ln -s '${input_file}' ${_input_file} &&
             #set $named_input_files = $named_input_files + ' ' + $_input_file
         #end for
