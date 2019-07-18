@@ -11,24 +11,24 @@
     #if $inputs.input_type == 'paired':
         #set $safename_R1 = re.sub('[^\w\-_\.]', '_', $inputs.R1.element_identifier)
         #set $safename_R2 = re.sub('[^\w\-_\.]', '_', $inputs.R2.element_identifier)
-        ln -s '$input.R1' ${safename_R1}.fastq &&
-        ln -s '$input.R2' ${safename_R2}.fastq &&
+        ln -fs '$inputs.R1' ${safename_R1}.fastq &&
+        ln -fs '$inputs.R2' ${safename_R2}.fastq &&
     #elif $inputs.input_type == 'collection':
         #for $input in $inputs.input_collection
             #set $safename_fwd = re.sub('[^\w\-_\.]', '_', $input.forward.element_identifier)
-            ln -s $input.forward ${safename_fwd}.fastq &&
+            ln -fs $input.forward ${safename_fwd}.fastq &&
             #set $safename_rvs = re.sub('[^\w\-_\.]', '_', $input.reverse.element_identifier)
-            ln -s $input.reverse ${safename_rvs.element_identifier}.fastq &&
+            ln -fs $input.reverse ${safename_rvs}.fastq &&
         #end for
     #elif $inputs.input_type == 'sequence':
-        #for $input in $inputs.sequence
+        #for $input in $inputs.input_sequence
             #set $safename_seq = re.sub('[^\w\-_\.]', '_', $input.element_identifier)
-            ln -s $input ${safename_seq}.fasta
+            ln -fs $input ${safename_seq}.fasta &&
         #end for
     #end if
 
     fargene
-    --infiles 
+    --infiles  
     #if $inputs.input_type in ('paired', 'collection'):
         *.fastq
     --meta
@@ -36,7 +36,7 @@
         *.fasta
     #end if
     --hmm-model $models
-    --output out_dir
+    --output fargene_output
     --tmp-dir tmp
     -p \${GALAXY_SLOTS:-4}
     #if $meta_score != 0.0:
@@ -71,10 +71,9 @@
     #end if
     &&
     #if $inputs.input_type in ('paired', 'collection'):
-        tar czf assembly.tar.gz fargene_output/spades_assembly
-    &&
+        tar czf retrievedFragments.tar.gz fargene_output/retrievedFragments
     #end if
-    tar czf retrievedFragments.tar.gz fargene_output/retrievedFragments
+    2>&1
     ]]></command>
     <inputs>
         <conditional name="inputs">
@@ -125,17 +124,16 @@
         
     </inputs>
     <outputs>
-        <data name="summary" format="text" from_work_dir="fargene_output/results_summary.txt" label="${tool.name} on ${on_string} (Summary)"/>
-        <data name="assembly" auto_format="true" from_work_dir="assembly.tar.gz" label="${tool.name} on ${on_string} (Assembly)">
+        <data name="summary" format="txt" from_work_dir="fargene_output/results_summary.txt" label="${tool.name} on ${on_string} (Summary)"/>
+        <data name="retrievedFragments" format="gz" from_work_dir="retrievedFragments.tar.gz" label="${tool.name} on ${on_string} (Retrieved Fragments)">
             <filter>inputs["input_type"] in ['paired', 'collection']</filter>
         </data>
-        <data name="retrievedFragments" auto_format="true" from_work_dir="retrievedFragments.tar.gz" label="${tool.name} on ${on_string} (Retrieved Fragments)"/>
         <data name="fargene_log" format="txt" from_work_dir="fargene_analysis.log" label="${tool.name} on ${on_string} (log)"/>
          <collection name="hmmsearchresults" type="list" label="HMM Search Result">
-            <discover_datasets pattern="*.out" directory="fargene_output/hmmsearchresults" ext="out" visible="true" />
+            <discover_datasets pattern="__name__" directory="fargene_output/hmmsearchresults" format="txt" ext="out" visible="false" />
          </collection>         
         <collection name="predictedGenes" type="list" label="Predicted Genes">
-            <discover_datasets pattern="*.fasta" directory="fargene_output/predictedGenes" ext="fasta"  format="fasta" visible="true" />
+            <discover_datasets pattern="__name__" directory="fargene_output/predictedGenes" ext="fasta"  format="fasta" visible="false" />
         </collection> 
     </outputs>
     <tests>
@@ -151,6 +149,7 @@
             <conditional name="inputs">
             <param name="input_type" value="sequence"/>
             <param name="input_sequence" value="klebsiella_plasmid.fasta"/>
+            <param name="models" value="class_b_1_2" />
             </conditional>
             <output name="summary" file="scontigs/results_summary.txt"  compare="sim_size"/>
         </test>
