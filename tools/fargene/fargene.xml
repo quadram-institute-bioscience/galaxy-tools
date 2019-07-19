@@ -151,7 +151,7 @@
             <param name="input_sequence" value="klebsiella_plasmid.fasta"/>
             <param name="models" value="class_b_1_2" />
             </conditional>
-            <output name="summary" file="scontigs/results_summary.txt"  compare="sim_size"/>
+            <output name="summary" file="contigs/results_summary.txt"  compare="sim_size"/>
         </test>
     </tests>
     <help><![CDATA[
