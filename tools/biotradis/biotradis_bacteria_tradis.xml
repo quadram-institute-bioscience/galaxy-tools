@@ -1,5 +1,5 @@
-<tool id="add_tradis_tags" name="add tradis tags" version="@VERSION@">
-    <description>Generates a BAM file with tags added to read strings.</description>
+<tool id="bacteria_tradis" name="bacteria tradis" version="@VERSION@">
+    <description>Generates a BAM file with tags added to read strings</description>
     <macros>
         <import>macros.xml</import>
     </macros>
@@ -39,7 +39,7 @@
                     && tar cvzf mapped.tar.gz *mapped.bam*
     ]]></command>
     <inputs>
-        <param name="input_files" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" multiple="true" />
+        <param name="input_files" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" multiple="true" label="Input files" />
         <param name="tag" type="text" label="Tag" help="Tag to search for" />
         <param name="ref" type="data" format="fasta" label="Reference geome" help="Fasta format" />
         <param name="tag_dir" type="select" label="Tag direction" help="3 or 5(optional. default = 3)" >
@@ -50,20 +50,17 @@
         <param name="m" type="integer" value="30" label="Mapping quality cutoff score" help="(optional. default = 30)" />
         <param argument="--smalt_k" type="integer" value="" optional="True" label="Custom k-mer value for SMALT mapping" help="(optional)" />
         <param argument="--smalt_s" type="integer" value="" optional="True" label="Custom step size for SMALT mapping" help="(optional)" />
-        <param argument="--smalt_y" type="integer" value="0.96" label="Custom y parameter for SMALT" help="(optional. default = 0.96)" />
+        <param argument="--smalt_y" type="float" value="0.96" label="Custom y parameter for SMALT" help="(optional. default = 0.96)" />
         <param argument="--smalt_r" type="integer" value="-1" label="custom r parameter for SMALT" help="(optional. default = -1)" />
         <param argument="--verbose" type="boolean" truevalue="-v" falsevalue="" checked="false" label="verbose debugging output" help="(Default:No)" />
     </inputs>
 
     <outputs>
-        <data name="insert_size_plots" format="archive" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="insert_site_plot.tar.gz"/>>   
-        <data name="mapped_bam" format="archive" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="mapped.tar.gz"/>>   
-        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/>>   
+        <data name="insert_size_plots" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="insert_site_plot.tar.gz"/>
+        <data name="mapped_bam" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="mapped.tar.gz"/>   
+        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/> 
     </outputs>
-
-    <!-- <tests>
-    </tests> -->
-    
+  
     <help>
     <![CDATA[
         Run a TraDIS analysis. This involves:

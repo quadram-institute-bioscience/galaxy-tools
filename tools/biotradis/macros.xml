@@ -1,5 +1,5 @@
 <macros>
-    <token name="@VERSION@">1.4.1</token>
+    <token name="@VERSION@">1.4.1.dev</token>
     <xml name="requirements">
         <requirements>
             <requirement type="package" version="@VERSION@">biotradis</requirement>
