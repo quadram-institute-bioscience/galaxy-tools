@@ -153,6 +153,8 @@ $modelling_parameters.partition_model.spp
 
 $modelling_parameters.site_specific_frequency.fmax
 
+
+
 #if str($tree_parameters.tree_search.ninit) != ''
     -ninit '$tree_parameters.tree_search.ninit'
 #end if
@@ -183,6 +185,7 @@ $modelling_parameters.site_specific_frequency.fmax
 
 $tree_parameters.tree_search.allnni
 $tree_parameters.tree_search.djc
+$tree_parameters.tree_search.fast
 
 ## file
 #if $tree_parameters.tree_search.g
@@ -423,16 +426,25 @@ IQ-TREE also works for codon, binary and morphogical data.
         </section>
         <section name="tree_parameters" title="Tree Parameters">
             <section name="tree_search" expanded="False" title="Tree search parameters">
-                <param argument="-n" type="integer" optional="true" label="Skip subsequent tree search (n = 0), useful when you only want to assess the phylogenetic information of the alignment. Otherwise specify number of iterations to stop (this option overrides -nstop criterion)." />
-                <param argument="-ninit" type="integer" value="100" optional="true" label="Specify number of initial parsimony trees"/>
-                <param argument="-ntop" type="integer" value="20" optional="true" label="Specify number of top initial parsimony trees to optimize with ML nearest neighbor interchange (NNI) search to initialize the candidate set"/>
-                <param argument="-nbest" type="integer" value="5" optional="true" label="Specify number of trees in the candidate set to maintain during ML tree search"/>
-                <param argument="-nstop" type="integer" value="100" optional="true" label="Specify number of unsuccessful iterations to stop"/>
-                <param argument="-sprrad" type="integer" value="6" optional="true" label="Specify SPR radius for the initial parsimony tree search"/>
-                <param argument="-pers" type="float" value="0.5" optional="true" label="Specify perturbation strength (between 0 and 1) for randomized NNI"/>
-                <param argument="-allnni" type="boolean" truevalue="-allnni" falsevalue="" checked="false" label="Turn on more thorough and slower NNI search"/>
-                <param argument="-djc" type="boolean" truevalue="-djc" falsevalue="" checked="false" label="Avoid computing ML pairwise distances and BIONJ tree."/>
-                <param argument="-g" type="data" format="txt" optional="true" label="Specify a topological constraint tree file in NEWICK format" help="The constraint tree can be a multifurcating tree and need not to include all taxa."/>
+              <param argument="-fast" type="boolean" truevalue="-fast" falsevalue="" checked="false" label="fast tree search mode">
+                <help><![CDATA[
+                  <br/>Emulates fasttree. According to the documentation (see http://www.iqtree.org/doc/Command-Reference#tree-search-parameters):
+                  <br/>"Turn on the fast tree search mode, where IQ-TREE will just construct two starting trees: maximum parsimony and BIONJ, which are then optimized 
+                  by nearest neighbor interchange (NNI). Introduced in version 1.6."
+                  <br/> Some options below may therefore be unused (e.g. the initial number of parsimony trees...)
+                  ]]>
+                </help>
+              </param>
+              <param argument="-n" type="integer" optional="true" label="Skip subsequent tree search (n = 0), useful when you only want to assess the phylogenetic information of the alignment. Otherwise specify number of iterations to stop (this option overrides -nstop criterion)." />
+              <param argument="-ninit" type="integer" value="100" optional="true" label="Specify number of initial parsimony trees"/>
+              <param argument="-ntop" type="integer" value="20" optional="true" label="Specify number of top initial parsimony trees to optimize with ML nearest neighbor interchange (NNI) search to initialize the candidate set"/>
+              <param argument="-nbest" type="integer" value="5" optional="true" label="Specify number of trees in the candidate set to maintain during ML tree search"/>
+              <param argument="-nstop" type="integer" value="100" optional="true" label="Specify number of unsuccessful iterations to stop"/>
+              <param argument="-sprrad" type="integer" value="6" optional="true" label="Specify SPR radius for the initial parsimony tree search"/>
+              <param argument="-pers" type="float" value="0.5" optional="true" label="Specify perturbation strength (between 0 and 1) for randomized NNI"/>
+              <param argument="-allnni" type="boolean" truevalue="-allnni" falsevalue="" checked="false" label="Turn on more thorough and slower NNI search"/>
+              <param argument="-djc" type="boolean" truevalue="-djc" falsevalue="" checked="false" label="Avoid computing ML pairwise distances and BIONJ tree."/>
+              <param argument="-g" type="data" format="txt" optional="true" label="Specify a topological constraint tree file in NEWICK format" help="The constraint tree can be a multifurcating tree and need not to include all taxa."/>
             </section>
             <section name="single_branch" expanded="False" title="Single branch tests">
                 <param argument="-alrt" type="integer" optional="true" label="Specify number of replicates (&gt;=1000) to perform SH-like approximate likelihood ratio test (SH-aLRT) (Guindon et al., 2010)" help="If number of replicates is set to 0 (-alrt 0), then the parametric aLRT test (Anisimova and Gascuel 2006) is performed, instead of SH-aLRT."/>
