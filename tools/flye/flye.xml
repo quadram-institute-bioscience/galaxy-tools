@@ -14,6 +14,10 @@
             #set $ext = 'fastq'
         #elif $input.is_of_type('fastqsanger.gz'):
             #set $ext = 'fastq.gz'
+        #elif $input.is_of_type('fastq'):
+            #set $ext = 'fastq'
+        #elif $input.is_of_type('fastq.gz'):
+            #set $ext = 'fastq.gz'
         #elif $input.is_of_type('fasta.gz'):
             #set $ext = 'fasta.gz'
         #elif $input.is_of_type('fasta'):
@@ -97,7 +101,7 @@
         <param argument="--no_trestle" type="boolean" truevalue="--no-trestle" falsevalue="" checked="False" label="skip Trestle stage" help="After resolving bridged repeats, Trestle module attempts to resolve simple unbridged repeats (of multiplicity 2) using the heterogeneities between repeat copies"/>
     </inputs>
     <outputs>
-        <data name="scaffolds" format="fasta" from_work_dir="out_dir/scaffolds.fasta" label="${tool.name} on ${on_string} (scaffolds)"/>
+        <data name="assembly" format="fasta" from_work_dir="out_dir/assembly.fasta" label="${tool.name} on ${on_string} (scaffolds)"/>
         <data name="assembly_info" format="tabular" from_work_dir="out_dir/assembly_info.txt" label="${tool.name} on ${on_string} (assembly_info)"/>
         <data name="assembly_graph" format="graph_dot" from_work_dir="out_dir/assembly_graph.gv" label="${tool.name} on ${on_string} (assembly_graph)"/>
         <data name="assembly_gfa" format="txt" from_work_dir="out_dir/assembly_graph.gfa" label="${tool.name} on ${on_string} (Graphical Fragment Assembly)"/>
