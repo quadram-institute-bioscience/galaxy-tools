@@ -6,5 +6,5 @@ description: Assembly of long and error-prone reads. Adapted from bgruening's wr
 homepage_url: https://github.com/fenderglass/Flye/
 long_description: |
   Flye is an assembler for long and error-prone reads. It supports data produced by both Pacific Biosciences and Oxford Nanopore Technologies.
-remote_repository_url: https://github.com/bgruening/galaxytools/tree/master/tools/flye
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/flye
 type: unrestricted

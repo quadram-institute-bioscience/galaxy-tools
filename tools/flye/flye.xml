@@ -1,4 +1,4 @@
-<tool id="flye" name="Flye assembler" version="2.4.2">
+<tool id="flye" name="Flye assembler" version="2.5">
     <description>of long and error-prone reads</description>
     <macros>
         <import>macros.xml</import>
@@ -6,7 +6,7 @@
     <expand macro="requirements" />
     <version_command>flye --version</version_command>
     <command detect_errors="exit_code">
-    <![CDATA[
+        <![CDATA[
 
     #for $counter, $input in enumerate($inputs):
 
@@ -48,9 +48,21 @@
         '$no_trestle'
     #end if
     2>&1
-    ]]></command>
+    ]]>    </command>
     <inputs>
-        <param name="inputs" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Input reads" />
+        <param name="inputs" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Input reads" >
+        <help><![CDATA[
+
+    Input reads could be in FASTA or FASTQ format, uncompressed
+    or compressed with gz. Currenlty, raw and corrected reads
+    from PacBio and ONT are supported. The expected error rates are
+    <30% for raw and <2% for corrected reads. Additionally,
+    --subassemblies option performs a consensus assembly of multiple
+    sets of high-quality contigs. You may specify multiple
+    files with reads (separated by spaces). Mixing different read
+    types is not yet supported.
+     ]]>        </help>
+     </param>
         <param name="mode" type="select" label="Mode">
             <option value="--nano-raw">Nanopore raw</option>
             <option value="--nano-corr">Nanopore corrected</option>
@@ -59,14 +71,30 @@
             <option value="--subassemblies">high-quality contig-like input</option>
         </param>
         <param argument="-g" type="text" label="estimated genome size (for example, 5m or 2.6g)">
+            <help>
+                <![CDATA[
+            <span>The genome size estimate is used for solid k-mer selection in the
+            initial disjointig assembly stage. <b>Flye is not very sensitive to this
+            parameter, and the estimate could be rough</b>. It is ok if the parameter is
+            within 0.5x-2x of the actual genome size. If the final assembly size is
+            very different from the initial guess, consider re-running the pipeline
+            with an updated estimate for better results.</span>
+<br>
+<span>An alternative option is to run Flye in <b>--meta</b> mode, which uses a different
+            approach for solid k-mer selection. This mode is almost independent from the
+            genome size parameter (you still need to provide an estimate for the selection
+            of some other parameters). When assembly is completed, you can re-run in the
+            normal mode with the inferred genome size.</span>
+            ]]>
+            </help>
             <validator type="regex" message="Genome size must be a float  or integer, optionally followed by the a unit prefix (kmg)">^([0-9]*[.])?[0-9]+[kmg]?$</validator>
         </param>
         <param argument="-i" type="integer" value="1" label="number of polishing iterations" />
-        <param argument="-m" type="integer" optional="true" label="minimum overlap between reads (default: auto)" />
+        <param argument="-m" type="integer" optional="true" label="minimum overlap between reads (default: auto)" help="This sets a minimum overlap length for two reads to be considered overlapping. In the latest Flye versions, this parameter is chosen automatically based on the read length distribution (reads N90) and does not require manual setting. Typical value is 3k-5k (and down to 1k for datasets with shorter read length). Intuitively, we want to set this parameter as high as possible, so the repeat graph is less tangled. However, higher values might lead to assembly gaps. In some rare cases (for example in case of biased read length distribution) it makes sense to set this parameter manualy."/>
         <param argument="--asm_coverage" type="integer" optional="true" label="reduced coverage for initial contig assembly (default: not set)" />
         <param argument="--plasmid" type="boolean" truevalue="--plasmid" falsevalue="" checked="False" label="rescue short unassmebled plasmids" />
         <param argument="--meta" type="boolean" truevalue="--meta" falsevalue="" checked="False" label="metagenome / uneven coverage mode" />
-        <param argument="--no_trestle" type="boolean" truevalue="--no-trestle" falsevalue="" checked="False" label="skip Trestle stage" />
+        <param argument="--no_trestle" type="boolean" truevalue="--no-trestle" falsevalue="" checked="False" label="skip Trestle stage" help="After resolving bridged repeats, Trestle module attempts to resolve simple unbridged repeats (of multiplicity 2) using the heterogeneities between repeat copies"/>
     </inputs>
     <outputs>
         <data name="scaffolds" format="fasta" from_work_dir="out_dir/scaffolds.fasta" label="${tool.name} on ${on_string} (scaffolds)"/>
@@ -103,23 +131,39 @@
             <output name="assembly_gfa" file="result2_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
         </test>
     </tests>
-    <help><![CDATA[
+    <help>
+    <![CDATA[
+    Flye output
+    The main output files are:
 
-Input reads could be in FASTA or FASTQ format, uncompressed
-or compressed with gz. Currenlty, raw and corrected reads
-from PacBio and ONT are supported. The expected error rates are
-<30% for raw and <2% for corrected reads. Additionally,
---subassemblies option performs a consensus assembly of multiple
-sets of high-quality contigs. You may specify multiple
-files with reads (separated by spaces). Mixing different read
-types is not yet supported.
+    -   **assembly.fasta** - Final assembly. Contains contigs and possibly scaffolds (see below).
 
-You must provide an estimate of the genome size as input,
-which is used for solid k-mers selection. The estimate could
-be rough (e.g. withing 0.5x-2x range) and does not affect
-the other assembly stages. Standard size modificators are
-supported (e.g. 5m or 2.6g).
+    -   **assembly_graph.{gfa|gv}** - Final repeat graph. Note that the edge sequences might be different (shorter) than contig sequences, because contigs might include multiple graph edges (see below).
+    
+    -   **assembly_info.txt** - Extra information about contigs (such as length or coverage).
+    
+    Each contig is formed by a single unique graph edge. If possible, unique contigs are extended with the sequence from flanking unresolved repeats on the graph. Thus, a contig fully contains the corresponding graph edge (with the same id), but might be longer then this edge. This is somewhat similar to unitig-contig relation in OLC assemblers. In a rare case when a repetitive graph edge is not covered by the set of "extended" contigs, it will be also output in the assembly file.
 
-    ]]></help>
+    Sometimes it is possible to further order contigs into scaffolds based on the repeat graph structure. These ordered contigs will be output as a part of scaffold in the assembly file (with a scaffold\_ prefix). Since it is hard to give a reliable estimate of the gap size, those gaps are represented with the default 100 Ns. assembly_info.txt file (below) contains additional information about how scaffolds were formed.
+
+    Extra information about contigs/scaffolds is output into the assembly_info.txt file. It is a tab-delimited table with the columns as follows:
+
+    -   Contig/scaffold id
+
+    -   Length
+    
+    -   Coverage
+    
+    -   Is circular (representing circular sequence, such as bacterial chromosome or plasmid)
+    
+    -   Is repetitive (represents repeated, rather than unique sequence)
+    
+    -   Multiplicity (inferred multiplicity based on coverage)
+    
+    -   Graph path (repeat graph path corresponding to this contig/scaffold). Scaffold gaps are marked with ?? symbols, and * symbol denotes a terminal graph node.
+    
+    scaffolds.fasta file is a symlink to assembly.fasta, which is retained for the backward compatibility.
+    ]]>
+    </help>
     <expand macro="citations" />
 </tool>
