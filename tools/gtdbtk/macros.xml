@@ -1,0 +1,17 @@
+<macros>
+  <token name="@VERSION@">0.3.2</token>
+  <xml name="requirements">
+    <requirements>
+      <requirement type="package" version="@VERSION@">gtdbtk</requirement>
+      <yield/>
+    </requirements>
+  </xml>
+  <xml name="version_command">
+    <version_command>gtdbtk --version</version_command>
+  </xml>
+  <xml name="citations">
+    <citations>
+      <yield />
+    </citations>
+  </xml>
+</macros>

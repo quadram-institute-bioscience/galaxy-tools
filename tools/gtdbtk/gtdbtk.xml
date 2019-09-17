@@ -1,0 +1,84 @@
+<tool id="gtdbtk" name="GTDB-tk" version="@VERSION@">
+  <description>A toolkit for assigning objective taxonomic classifications to bacterial and archaeal genomes</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+      #import re
+      #set $bool_unz = ''
+      #set $bool_zip = ''
+      mkdir ./input && 
+      #for $counter, $i_file in enumerate($inputseq):
+        #if $i_file.is_of_type('fasta'):
+          #set $bool_unz = "true"
+          #set $ext = '.fasta'
+        #elif $i_file.is_of_type('fasta.gz'):
+          #set $bool_zip = "true"
+          #set $ext = '.gz'
+        #end if
+        #set $_input_file = "./input/" + $i_file.element_identifier + $ext
+        ln -s '${i_file}' ${_input_file} &&
+      #end for
+      mkdir ./output ./output_zip &&
+      #if str($bool_unz) == "true"
+        GTDBTK_DATA_PATH='$gtdbtk_databases.fields.path'  gtdbtk classify_wf -x fasta --genome_dir ./input --cpus  \${GALAXY_SLOTS:-4} --out_dir ./output &&
+      #end if
+      #if str($bool_zip) == "true"
+        GTDBTK_DATA_PATH='$gtdbtk_databases.fields.path'  gtdbtk classify_wf -x gz --genome_dir ./input --cpus  \${GALAXY_SLOTS:-4} --out_dir ./output_zip &&
+      #end if
+      grep -h  user_genome ./output*/gtdbtk.*.summary.tsv | head -1 > output/summary.tsv &&
+      grep -hv user_genome ./output*/gtdbtk.*.summary.tsv >> output/summary.tsv &&
+      if [ -f ./output/gtdbtk.ar122.user_msa.fasta ]; then mv ./output/gtdbtk.ar122.user_msa.fasta ./output/archaea.fasta; fi &&
+      if [ -f ./output_zip/gtdbtk.ar122.user_msa.fasta ]; then cat ./output_zip/gtdbtk.ar122.user_msa.fasta >> ./output/archaea.fasta; fi &&
+      if [ -f ./output/gtdbtk.bac120.user_msa.fasta ]; then mv ./output/gtdbtk.bac120.user_msa.fasta ./output/bacteria.fasta; fi &&
+      if [ -f ./output_zip/gtdbtk.bac120.user_msa.fasta ]; then cat ./output_zip/gtdbtk.bac120.user_msa.fasta >> ./output/bacteria.fasta; fi 
+    ]]></command>
+  <inputs>
+    <param name="inputseq" multiple="true" type="data" format="fasta, fasta.gz" label="input genomes in fasta format (can be gzipped)">
+      <help><![CDATA[
+        Unlike the standalone program, where the output removes the suffixes, this Galaxy tools preserves the suffix (i.e. will output <i>genome1.fas</i> instead of <i>genome1</i>).
+        This is to allow for mixing compressed and uncompressed files (while avoiding overwritting similarly-named ones).
+        Here we also merge results from <i>gtdbtk.ar122.summary.tsv</i> and <i>gtdbtk.bac120.summary.tsv</i> files. 
+        ]]></help>
+    </param>
+
+    <param label="Select a GTDB database" name="gtdbtk_databases" type="select">
+      <options from_data_table="gtdbtk_databases">
+        <validator message="No database is available" type="no_options" />
+      </options>
+    </param>
+
+  </inputs>
+  <outputs>
+    <data name="summary_out" format="tabular" label="summarised taxon classification" from_work_dir="output/summary.tsv" />
+    <data name="bact_out" format="fasta" label="MSA of submitted genomes inferred as bacterial" from_work_dir="output/bacteria.fasta" />
+    <data name="arch_out" format="fasta" label="MSA of submitted genomes inferred as archaeal" from_work_dir="output/archaea.fasta" />
+  </outputs>
+
+  <tests>
+    <test>
+      <param name="inputseq" value="genome_3.fna"/>
+      <param name="gtdbtk_databases" value="default_db"/>
+      <output name='summary_out' file="gtdbtk.ar122.summary.tsv"/>
+    </test>
+  </tests>
+
+    <help><![CDATA[
+      The classify workflow consists of three steps: identify, align, and classify. The identify step calls genes using Prodigal, 
+      and uses HMM models and the HMMER package to identify the 120 bacterial and 122 archaeal marker genes used for phylogenetic inference. 
+      Multiple sequence alignments (MSA) are obtained by aligning marker genes to their respective HMM model. The
+      align step concatenates the aligned marker genes and filters the concatenated MSA to approximately 5,000 amino
+      acids. Finally, the classify step uses pplacer to find the maximum-likelihood placement of each genome in the
+      GTDB-Tk reference tree. GTDB-Tk classifies each genome based on its placement in the reference tree, its
+      relative evolutionary divergence, and/or average nucleotide identity (ANI) to reference genomes.  
+
+      It will process all genomes in the directory <my_genomes> using both bacterial and archaeal marker sets and place
+      the results in <output_dir>. Genomes must be in FASTA format (gzip with the extension .gz is acceptable). The
+      location of genomes can also be specified using a batch file with the --batchfile flag. The batch file is a
+      two column file indicating the location of each genome and the desired genome identifier (i.e., a Newick
+      compatible alphanumeric string). These fields must be separated by a tab.
+    ]]></help>
+    <expand macro="citations" />
+</tool>
