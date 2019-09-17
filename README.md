@@ -21,3 +21,4 @@
 - **[iqtree](http://www.iqtree.org/)** A fast and effective stochastic algorithm to infer phylogenetic trees by maximum likelihood
 - **[super_distance](https://github.com/quadram-institute-bioscience/super_distance)** Matrix Representation with Distances: calculates pairwise distances between gene leaves, 
 and estimates species supertrees
+- **[GTDB-Tk](https://github.com/Ecogenomics/GTDBTk)** A toolkit for assigning objective taxonomic classifications to bacterial and archaeal genomes. 
