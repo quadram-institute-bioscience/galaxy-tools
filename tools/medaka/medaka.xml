@@ -1,0 +1,42 @@
+<tool id="medaka" name="medaka" version="@VERSION@">
+    <description> creates a consensus sequence from nanopore sequencing data</description>
+    <macros>
+        <token name="@VERSION@">0.91</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">medaka</requirement>
+    </requirements>
+    <version_command>medaka --version</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        medaka_consensus 
+        -i ${basecalled} 
+        -d ${draft} 
+        -o out_dir 
+        -t \${GALAXY_SLOTS:-4} 
+        -m '${model}'
+    ]]>    </command>
+
+    <inputs>
+        <param name="basecalled" type="data" format="fastq,fastq.gz,fasta.fasta.gz" label="Basecalled data"/>
+         <param name="model" type="select" label="Model">
+            <option value="r941_min_fast">r941_min Fast</option>
+            <option value="r941_min_high" selected="True">r941_min High Accuracy</option>
+            <option value="r941_prom_fast">r941_prom_fast</option>
+            <option value="r941_prom_high">r941_prom_high</option>
+            <option value="r10_min_high">r10_min_high.</option>
+        </param>
+        <param name="draft" type="data" format="fastq,fastq.gz,fasta.fasta.gz" label="Draft assemblies" help="The input assembly should be
+preprocessed with racon"/>
+    </inputs>
+
+    <outputs>
+    <collection name="list_output" type="list" label="Output">
+        <discover_datasets pattern="__name_and_ext__" directory="out_dir"/>
+    </collection>
+    </outputs>
+    <help><![CDATA[
+    ]]>    </help>
+    <citations>
+        <citation type="doi">10.1186/1471-2105-12-385</citation>
+    </citations>
+</tool>
