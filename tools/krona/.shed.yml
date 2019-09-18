@@ -1,0 +1,13 @@
+categories: [Visualization, Graphics]
+description: Interactively explore metagenomes and more from a web browser
+long_description: |
+  Krona allows hierarchical data to be explored with zooming, multi-layered pie
+  charts. Krona charts can be created using an Excel template or KronaTools,
+  which includes support for several bioinformatics tools and raw data formats.
+  The interactive charts are self-contained and can be viewed with any modern
+  web browser.
+homepage_url: https://github.com/marbl/Krona/
+name: krona
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/krona
+type: unrestricted
