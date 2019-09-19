@@ -23,9 +23,9 @@
             <option value="r941_min_high" selected="True">r941_min High Accuracy</option>
             <option value="r941_prom_fast">r941_prom_fast</option>
             <option value="r941_prom_high">r941_prom_high</option>
-            <option value="r10_min_high">r10_min_high.</option>
+            <option value="r10_min_high">r10_min_high</option>
         </param>
-        <param name="draft" type="data" format="fastq,fastq.gz,fasta.fasta.gz" label="Draft assemblies" help="The input assembly should be
+        <param name="draft" type="data" format="fasta.fasta.gz" label="Draft assemblies" help="The input assembly should be
 preprocessed with racon"/>
     </inputs>
 
