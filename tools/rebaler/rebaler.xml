@@ -1,0 +1,43 @@
+<tool id="rebaler" name="rebaler" version="@VERSION@">
+    <description> Conducts reference-based assemblies using long
+    reads</description>
+    <macros>
+        <token name="@VERSION@">0.2.0</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">rebaler</requirement>
+    </requirements>
+    <version_command>echo "0.2.0"</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+    rebaler 
+    -t \${GALAXY_SLOTS:-8}
+    '$ref' 
+    '$reads' > '$assembly'
+    ]]>    </command>
+
+    <inputs>
+        <param name="ref" type="data" format="fasta,fasta.gz" label="Reference
+        assembly"/>
+        <param name="reads" type="data" format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" label="Long
+        reads"/>
+    </inputs>
+
+    <outputs>
+        <data name="assembly" format="fasta" label="${tool.name} on ${on_string} Assembly"/>
+    </outputs>
+    <help><![CDATA[
+    - Reasons to use Rebaler: 
+            You want to reassemble/polish an
+    assembly with long reads, using a reference assembly to guide the
+    large-scale structure. 
+            You don't want the reference assembly's basecalls to
+    influence the basecalls in your new assembly. 
+    - Reasons to not use Rebaler:
+            You expect there to be structural differences between your reference genome
+    and your sequenced reads. Rebaler is built on the assumption that the genome
+    structure is the same, only bases differ. 
+            You want to polish an assembly using the same long reads you used to make the assembly. Rebaler might work
+    for this, but simply using Racon on its own is probably better (read more
+    here).]]>    </help>
+    
+</tool>
