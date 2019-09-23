@@ -1,0 +1,11 @@
+categories: [Sequence Analysis]
+description: Conducts reference-based assemblies using long reads
+long_description: |
+  Rebaler is a program for conducting reference-based assemblies using long
+  reads. It relies mainly on minimap2 for alignment and Racon for making
+  consensus sequences.
+homepage_url: https://github.com/rrwick/Rebaler
+name: rebaler
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/medaka
+type: unrestricted
