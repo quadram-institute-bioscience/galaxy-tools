@@ -1,0 +1,8 @@
+categories: [Sequence Analysis]
+description: Pacbio Tool Set
+long_description: Galaxy Tool Set for Processing Pacbio Data.
+homepage_url: https://github.com/PacificBiosciences
+name: pacbio
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/pacbio
+type: unrestricted

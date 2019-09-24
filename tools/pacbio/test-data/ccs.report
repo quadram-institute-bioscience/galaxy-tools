@@ -1,0 +1,14 @@
+ZMW Yield
+Success (without retry) -- CCS generated,126,1.09%
+Success (with retry)    -- CCS generated,1,0.01%
+Failed -- Below SNR threshold,0,0.00%
+Failed -- No usable subreads,8,0.07%
+Failed -- Insert size too long,0,0.00%
+Failed -- Insert size too small,0,0.00%
+Failed -- Not enough full passes,11391,98.83%
+Failed -- Too many unusable subreads,0,0.00%
+Failed -- CCS did not converge,0,0.00%
+Failed -- CCS below minimum predicted accuracy,0,0.00%
+Failed -- Unknown error during processing,0,0.00%
+
+

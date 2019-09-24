@@ -1,0 +1,85 @@
+<tool id="ccs" name="CCS" version="3.4.1">
+    <description> Generate Highly Accurate Single-Molecule Consensus Reads</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <version_command>ccs --version</version_command>
+    <command detect_errors="exit_code">
+    <![CDATA[
+    ccs 
+    --minLength $ifo.min_length
+    --maxLength $ifo.max_length
+    --minPasses $ifo.min_passes
+    --minIdentity $ifo.min_identity
+    --minSnr $ifo.min_snr
+    $ifo.zmws
+
+    #if $moo.model_path != 0:
+        --modelPath $moo.model_path
+    #end if
+    #if $moo.model_path != 0:
+        --modelSpec $moo.model_spec
+    #end if
+
+    #if $po.by_strand
+        $po.by_strand
+    #end if
+
+    #if $po.no_polish
+        $po.no_polish
+    #end if
+
+    #if $po.rich_qvs
+        $po.rich_qvs
+    #end if
+
+    --minPredictedAccuracy $ofo.min_predicted_accuracy
+    --minReadScore $ofo.min_read_score
+    --maxDropFraction $ofo.max_drop_fraction
+    -j \${GALAXY_SLOTS:-1}
+    $bam ccs.bam
+    ]]></command>
+    <inputs>
+        <param name="bam" type="text" label="Path to subreads bam file"/>
+        <section name="ifo" title="Input Filter Options" expanded="True">
+            <param name="min_length" type="integer" value="10" label="Minimum length of subreads to use for generating CCS" />
+            <param name="max_length" type="integer" value="21000" label="Maximum length of subreads to use for generating CCS" />
+            <param name="min_passes" type="integer" value="3" label="Minimum number of subreads required to generate CCS" />
+            <param name="min_identity" type="float" value="0.82" label="Minimum identity of a subread aligned to the draft consensus to use it for polishing. 0 disables this filter" />
+            <param name="min_snr" type="float" value="2.5" label="Minimum SNR of input subreads" />
+            <param argument="--zmws" type="boolean" truevalue="--zmws" falsevalue = "" checked="False" label="Minimum SNR of input subreads" />
+        </section>
+        <section name="moo" title="Model Override Options" expanded="True">
+            <param name="model_path" type="text" value="0" label="Path to a model file or directory containing model files" />
+            <param name="model_spec" type="text" value="0" label="Name of chemistry or model to use, overriding default selection" />
+        </section>
+        <section name="po" title="Processing Options" expanded="True">
+            <param name="by_strand" argument="--byStrand" type="boolean" truevalue="--byStrand" falsevalue = "" checked="False" label="Generate a consensus for each strand" />
+            <param name="no_polish" argument="--noPolish" type="boolean" truevalue="--noPolish" falsevalue = "" checked="False" label="Only output the initial template derived from the POA (faster, less accurate)" />
+            <param name="rich_qvs" argument="--richQVs" type="boolean" truevalue="--richQVs" falsevalue = "" checked="False" label="Emit dq, iq, and sq rich quality tracks" />
+        </section>
+        <section name="ofo" title="Output Filter Options">
+            <param name="min_predicted_accuracy" type="float" value="0.9" min="0" max="1" label="Minimum predicted accuracy in [0, 1]" />
+            <param name="min_read_score" type="float" value="0.75" min="0" max="1" label="Minimum read score of input subreads" />
+            <param name="max_drop_fraction" type="float" value="0.34" min="0" max="1" label="Maximum fraction of subreads dropped by polishing (not input filters) before skipping ZMW" />
+        </section>
+    </inputs>
+    <outputs>
+        <data name="output_bam" format="bam" from_work_dir="ccs.bam" label="${tool.name} on ${on_string} Bam"/>
+        <data name="output_bam_index" format="binary" from_work_dir="ccs.bam.pbi" label="${tool.name} on ${on_string} Bam index"/>
+        <data name="report" format="txt" from_work_dir="ccs_report.txt" label="${tool.name} on ${on_string} Report"/>
+    </outputs>
+    <tests>
+        <test>
+        <param name="bam" value="/home/centos/pacbio-galaxy/test-data/pacbio.bam" />
+        <output name="output_bam" ftype="bam" file="ccs.bam" compare="sim_size" />
+        </test>
+    </tests>
+    <help><![CDATA[
+    CCS takes multiple (sub)reads of the same SMRTbell molecule and combines
+    them using a statistical model to produce one highly accurate consensus
+    sequence, also called HiFi or CCS read, with base quality values. This tool
+    powers the Circular Consensus Sequences workflow in SMRT Link.
+    ]]></help>
+</tool>

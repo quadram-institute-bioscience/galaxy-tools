@@ -1,0 +1,151 @@
+<tool id="lima" name="LIMA" version="1.9.0">
+    <description>  Demultiplex Barcoded PacBio Data and Clip Barcodes</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <version_command>lima --version</version_command>
+    <command detect_errors="exit_code">
+        <![CDATA[
+        ln -s '$barcode' adapters.fa && 
+        lima 
+        #if str($lib_design) == 'same':
+            --same
+        #elif str($lib_design) == 'different'
+            --different
+        #end if
+        $il.per_read
+        $il.score_full_pass
+        --max-scored-barcode-pairs $il.max_scored_barcode_pairs
+        --max-scored-barcodes $il.max_scored_barcodes
+        --max-scored-adapters $il.max_scored_adapters
+        --min-passes $il.min_passes
+        --min-length $il.min_length
+        --max-input-length $il.max_length
+        --bad-adapter-ratio $il.bad_adapter_ratio
+        $il.shared_prefix
+        --window-size-mult $br.window_size_mult
+        --window-size-bp $br.window_size_bp
+        --min-ref-span $br.min_ref_span
+        --min-scoring-regions $br.min_scoring_regions
+        --min-score $sf.min_score
+        --min-end-score $sf.min_end_score
+        --min-signal-increase $sf.min_signal_increase
+        --min-score-lead $sf.min_score_lead
+        $is.keep_tag_idx_order
+        $is.keep_split_idx_order
+        --match-score $ac.match_score
+        --mismatch-penalty $ac.mismatch_penalty
+        --deletion-penalty $ac.deletion_penalty
+        --insertion-penalty $ac.insertion_penalty
+        --branch-penalty $ac.branch_penalty
+        $oc.split_bam
+        $oc.split_bam_named
+        --bam-handles $oc.bam_handles
+        $oc.dump_clips  
+        $oc.dump_removed 
+        $oc.no_pbi
+        $oc.no_bam     
+        $oc.no_reports
+        $ss.single_side      
+        --scored-adapter-ratio $ss.scored_adapter_ratio
+        $isq.isoseq
+        --peek $adv.peek      
+        --guess $adv.guess
+        --guess-min-count $adv.guess_min_count
+        $adv.peek_guess
+        -j \${GALAXY_SLOTS:-1}
+
+        '$bam' adapters.fa 'deplexed.bam'
+        && ls -lah > output.txt
+        && mkdir demultiplexed
+        && mv *.bam ./demultiplexed
+    ]]>    </command>
+    <inputs>
+        <param name="bam" value="/home/centos/pacbio-galaxy/test-data/pacbio.bam" type="text" label="Path to subreads bam file"/>
+        <param name="barcode" type="data" format="fasta" label="Barcode fasta file"/>
+        <param name="lib_design" label="Library Design" type="select">
+            <option value="same" selected="true">Only keep same barcodes in a pair in BAM output</option>
+            <option value="different">Only keep different barcodes in a pair in BAM output</option>
+        </param>
+        <section name="il" title="Input Limitations" expanded="True">
+            <param name="per_read" type="boolean" truevalue="--per-read" falsevalue="" checked="False" label="Do not tag per ZMW, but per read" />
+            <param name="score_full_pass" type="boolean" truevalue="--score-full-pass" falsevalue="" checked="False" label="Only use subreads flanked by adapters for barcode identification" />
+            <param name="max_scored_barcode_pairs" type="integer" min="0" value="0" label="Only use up to N barcode pair regions to find the barcode, 0 means use all" />
+            <param name="max_scored_barcodes" type="integer" value="0" label="Analyze at maximum the provided number of barcodes per ZMW; 0 means deactivated" />
+            <param name="max_scored_adapters" type="integer" value="0" label="Analyze at maximum the provided number of adapters per ZMW; 0 means deactivated" />
+            <param name="min_passes" type="integer" value="0" label="Minimal number of full passes" />
+            <param name="min_length" type="integer" value="50" label="Minimum sequence length after clipping" />
+            <param name="max_length" type="integer" value="0" label="Maximum input sequence length, 0 means deactivated" />
+            <param name="bad_adapter_ratio" type="integer" value="0" label="Maximum ratio of bad adapter" />
+            <param name="shared_prefix" type="boolean" truevalue="--shared-prefix" falsevalue="" checked="False" label="Barcodes may be substrings of others" />
+        </section>
+        <section name="br" title="Barcode Region" expanded="True">
+            <param name="window_size_mult" argument="--window-size-mult" type="float" value="1.5" label="The candidate region size multiplier: barcode_length * multiplier" />
+            <param name="window_size_bp" argument="--window-size-bp" type="integer" value="0" label="The candidate region size in bp. If set, --window-size-mult will be ignored" />
+            <param name="min_ref_span" argument="--min-ref-span" type="float" value="0.5" label="Minimum reference span relative to the barcode length" />
+            <param name="min_scoring_regions" argument="--min-scoring-regions" min="0" type="integer" value="1" label="Minimum number of barcode regions with sufficient relative span to the barcode length" />
+        </section>
+        <section name="sf" title="Score Filters" expanded="True">
+            <param name="min_score" argument="--min-score" type="integer" value="0" label="Reads below the minimum barcode score are removed from downstream analysis"/>
+            <param name="min_end_score" argument="--min-end-score" type="integer" value="0" label="Minimum end barcode score threshold is applied to the individual leading and trailing ends"/>
+            <param name="min_signal_increase" argument="--min-signal-increase" type="integer" value="10" label="The minimal score difference, between first and combined, required to call a barcode pair different"/>
+            <param name="min_score_lead" argument="--min-score-lead" type="integer" value="10" label="The minimal score lead required to call a barcode pair significant"/>
+        </section>
+        <section name="is" title="Index Sorting">
+            <param name="keep_tag_idx_order" type="boolean" truevalue="--keep-tag-idx-order" falsevalue="" checked="False" label="Keep identified order of barcode pair indices in BC tag; CCS only." />
+            <param name="keep_split_idx_order" type="boolean" truevalue="--keep-split-idx-order" falsevalue="" checked="False" label="Keep identified order of barcode pair indices in split BAM names; CCS only." />
+        </section>
+        <section name="ac" title="Aligner Configuration" expanded="True">
+            <param name="css" type="boolean" truevalue="--css" falsevalue="" checked="False" label="CCS mode, use optimal alignment options -A 1 -B 4 -D 3 -I 3 -X 4" />
+            <param name="match_score" argument="--match-score" type="integer" value="4" label="Score for a sequence match"/>
+            <param name="mismatch_penalty" argument="--mismatch-penalty" type="integer" value="13" label="Penalty for a mismatch"/>
+            <param name="deletion_penalty" argument="--deletion-penalty" type="integer" value="7" label="Deletions penalty"/>
+            <param name="insertion_penalty" argument="--insertion-penalty" type="integer" value="7" label="Insertion penalty"/>
+            <param name="branch_penalty" argument="--branch-penalty" type="integer" value="4" label="Branch penalty"/>
+        </section>
+        <section name="oc" title="Output Restrictions">
+            <param name="split_bam" type="boolean" truevalue="--split-bam" falsevalue="" checked="False" label="Split BAM output by barcode pair" />
+            <param name="split_bam_named" type="boolean" truevalue="--split-bam-named" falsevalue="" checked="True" label="Split BAM output by resolved barcode pair name" />
+            <param name="bam_handles" argument="--bam-handles" type="integer" value="500" label="Maximum number of open BAM files"/>
+            <param name="dump_clips" type="boolean" truevalue="--dump-clips" falsevalue="" checked="False" label="Dump clipped regions in a separate output file prefix.lima.clips" />
+            <param name="dump_removed" type="boolean" truevalue="--dump-removed" falsevalue="" checked="False" label="Dump removed records to prefix.lima.removed.bam" />
+            <param name="no_pbi" type="boolean" truevalue="--no-pbi" falsevalue="" checked="False" label="Do not generate a PBI file that is needed for SMRTLink" />
+            <param name="no_bam" type="boolean" truevalue="--no-bam" falsevalue="" checked="False" label="Do not generate BAM output" />
+            <param name="no_reports" type="boolean" truevalue="--no-reports" falsevalue="" checked="False" label="Do not generate reports" />
+        </section>
+        <section name="ss" title="Single Side">
+            <param name="single_side" type="boolean" truevalue="--single-side" falsevalue="" checked="False" label="Assign single side barcodes by score clustering" />
+            <param name="scored_adapter_ratio" type="float" value="0.25" label="Minimum ratio of scored vs sequenced adapters" />
+        </section>
+        <section name="isq" title="IsoSeq">
+            <param name="isoseq" type="boolean" truevalue="--isoseq" falsevalue="" checked="False" label="Activate specialized IsoSeq mode" />
+        </section>
+        <section name="adv" title="Advanced">
+            <param name="peek" type="integer" value="0" label="Demux the first N ZMWs and return the mean score; 0 means peeking deactivated. [0]" />
+            <param name="guess" type="integer" value="0" label="Try to guess the used barcodes, using the provided mean score threshold; 0 means guessing deactivated. [0]" />
+            <param name="guess_min_count" type="integer" value="0" label="Minimum number of ZMWs observed to whitelist barcodes" />
+            <param name="peek_guess" type="boolean" truevalue="--peek-guess" falsevalue="" checked="true" label="Try to infer the used barcodes subset, by peeking at the first 50,000 ZMWs, whitelisting barcode pairs with more than 10
+                                        counts and mean score ≥ 45." />
+        </section>
+    </inputs>
+    <outputs>
+        <collection name="list_deplexed" type="list" format="bam" label="Demultiplexed Bam">
+            <discover_datasets pattern="__name__" directory="demultiplexed" visible="false" />
+        </collection>
+        <data name="file_list" format="txt" from_work_dir="output.txt" label="${tool.name} on ${on_string} File list"></data>
+        <data name="counts" format="txt" from_work_dir="deplexed.lima.counts" label="${tool.name} on ${on_string} Counts"></data>
+        <data name="report" format="tabular" from_work_dir="deplexed.lima.report" label="${tool.name} on ${on_string} Report"></data>
+    </outputs>
+
+    <tests>
+        <!-- <test>
+            <param name="bam" value="/home/centos/pacbio-galaxy/test-data/pacbio.bam" />
+        </test> -->
+    </tests>
+
+    <help><![CDATA[
+        Usage: lima [options] INPUT BARCODES OUTPUT
+        Lima, Demultiplex Barcoded PacBio Data and Clip Barcodes
+    ]]>    </help>
+</tool>
