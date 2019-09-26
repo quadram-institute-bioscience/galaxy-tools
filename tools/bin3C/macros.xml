@@ -1,8 +1,8 @@
 <macros>
-    <token name="@VERSION@">4e32125</token>
+    <token name="@VERSION@">0.3</token>
     <xml name="requirements">
         <requirements>
-            <container type="docker">path/to/bin3c.sif</container>
+            <container type="singularity">path/to/bin3c.sif</container>
         </requirements>
     </xml>
 
