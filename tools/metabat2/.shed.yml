@@ -11,5 +11,3 @@ name: metabat2
 owner: thanhlv
 remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/metabat2
 type: unrestricted
-exclude:
-  - jgi_summarize_bam_contig_depths.xml

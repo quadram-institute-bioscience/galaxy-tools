@@ -1,0 +1,63 @@
+<tool id="mkmap" name="mkmap" version="@VERSION@">
+    <description>Create a new contact map from assembly sequences and Hi-C bam file</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        bin3C mkmap
+        $clobber
+        --max-image $max_image
+        --min-extent $min_extent
+        --min-reflen $min_reflen
+        --min-signal $min_signal
+        $eta
+        #if bin_size != 0
+            --bin-size $bin_size
+        #end if
+        #if min_insert != 0
+            --min-insert $min_insert
+        #end if
+        --min-mapq $min_mapq
+        --strong $strong
+        #if neb_name != ""
+            --enzyme $neb_name
+        #end if
+        $ref $bam out
+    ]]></command>
+    
+    <inputs>
+        <param name="ref" type="data" format="fasta,fastaq.gz" label="Reference fasta sequence" />
+        <param name="bam" type="data" format="bam" label="Input bam file in query order" />
+        <param name="clobber" type="boolean" truevalue="--clobber" falsevalue="" checked="false" label="Clobber existing files" />
+        <param name="max_image" type="integer" min="1" value="4000" label="Maximum image size for plots"/>
+        <param name="min_extent" type="integer" min="1" value="50000" label="Minimum cluster extent used in output"/>
+        <param name="min_reflen" type="integer" min="1" value="1000" label="Minimum acceptable reference length"/>
+        <param name="min_signal" type="integer" min="1" value="5" label="Minimum acceptable signal"/>
+        <param name="eta" type="boolean" truevalue="--eta" falsevalue="" checked="false" label="Re-count bam alignments to provide an ETA" />
+        <param name="bin_size" type="integer" min="0" value="0" label="Size of bins for windows extent maps" />
+        <param name="min_insert" type="integer" min="0" value="0" label="Minimum pair separation" />
+        <param name="min_mapq" type="integer" min="0" value="60" label="Minimum acceptable mapping quality" />
+        <param name="strong" type="integer" min="1" value="10" label="Accepted alignments must being N matches" />
+        <param name="neb_name" type="text" value="" label="Case-sensitive NEB enzyme name. Use multiple times for
+                        multiple enzymes" />
+    </inputs>
+
+    <outputs>
+        <data name="output" label="${tool.name} on ${on_string} Output">
+            <discover_datasets pattern="__designation_and_ext__" directory="out" />
+        </data>
+    </outputs>
+
+    <tests>
+        <test>
+        </test>
+    </tests>
+    <help><![CDATA[
+
+    Documentation can be found at `<https://github.com/cerebis/bin3C>`_.
+
+    ]]></help>
+<expand macro="citations" />
+</tool>

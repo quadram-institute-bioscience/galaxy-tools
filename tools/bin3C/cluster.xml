@@ -1,0 +1,56 @@
+<tool id="cluster" name="cluster" version="@VERSION@">
+    <description>Cluster an existing contact map into genome bins</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        bin3C cluster
+        $clobber
+        --max-image $max_image
+        --min-extent $min_extent
+        --min-reflen $min_reflen
+        --min-signal $min_signal
+        -s 201987356473
+        $no_report
+        $no_spades
+        $no_plot
+        $no_fasta
+        $only_large
+        $fasta
+        $contact_map out
+    ]]></command>
+    
+    <inputs>
+        <param name="contact_map" type="data" format="gz" label="Contact map" help="This file is generated from mkmap command" />
+        <param name="clobber" type="boolean" truevalue="--clobber" falsevalue="" label="Clobber existing files" />
+        <param name="max_image" type="integer" min="1" value="4000" label="Maximum image size for plots"/>
+        <param name="min_extent" type="integer" min="1" value="50000" label="Minimum cluster extent used in output"/>
+        <param name="min_reflen" type="integer" min="1" value="1000" label="Minimum acceptable reference length"/>
+        <param name="min_signal" type="integer" min="1" value="5" label="Minimum acceptable signal"/>
+        <param name="no_report" type="boolean" truevalue="--no-report" falsevalue="" checked="false" label="Do not generate a cluster report" />
+        <param name="no_spades" type="boolean" truevalue="--no-spades" falsevalue="" checked="false" label="Assembly was not done using SPAdes" />
+        <param name="no_plot" type="boolean" truevalue="--no-plot" falsevalue="" checked="false" label="Do not generate a clustered heatmap" />
+        <param name="no_fasta" type="boolean" truevalue="--no-fasta" falsevalue="" checked="false" label="Do not generate cluster FASTA files" />
+        <param name="only_large" type="boolean" truevalue="--only-large" falsevalue="" checked="false" label="Only write FASTA for clusters longer than min_extent" />
+        <param name="fasta" type="data" format="fasta" label="Alternative source FASTA location from that supplied during mkmap" />
+    </inputs>
+
+    <outputs>
+        <data name="output" label="${tool.name} on ${on_string} Output">
+            <discover_datasets pattern="__designation_and_ext__" directory="out" />
+        </data>
+    </outputs>
+
+    <tests>
+        <test>
+        </test>
+    </tests>
+    <help><![CDATA[
+
+    Documentation can be found at `<https://github.com/cerebis/bin3C>`_.
+
+    ]]></help>
+<expand macro="citations" />
+</tool>

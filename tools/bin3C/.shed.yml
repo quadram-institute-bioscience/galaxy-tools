@@ -1,0 +1,18 @@
+categories: [Sequence Analysis]
+description: Extract metagenome-assembled genomes (MAGs) from metagenomic data using Hi-C
+long_description: |
+  bin3C is a tool which attempts to extract so called metagenome-assembled
+  genones or MAGs from metagenomic shotgun sequencing experiments. The major
+  prerequisite for achieving this is an accompanying Hi-C sequencing data-set.
+  In short, the shotgun sequencing is assembled and the Hi-C read-set is used to
+  cluster the assembly contigs/scaffolds into genome bins. In our testing on
+  simulated validation datasets, bin3C genome binning solutions have high
+  precision (>0.95), in that extracted genomes possess low contamination in
+  comparison to non-HiC methods and good recall (0.65) for a realistic
+  experimental scenario.
+  Currently bin3C has only been tested with short-read sequencing data.
+homepage_url: https://github.com/cerebis/bin3C
+name: bin3C
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/bin3C
+type: unrestricted
