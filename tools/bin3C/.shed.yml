@@ -12,7 +12,7 @@ long_description: |
   experimental scenario.
   Currently bin3C has only been tested with short-read sequencing data.
 homepage_url: https://github.com/cerebis/bin3C
-name: bin3C
+name: bin3c
 owner: thanhlv
 remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/bin3C
 type: unrestricted
