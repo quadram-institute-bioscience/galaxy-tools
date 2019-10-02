@@ -1,0 +1,5 @@
+# This file defines databases and their folder location. Each database is a line with 
+# three columns: value{tab}{name}{/path/to/database-file} 
+# E.g. database100mers{tab}database100mers{tab}/home/user/bracken_databases/database100mers.kmer_distrib
+#default_db	default_db	${__HERE__}/db
+default_db	default_db	/media/deolivl/QIB_deolivl/nobackup/GTDBTK

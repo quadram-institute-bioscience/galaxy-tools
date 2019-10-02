@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tables>
+    <!-- Locations of checkM database in the required format for server -->
+    <table name="checkm_databases" comment_char="#" allow_duplicate_entries="False">
+        <columns>value, name, path</columns>
+        <file path="tool-data/checkm_databases.loc" />
+    </table>
+</tables>
