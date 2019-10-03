@@ -23,7 +23,7 @@
     ]]></command>
     
     <inputs>
-        <param name="contact_map" type="data" format="gz" label="Contact map" help="This file is generated from mkmap command" />
+        <param name="contact_map" type="data" format="tar.gz" label="Contact map" help="This file is generated from mkmap command" />
         <param name="clobber" type="boolean" truevalue="--clobber" falsevalue="" label="Clobber existing files" />
         <param name="max_image" type="integer" min="1" value="4000" label="Maximum image size for plots"/>
         <param name="min_extent" type="integer" min="1" value="50000" label="Minimum cluster extent used in output"/>
