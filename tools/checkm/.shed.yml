@@ -1,0 +1,7 @@
+categories: [Sequence Analysis]
+description: Assess the quality of microbial genomes recovered from isolates, single cells, and metagenomes -- Lineage-specific Workflow 
+name: checkm_lineage_wf
+long_description: |
+  The recommended workflow for assessing the completeness and contamination of genome bins is to use lineage-specific marker sets. 
+homepage_url: https://github.com/Ecogenomics/CheckM
+owner: leomrtns
