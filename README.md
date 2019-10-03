@@ -23,3 +23,4 @@
 and estimates species supertrees
 - **[GTDB-Tk](https://github.com/Ecogenomics/GTDBTk)** A toolkit for assigning objective taxonomic classifications to bacterial and archaeal genomes. 
 - **[checkM](https://github.com/Ecogenomics/CheckM/wiki/Workflows#lineage-specific-workflow)** Lineage-specific workflow  from checkM
+- **[dfast](https://github.com/nigyta/dfast_core)**  DDBJ Fast Annotation and Submission Tool 

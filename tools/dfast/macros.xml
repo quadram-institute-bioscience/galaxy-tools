@@ -1,0 +1,17 @@
+<macros>
+  <token name="@VERSION@">1.2.3</token>
+  <xml name="requirements">
+    <requirements>
+      <requirement type="package" version="@VERSION@">dfast</requirement>
+      <yield/>
+    </requirements>
+  </xml>
+  <xml name="version_command">
+    <version_command>dfast --version</version_command>
+  </xml>
+  <xml name="citations">
+    <citations>
+      <yield />
+    </citations>
+  </xml>
+</macros>
