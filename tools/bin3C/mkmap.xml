@@ -13,12 +13,8 @@
         --min-reflen $min_reflen
         --min-signal $min_signal
         $eta
-        #if bin_size != 0
-            --bin-size $bin_size
-        #end if
-        #if min_insert != 0
-            --min-insert $min_insert
-        #end if
+        --bin-size $bin_size
+        --min-insert $min_insert
         --min-mapq $min_mapq
         --strong $strong
         #if neb_name != ""
