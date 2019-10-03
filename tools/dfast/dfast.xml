@@ -1,0 +1,111 @@
+<tool id="dfast" name="dfast" version="@VERSION@">
+  <description>prokaryotic genome annotation</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+    #import re
+    #if $ortho.use
+      #set $ref_set_str = ''
+      #set $divisor = ''  
+      #for $i_file in $ortho.refs:
+        #set $ref_set_str = $ref_set_str + $divisor + "{}".format($i_file)
+        #set $divisor = ';'  ### will create "A ; B ; C "
+      #end for
+    #end if
+    #if $genome_input.is_of_type('fasta'):
+      ln -s ${genome_input}  in.fasta && 
+    #elif $genome_input.is_of_type('fasta.gz'):
+      gunzip -c ${genome_input} > in.fasta &&
+    #elif $genome_input.is_of_type('fasta.bz2'):
+      bunzip2 -c ${genome_input} > in.fasta &&
+    #end if
+    dfast -g in.fasta 
+      -o OUT
+      --cpu \${GALAXY_SLOTS:-1}
+      --aligner ${aligner} 
+      --gcode ${gcode} 
+      --use_original_name ${use_orig_name}
+      --sort_sequence ${sort_sequence}
+      --use_separate_tags ${separate_tags}
+      #if str($min_length) != ""
+        --minimum_length ${min_length}
+      #end if
+      #if $ortho.use
+        --references "${ref_set_str}"
+      #end if
+      ${fix_origin}
+    ]]></command>
+  <inputs>
+    <param name="genome_input" multiple="false" format="fasta, fasta.gz, fasta.bz2" type="data" label="Genome to be annotated, in fasta format (can be zipped)"/>
+
+    <param name="aligner" type="select" label="Aligner" help="Safer to leave the default (ghostx)">
+        <option value="ghostx" selected="true">ghostx (default)</option>
+        <option value="blastp">blastp (experimental, since didn't pass local tests) </option>
+    </param>
+
+    <param name="gcode" type="select" label="Genetic code">
+        <option value="11" selected="true">Default</option>
+        <option value="4">Mycoplasma</option>
+    </param>
+
+    <param name="use_orig_name" type="boolean" truevalue="t" falsevalue="f" checked="false" help="--use_original_name" label="Use original sequence names in a query FASTA file"/>
+
+    <param name="sort_sequence" type="boolean" truevalue="t" falsevalue="f" checked="true" help="--sort_sequence" label="Sort sequences by length"/>
+
+    <param name="min_length" type="integer" label="Minimum sequence length (default:200)" help="--minimum_length" optional="true" />
+
+    <param name="separate_tags" type="boolean" truevalue="t" falsevalue="f" checked="true" help="--use_separate_tags" label="Use separate tags according to feature types"/>
+
+    <param name="fix_origin" type="boolean" truevalue="--fix_origin" falsevalue="" checked="false" help="--fix_origin"
+      label="Rotate/flip the chromosome so that the dnaA gene comes first. (ONLY FOR A FINISHED GENOME)" />
+
+    <conditional name="ortho">
+      <param name="use" type="boolean" checked="false" help="--references" label="orthologous gene assignment with OrthoSearch"/>
+      <when value="true">
+        <param name="refs" type="data" multiple="true" format="genbank,embl,asn1" label="One or more genbank reference genomes">
+          <help><![CDATA[
+            OrthoSearch conducts all-against-all protein alignments between the given reference genomes to infer orthologous genes.
+          ]]></help>
+        </param>
+      </when>
+      <when value="false"> </when>
+    </conditional>
+  </inputs>
+  <outputs>
+    <data name="g_embl" format="embl" label="Annotated genome in EMBL format" from_work_dir="OUT/genome.embl"/>
+    <data name="g_gbk" format="genbank" label="Annotated genome in GENBANK format" from_work_dir="OUT/genome.gbk"/>
+    <data name="g_gff" format="gff"   label="Annotated genome in GFF format" from_work_dir="OUT/genome.gff"/>
+    <data name="e_fsa" format="fasta" label="fsa file for Genbank submission" from_work_dir="OUT/genbank/genbank.fsa"/>
+    <data name="e_tbl" format="txt"   label="tbl file for Genbank submission" from_work_dir="OUT/genbank/genbank.tbl"/>
+    <data name="e_fsa" format="fasta" label="fasta file for DDBJ submission" from_work_dir="OUT/ddbj/mss.fasta"/>
+    <data name="e_fsa" format="txt"   label="ann file for DDBJ submission" from_work_dir="OUT/ddbj/mss.ann"/>
+    <data name="g_fna" format="fasta" label="Genome sequences in fasta format" from_work_dir="OUT/genome.fna"/>
+    <data name="p_faa" format="fasta" label="Predicted proteins (fasta)" from_work_dir="OUT/protein.faa"/>
+    <data name="r_fna" format="fasta" label="Predicted RNAs (fasta)" from_work_dir="OUT/rna.fna"/>
+    <data name="c_fna" format="fasta" label="Predicted CDs (fasta)" from_work_dir="OUT/cds.fna"/>
+    <data name="stats" format="tabular" label="overall statistics" from_work_dir="OUT/statistics.txt"/>
+  </outputs>
+  <tests>
+    <test>
+      <param name="genome_input" value="test.genome.fna"/>
+      <param name="fast" value="true"/>
+      <param name="inputtre" value="HOG1.tre,HOG2.tre,HOG3.tre,HOG4.tre,HOG5.tre"/>
+      <output name="stats" file="statistics.txt"/>
+    </test>
+  </tests>
+    <help><![CDATA[
+      DFAST is a flexible and customizable pipeline for prokaryotic genome annotation as well as data submission to the
+      INSDC. It is originally developed as the background engine for the DFAST web service and is also available as a
+      stand-alone command-line tool.
+
+      DFAST can annotate a typical-sized bacterial genome within several minutes. In addition to the conventional
+      homology search, it features unique functions such as orthologous gene assignment between reference genomes,
+      pseudo/frameshifted gene prediction, and conserved domain search.
+
+      This galaxy tool may be incomplete, please let us know if there is any missing functionality. 
+    ]]></help>
+    <expand macro="citations" />
+</tool>

@@ -1,0 +1,10 @@
+categories: [Sequence Analysis]
+description: DDBJ Fast Annotation and Submission Tool 
+name: dfast 
+long_description: |
+  DFAST is a flexible and customizable pipeline for prokaryotic genome annotation as well as data submission to the INSDC. It is originally developed as the background engine for the DFAST web service and is also available as a stand-alone command-line tool.
+  DFAST can annotate a typical-sized bacterial genome within several minutes. In addition to the conventional homology search, it features unique functions such as orthologous gene assignment between reference genomes, pseudo/frameshifted gene prediction, and conserved domain search.
+homepage_url: https://github.com/nigyta/dfast_core
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/dfast 
+owner: leomrtns
+type: unrestricted
