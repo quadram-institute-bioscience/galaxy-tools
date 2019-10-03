@@ -1,0 +1,17 @@
+<macros>
+    <token name="@VERSION@">0.2.6.3</token>
+    <xml name="requirements">
+        <requirements>
+            <container type="singularity">path/to/qc3c.sif</container>
+        </requirements>
+    </xml>
+
+    <xml name="version_command">
+        <version_command>bin3C -V | grep -E -o "([0-9]\.[0-9]\.[0-9]\.[0-9])"</version_command>
+    </xml>
+    <!-- <xml name="citations">
+        <citations>
+            <citation type="doi">10.1186/s13059-019-1643-1</citation>
+        </citations>
+    </xml> -->
+</macros>

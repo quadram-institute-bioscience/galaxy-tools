@@ -1,0 +1,13 @@
+categories: [Sequence Analysis]
+description: Quality control for Hi-C DNA sequencing libraries
+long_description: |
+  qc3C attempts to provide a means of assessing the proportion of "signal"
+  within a Hi-C sequencing library. That is, read-pairs which are a true product
+  of proximity ligation, rather than self-religation or shotgun noise. To
+  accomplish this, two modes of analysis are available BAM analysis and
+  assembly-free kmer analysis.
+homepage_url: https://github.com/cerebis/qc3C
+name: qc3c
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/qc3c
+type: unrestricted
