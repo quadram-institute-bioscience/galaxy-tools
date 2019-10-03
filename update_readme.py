@@ -25,7 +25,7 @@ def update(path="tools"):
                 }
             )
             _sorted_holder = sorted(_holder, key = lambda i: i['name'])
-        
+        fh.write("\n#### Total: {} tools\n".format(len(_holder)))
         for item in _sorted_holder:
             _str_line = "- **[{0}]({1})** {2}\n".format(item["name"], item["homepage_url"], item["description"])
             fh.write(_str_line)

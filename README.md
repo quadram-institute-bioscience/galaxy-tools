@@ -2,6 +2,8 @@
 ### A collection of bioinformatics tools for use with [Galaxy](https://galaxyproject.org/) written at Quadram Institute
 
 [![Build Status](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools.svg?branch=master)](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools)
+
+#### Total: 35 tools
 - **[AMRFinderPlus](https://github.com/ncbi/amr/)** NCBI Antimicrobial Resistance Gene Finder Plus
 - **[abricate](https://github.com/tseemann/abricate)** Mass screening of contigs for antiobiotic resistance genes
 - **[albatradis](https://github.com/quadram-institute-bioscience/galaxy-tools)** Comparative TraDIS analysis
