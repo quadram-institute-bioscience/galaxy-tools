@@ -17,8 +17,9 @@
         --min-insert $min_insert
         --min-mapq $min_mapq
         --strong $strong
-        #if neb_name != ""
-            --enzyme $neb_name
+        #if $neb_name != ""
+            #set $_neb_name = ' -e '.join( str( $neb_name ).split( ';' ) )
+            -e ${_neb_name}
         #end if
         $ref $bam out
     ]]></command>
@@ -37,7 +38,7 @@
         <param name="min_mapq" type="integer" min="0" value="60" label="Minimum acceptable mapping quality" />
         <param name="strong" type="integer" min="1" value="10" label="Accepted alignments must being N matches" />
         <param name="neb_name" type="text" value="" label="Case-sensitive NEB enzyme name. Use multiple times for
-                        multiple enzymes" />
+                        multiple enzymes", help="Use ; to separate multiple enzymes, e.g enzyme1;enzyme2" />
     </inputs>
 
     <outputs>
