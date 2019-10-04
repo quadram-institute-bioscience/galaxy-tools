@@ -1,0 +1,60 @@
+<tool id="qc3c_kmer" name="qc3c_kmer" version="@VERSION@">
+    <description>qc3C Kmer-based analysis</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        jellyfish count -m $kmer_size -s 2G -C -o kmers.jf $fastq &&
+
+        qc3C kmer
+        #if str($sample_rate) != "0":
+            -p $sample_rate
+        #end if
+        -s $seed
+        --write_report
+        $verbose
+        -t \${GALAXY_SLOTS:-1}
+        --output-path './out'
+        -m $mean_insert
+        --output-table table.tsv
+        -x $max_coverage
+        -l kmers.jf
+        #if str($neb_name) != "":
+            #for $enzyme in str($neb_name).split(',')
+                -e $enzyme
+            #end for 
+        #end if
+        -r $fastq
+    ]]></command>
+    
+    <inputs>
+        <param name="fastq" type="data" format="fastq,fastqsanger,fastq.gz,fastqsanger.gz" label="FastQ format reads" />
+        <param name="sample_rate" type="float" min="0" value="0" label="Sample only a proportion of all read-pairs"/>
+        <param name="seed" type="integer" min="1" value="20191902" label="Minimum cluster extent used in output"/>
+        <param name="min_insert" type="integer" min="0" value="0" label="Mean fragment length to use in estimating the unobserved junction rate" />
+        <param name="max_coverage" type="integer" min="0" value="500" label="Ignore regions with more than this coverage" />
+        <param name="kmer_size" type="integer" min="0" value="24" label="Kmer size" />
+        <param name="neb_name" type="text" value="" label="Case-sensitive NEB enzyme name. Use multiple times for
+                        multiple enzymes" />
+        <param name="output_table" type="boolean" truevalue="true" falsevalue="" checked="false" label="Save the collected per-read statistics table to a file" />
+        <param name="verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="false" label="Verbose output" />
+    </inputs>
+
+    <outputs>
+        <data name="report" format="json" label="{tool.name} on ${on_string} Report" from_work_dir="out/report.jsonl"/>
+        <data name="table" format="tabular" label="{tool.name} on ${on_string} Table" from_work_dir="out/table.tsv"/>
+        <data name="log" format="text" label="{tool.name} on ${on_string} Log" from_work_dir="out/qc3C.log"/>
+    </outputs>
+
+    <tests>
+        <test>
+        </test>
+    </tests>
+    <help><![CDATA[
+
+    Documentation can be found at `<https://github.com/cerebis/bin3C>`_.
+
+    ]]></help>
+</tool>
