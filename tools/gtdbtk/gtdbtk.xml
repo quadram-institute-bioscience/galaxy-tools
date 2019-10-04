@@ -18,7 +18,7 @@
           #set $bool_zip = "true"
           #set $ext = '.gz'
         #end if
-        #set $_input_file = "./input/" + $i_file.element_identifier + $ext
+        #set $_input_file = "./input/" + "'{}'".format($i_file.element_identifier) + $ext
         ln -s '${i_file}' ${_input_file} &&
       #end for
       mkdir ./output ./output_zip &&
