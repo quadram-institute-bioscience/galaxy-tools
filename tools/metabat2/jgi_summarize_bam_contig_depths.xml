@@ -17,76 +17,35 @@
             #set $named_input_files = $named_input_files + ' ' + $_input_file
         #end for
         jgi_summarize_bam_contig_depths 
-        --outputDepth '${outputDepth}.txt'
+        --outputDepth outputDepth.txt
         --percentIdentity $percentIdentity
-        --pairedContigs '${pairedContigs}.txt'
+        #if $pairedContigs:
+            --pairedContigs pairedContigs.txt
+        #end if
         --unmappedFastq $unmappedFastq
-        #if $noIntraDepthVariance
-            $noIntraDepthVariance
-        #end if
-        #if $showDepth
-            $showDepth
-        #end if
-        #if $minMapQual != 0
-            --minMapQual $minMapQual
-        #end if
-        #if $weightMapQual != 0
-            --weightMapQual $weightMapQual
-        #end if
-        #if $includeEdgeBases != 0
-            $includeEdgeBases
-        #end if
+        $includeEdgeBases
         --maxEdgeBases $maxEdgeBases
-
         $named_input_files
-        --referenceFasta $reference_fasta
-        --outputGC output_gc.txt
-        --gcWindow $output_gc
-        --outputReadStats read_stats.txt
-        --outputKmers kmers
-        #if $opt_shred.shredLength != 0
-            --shredLength $opt_shred.shredLength
-        #end if
-        #if $opt_shred.shredDepth != 0
-            --shredDepth $opt_shred.shredDepth
-        #end if
-        #if $opt_shred.minContigLength != 0
-            --minContigLength $opt_shred.minContigLength
-        #end if
-        #if $opt_shred.minContigDepth != 0
-            --minContigDepth $opt_shred.minContigDepth
-        #end if
-    ]]></command>
-    
+    ]]>    </command>
+
     <inputs>
-        <param name="in_file" type="data" format="bam" label="Sorted bam files" help="(Mandatory)"/>
-        <section name="opt" title="Options">
-            <param argument="--outputDepth" type="text" value="output_depth" label="The file to put the contig by bam depth matrix" help=""/>
-            <param argument="--percentIdentity" type="integer" value="97" label="The minimum end-to-end % identity of qualifying reads" help="(default: 97)"/>
-            <param argument="--pairedContigs" type="text" value="paired_contigs" label="The file to output the sparse matrix of contigs which paired reads span" help=""/>
-            <param argument="--unmappedFastq" type="text" value="unmaped" label="The prefix to output unmapped reads from each bam file suffixed by" help=""/>
-            <param argument="--noIntraDepthVariance" type="boolean" truevalue="--noIntraDepthVariance" falsevalue="" checked="false" label="Do not include variance from mean depth along the contig" help=""/>
-            <param argument="--showDepth" type="boolean" truevalue="--showDepth" falsevalue="" checked="false" label="Output a .depth file per bam for each contig base" help=""/>
-            <param argument="--minMapQual" type="integer" value="0" label="The minimum mapping quality necessary to count the read as mapped" help="(default: 0)"/>
-            <param argument="--weightMapQual" type="integer" value="0" label="Weight per-base depth based on the MQ of the read (i.e uniqueness)" help="(default: 0)"/>
-            <param argument="--includeEdgeBases" type="boolean" truevalue="--includeEdgeBases" falsevalue="" checked="false" label="When calculating depth and variance, include the 1-readlength edges" help="(No by default)"/>
-            <param argument="--maxEdgeBases" type="integer" value="75" label="When calculating depth and variance, and not --includeEdgeBases, the maximum length" help="(default: 75)"/>
-            <param name="reference_fasta" type="data" format="fasta" label="The reference file." help="(It must be the same fasta that bams used)"/>
-            <param name="gc_window" type="integer" value ="100" label="The sliding window size for GC calculations" help=""/>
-        </section>
-        <section name="opt_shred" title="Options to control shredding contigs that are under represented by the reads">
-            <param argument="--shredLength" type="integer" value="0" label="The maximum length of the shreds" help="(default: 0)"/>
-            <param argument="--shredDepth" type="integer" value="0" label="The depth to generate overlapping shreds" help="(default: 0)"/>
-            <param argument="--minContigLength" type="integer" value="0" label="The mimimum length of contig to include for mapping and shredding" help="(default: 0)"/>
-            <param argument="--minContigDepth" type="integer" value="0" label="The minimum depth along contig at which to break the contig" help="(default: 0)"/>
-        </section>
+        <param name="in_file" type="data" format="bam" label="Sorted bam files"/>
+        <param argument="--percentIdentity" type="integer" value="97" label="The minimum end-to-end % identity of qualifying reads"/>
+        <param argument="--pairedContigs" type="boolean" truevalue="true" falsevalue="false" label="Write the sparse matrix of contigs which paired reads span"/>
+        <param argument="--unmappedFastq" type="text" value="unmaped" label="The prefix to output unmapped reads from each bam file suffixed by" />
+        <param argument="--noIntraDepthVariance" type="boolean" truevalue="--noIntraDepthVariance" falsevalue="" checked="false" label="Do not include variance from mean depth along the contig" />
+        <param argument="--showDepth" type="boolean" truevalue="--showDepth" falsevalue="" checked="false" label="Output a .depth file per bam for each contig base" />
+        <param argument="--minMapQual" type="integer" value="0" label="The minimum mapping quality necessary to count the read as mapped" />
+        <param argument="--weightMapQual" type="integer" value="0" label="Weight per-base depth based on the MQ of the read (i.e uniqueness)" />
+        <param argument="--includeEdgeBases" type="boolean" truevalue="--includeEdgeBases" falsevalue="" checked="false" label="When calculating depth and variance, include the 1-readlength edges"/>
+        <param argument="--maxEdgeBases" type="integer" value="75" label="When calculating depth and variance, and not --includeEdgeBases, the maximum length"/>
     </inputs>
 
     <outputs>
-        <data name="out_file" format="fasta" from_work_dir="*.fasta" label="${tool.name} on ${on_string}: Output file">
-            <discover_datasets pattern="__designation_and_ext__" directory="." visible="true" />
+        <data name="depth_coverage" format="tabular" from_work_dir="outputDepth.txt" label="${tool.name} on ${on_string}: Depth Coverage" />
+        <data name="depth_coverage" format="tabular" from_work_dir="pairedContigs.txt" label="${tool.name} on ${on_string}: pairedContigs">
+            <filter>pairedContigs</filter>
         </data>
-        <data name="log" format="tabular" label="${tool.name} on ${on_string} report file" />
     </outputs>
 
     <tests>
@@ -96,15 +55,5 @@
     <help><![CDATA[
     Documentation can be found at `<https://bitbucket.org/berkeleylab/metabat>`_.
 
-    ]]></help>
-    <citations>
-        <citation type="bibtex">
-            @ARTICLE{Dong2017,
-            author = {Dong Kang, Feng Li, Jeff Froula, Rob Egan, Zhong Wang},
-            title = {MetaBAT: Metagenome Binning based on Abundance and Tetranucleotide frequency},
-            year = {2017},
-            url = {https://bitbucket.org/berkeleylab/metabat},
-        }
-        </citation>
-    </citations>
+    ]]>    </help>
 </tool>

@@ -8,7 +8,7 @@
     <command detect_errors="exit_code"><![CDATA[
         metabat2
         --inFile $in_file
-        --outFile '${in_file.element_identifier}_bin'
+        --outFile './bin'
         #if $abd_file
             --abdFile $abd_file
         #end if
@@ -22,7 +22,7 @@
         --minCV $min_cv
         --minCVSum $min_cv_sum
         --minClsSize $min_cls_size
-        --numThreads \${GALAXY_SLOTS:-0}
+        --numThreads 8
         #if $onlyLabel
             $onlyLabel
         #end if
@@ -34,34 +34,32 @@
         #if $debug
             $debug
         #end if
-        --verbose > $log &&
-        mkdir bin &&
-        mv *.fa ./bin
+        --verbose > $log
 
-    ]]></command>
-    
+    ]]>    </command>
+
     <inputs>
         <param name="in_file" type="data" format="fasta" label="Contigs in fasta file format" help="(Mandatory)"/>
-        <param name="abd_file" type="data" format="tabular" optional="True" label="A file having mean and variance of base coverage depth" help="(tab delimited;
-                                    the first column should be contig names, and the first row will be considered as the header and be skipped) (Optional)"/>
-        <param name="min_contig" type="integer" value="2500" label="Minimum size of a contig for binning (should be >=1500)" help="(Default: 2500)"/>
+        <param name="abd_file" type="data" format="txt" optional="True" label="A file having mean and variance of base coverage depth" help="(tab delimited
+                                     the first column should be contig names, and the first row will be considered as the header and be skipped) (Optional)"/>
+        <param name="min_contig" type="integer" value="2500" label="Minimum size of a contig for binning (should be >=1500)"/>
         <param name="max_p" type="integer" value="95" label="Percentage of 'good' contigs considered for binning decided by connection
-                                    among contigs" help="The greater, the more sensitive. (Default: 95)"/>
+                                    among contigs" help="The greater, the more sensitive"/>
         <param name="min_s" type="integer" value="60" label="Minimum score of a edge for binning (should be between 1 and 99)" help="The
-                                    greater, the more specific. (Default: 60)"/>
-        <param name="maxEdges" type="integer" value="200" label="Maximum number of edges per node." help="The greater, the more sensitive. (Default: 200)"/>
+                                    greater, the more specific"/>
+        <param name="maxEdges" type="integer" value="200" label="Maximum number of edges per node." help="The greater, the more sensitive"/>
         <param name="ptnf" type="integer" value="0" label="TNF probability cutoff for building TNF graph" help="Use it to skip the
-                                    preparation step. (Default: 0)"/>
-        <param argument="--noAdd" type="boolean" truevalue="--noAdd" falsevalue="" checked="false" label="Turning off additional binning for lost or small contigs." help="Default:No" />    
-        <param name="min_cv" type="integer" value="1" label="Minimum mean coverage of a contig in each library for binning" help="(Default: 1)"/>
+                                    preparation step"/>
+        <param argument="--noAdd" type="boolean" truevalue="--noAdd" falsevalue="" checked="false" label="Turning off additional binning for lost or small contigs" />
+        <param name="min_cv" type="integer" value="1" label="Minimum mean coverage of a contig in each library for binning"/>
         <param name="min_cv_sum" type="integer" value="1" label="Minimum total effective mean coverage of a contig (sum of depth over
-                                    minCV) for binning" help="(Default: 1)"/>
-        <param name="min_cls_size" type="integer" value="200000" label="Minimum size of a bin as the output" help="(Default: 200000)"/>
-        <param argument="--onlyLabel" type="boolean" truevalue="--onlyLabel" falsevalue="" checked="false" label="Output only sequence labels as a list in a column without sequences." help="Default:No" />    
-        <param argument="--saveCls" type="boolean" truevalue="--saveCls" falsevalue="" checked="false" label="Save cluster memberships as a matrix format" help="Default:No" />    
-        <param argument="--unbinned" type="boolean" truevalue="--unbinned" falsevalue="" checked="false" label="Generate [outFile].unbinned.fa file for unbinned contigs" help="Default:No" />    
+                                    minCV) for binning"/>
+        <param name="min_cls_size" type="integer" value="200000" label="Minimum size of a bin as the output" />
+        <param argument="--onlyLabel" type="boolean" truevalue="--onlyLabel" falsevalue="" checked="false" label="Output only sequence labels as a list in a column without sequences" />
+        <param argument="--saveCls" type="boolean" truevalue="--saveCls" falsevalue="" checked="false" label="Save cluster memberships as a matrix format" />
+        <param argument="--unbinned" type="boolean" truevalue="--unbinned" falsevalue="" checked="false" label="Generate [outFile].unbinned.fa file for unbinned contigs"/>
         <param name="seed" type="integer" value="0" label="For exact reproducibility." help="(Default: 0 use random seed)"/>
-        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Debug output" help="Default:No" />   
+        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Debug output" />
     </inputs>
 
     <outputs>
@@ -73,6 +71,18 @@
 
     <tests>
         <test>
+            <param name="in_file" value="assembly.fa.gz"/>
+            <param name="abd_file" value="depth.txt"/>
+            <param name="seed" value="2019" />
+            <outputs>
+                <collection name="bin_files">
+                    <discovered_dataset designation="bin.1" ftype="fasta" directory="bin">
+                        <assert_contents>
+                            <has_line line="1" />
+                        </assert_contents>
+                    </discovered_dataset>
+                </collection>
+            </outputs>
         </test>
     </tests>
     <help><![CDATA[
@@ -80,15 +90,6 @@
         
     Documentation can be found at `<https://bitbucket.org/berkeleylab/metabat>`_.
 
-    ]]></help>
-    <citations>
-        <citation type="bibtex">
-            @ARTICLE{Dong2017,
-            author = {Dong Kang, Feng Li, Jeff Froula, Rob Egan, Zhong Wang},
-            title = {MetaBAT: Metagenome Binning based on Abundance and Tetranucleotide frequency},
-            year = {2017},
-            url = {https://bitbucket.org/berkeleylab/metabat},
-        }
-        </citation>
-    </citations>
+    ]]>    </help>
+    <expand macro="citations" />
 </tool>
