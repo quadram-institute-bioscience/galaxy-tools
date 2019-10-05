@@ -8,3 +8,4 @@ long_description: |
 name: gtdbtk
 owner: leomrtns
 homepage_url: https://github.com/Ecogenomics/GTDBTk 
+remote_repository_url:  https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/gtdbtk 
