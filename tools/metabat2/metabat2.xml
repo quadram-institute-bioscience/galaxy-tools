@@ -71,17 +71,19 @@
 
     <tests>
         <test>
-            <param name="in_file" value="assembly.fa.gz"/>
-            <param name="abd_file" value="depth.txt"/>
+            <!-- Test data downloaded from metabat2 tutorial website - named CASE1 -->
+            <param name="in_file" value="contigs.fa"/>
+            <param name="abd_file" value="contigs_depth.txt"/>
             <param name="seed" value="2019" />
             <outputs>
-                <collection name="bin_files">
+                <!-- <collection name="bin_files">
                     <discovered_dataset designation="bin.1" ftype="fasta" directory="bin">
                         <assert_contents>
                             <has_line line="1" />
                         </assert_contents>
                     </discovered_dataset>
-                </collection>
+                </collection> -->
+                <param name="log" value="log.txt"/>
             </outputs>
         </test>
     </tests>

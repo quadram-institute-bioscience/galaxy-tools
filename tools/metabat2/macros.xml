@@ -7,13 +7,13 @@
     </xml>
 
     <xml name="version_command">
-        <!-- <version_command>metabat2 -h 2>&1 | head -n2 | grep -Po "(?<=version)(.*)(?=\;)"</version_command> -->
-        <version_command>metabat2 -h </version_command>
+        <version_command>
+            <![CDATA[metabat2 -h 2>&1 | head -n2 | grep -Po "(?<=version)(.*)(?=\;)"]]></version_command>
     </xml>
 
-    <!-- <xml name="citations">
+    <xml name="citations">
         <citations>
-            <citation type="doi">fill_here</citation>
+            <citation type="doi">10.7717/peerj.7359</citation>
         </citations>
-    </xml> -->
+    </xml>
 </macros>
