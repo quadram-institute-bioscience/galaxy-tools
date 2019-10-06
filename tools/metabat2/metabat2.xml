@@ -22,7 +22,7 @@
         --minCV $min_cv
         --minCVSum $min_cv_sum
         --minClsSize $min_cls_size
-        --numThreads 8
+        --numThreads \${GALAXY_SLOTS:-4}
         #if $onlyLabel
             $onlyLabel
         #end if
