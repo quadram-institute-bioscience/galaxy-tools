@@ -43,7 +43,7 @@
         #if $opt_shred.minContigDepth != "0"
             --minContigDepth $opt_shred.minContigDepth
         #end if
-        $identifier
+        '$identifier'
     ]]>    </command>
 
     <inputs>
