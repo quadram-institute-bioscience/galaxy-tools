@@ -8,7 +8,7 @@
     </requirements>
     <version_command>coverm --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
-        coverm contigs
+        coverm contig
         -t \${GALAXY_SLOTS}
         --methods metabat
         --bam-files $bam 
