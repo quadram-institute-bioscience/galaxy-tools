@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools.svg?branch=master)](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools)
 
-#### Total: 35 tools
+#### Total: 36 tools
 - **[AMRFinderPlus](https://github.com/ncbi/amr/)** NCBI Antimicrobial Resistance Gene Finder Plus
 - **[abricate](https://github.com/tseemann/abricate)** Mass screening of contigs for antiobiotic resistance genes
 - **[albatradis](https://github.com/quadram-institute-bioscience/galaxy-tools)** Comparative TraDIS analysis
@@ -14,6 +14,7 @@
 - **[canu](https://github.com/marbl/canu)** Canu is a hierarchical assembly pipeline designed for high-noise single-molecule sequencing (such as the PacBio RS II/Sequel or Oxford Nanopore MinION). Adapted from bgruening's wrapper
 - **[checkm_lineage_wf](https://github.com/Ecogenomics/CheckM)** Assess the quality of microbial genomes recovered from isolates, single cells, and metagenomes -- Lineage-specific Workflow
 - **[circlator](https://sanger-pathogens.github.io/circlator/)** A tool to circularize genome assemblies
+- **[coverm](https://github.com/wwood/CoverM)** Read coverage calculator for metagenomics
 - **[dfast](https://github.com/nigyta/dfast_core)** DDBJ Fast Annotation and Submission Tool
 - **[fargene](https://github.com/fannyhb/fargene)** fARGene (Fragmented Antibiotic Resistance Gene iENntifiEr )
 - **[fastani](https://github.com/ParBLiSS/FastANI)** Fast alignment-free computation of whole-genome Average Nucleotide Identity
