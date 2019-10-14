@@ -7,15 +7,16 @@
     <expand macro="version_command" />
     <command detect_errors="exit_code"><![CDATA[
         bin3C mkmap
-        $clobber
         --max-image $max_image
         --min-extent $min_extent
         --min-reflen $min_reflen
         --min-signal $min_signal
-        $eta
-        --bin-size $bin_size
+        #if str($bin_size) != "0":
+            --bin-size $bin_size
+        #end if
         --min-insert $min_insert
         --min-mapq $min_mapq
+        $eta
         --strong $strong
         #if str($neb_name) != "":
             #for $enzyme in str($neb_name).split(',')
@@ -28,7 +29,6 @@
     <inputs>
         <param name="ref" type="data" format="fasta,fastaq.gz" label="Reference fasta sequence" />
         <param name="bam" type="data" format="bam" label="Input bam file in query order" />
-        <param name="clobber" type="boolean" truevalue="--clobber" falsevalue="" checked="false" label="Clobber existing files" />
         <param name="max_image" type="integer" min="1" value="4000" label="Maximum image size for plots"/>
         <param name="min_extent" type="integer" min="1" value="50000" label="Minimum cluster extent used in output"/>
         <param name="min_reflen" type="integer" min="1" value="1000" label="Minimum acceptable reference length"/>
