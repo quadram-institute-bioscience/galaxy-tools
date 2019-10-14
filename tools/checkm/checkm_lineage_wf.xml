@@ -9,11 +9,13 @@
   <expand macro="stdio"/>
   <expand macro="version_command"/>
   <command><![CDATA[
+  #import re
 echo {\"dataRoot\": \"$checkm_databases.fields.path\", \"remoteManifestURL\": \"https://data.ace.uq.edu.au/public/CheckM_databases/\", \"manifestType\": \"CheckM\", \"localManifestName\": \".dmanifest\", \"remoteManifestName\": \".dmanifest\"} > \${CONDA_PREFIX}/lib/python2.7/site-packages/checkm/DATA_CONFIG &&
 mkdir bin_folder && 
 #for $k, $f in enumerate($bin_folder)
     #if $f
-        ln -s "${f}" bin_folder/${k}.fna &&
+        #set $safe_name = re.sub('[^\w\s]', '_', str($f.element_identifier))
+        ln -s "${f}" bin_folder/${safe_name}.fna &&
     #end if
 #end for
 
@@ -103,7 +105,9 @@ done
 
   </inputs>
   <outputs>
-    <data  name="alignment_file_output" format="txt" hidden="false" label="${tool.name} on ${on_string} (alignment)"><filter>alignment_file</filter></data>
+    <data name="alignment_file_output" format="txt" hidden="false" label="${tool.name} on ${on_string} (alignment)">
+      <filter>alignment_file</filter>
+    </data>
     <collection name="hmmer_nucleotide_per_bin" type="list" label="${tool.name} on ${on_string} (nucleotide gene sequences per bin)">
       <filter>nt</filter>
       <discover_datasets directory="out_folder/bins/" pattern="(?P&lt;designation&gt;.+).genes.fna" ext="fasta" />
@@ -115,7 +119,7 @@ done
     <data name="output" format="tabular" hidden="false" label="${tool.name} on ${on_string}"/>
   </outputs>
   <tests>
-  <expand macro="tests"/>
+    <expand macro="tests"/>
   </tests>
   <help><![CDATA[Example: checkm lineage_wf ./bins ./output]]></help>
   <expand macro="citations"/>
