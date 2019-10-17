@@ -14,18 +14,18 @@
         -s 201987356473
         --assembler $assembler
         $no_report
-        $no_spades
         $no_plot
         $no_fasta
         $only_large
         $fasta
+        --n-iter $iteration
         $contact_map out
     ]]>    </command>
 
     <inputs>
         <param name="contact_map" type="data" format="tar.gz" label="Contact map" help="This file is generated from mkmap command" />
-        <param name="assembler" label="Assembly software used to create contigs" name="mode" type="select">
-            <option selected="true"  value="generic">generic</option>
+        <param name="assembler" label="Assembly software used to create contigs" type="select">
+            <option selected="true" value="generic">generic</option>
             <option value="megahit">megahit</option>
             <option value="spades">spades</option>
         </param>
@@ -33,12 +33,12 @@
         <param name="min_extent" type="integer" min="1" value="50000" label="Minimum cluster extent used in output"/>
         <param name="min_reflen" type="integer" min="1" value="1000" label="Minimum acceptable reference length"/>
         <param name="min_signal" type="integer" min="1" value="5" label="Minimum acceptable signal"/>
+        <param name="iteration" type="integer" min="1" value="10" label="Number of iterations for clustering optimisation"/>
         <param name="no_report" type="boolean" truevalue="--no-report" falsevalue="" checked="false" label="Do not generate a cluster report" />
-        <param name="no_spades" type="boolean" truevalue="--no-spades" falsevalue="" checked="false" label="Assembly was not done using SPAdes" />
         <param name="no_plot" type="boolean" truevalue="--no-plot" falsevalue="" checked="false" label="Do not generate a clustered heatmap" />
         <param name="no_fasta" type="boolean" truevalue="--no-fasta" falsevalue="" checked="false" label="Do not generate cluster FASTA files" />
         <param name="only_large" type="boolean" truevalue="--only-large" falsevalue="" checked="false" label="Only write FASTA for clusters longer than min_extent" />
-        <param name="fasta" type="data" format="fasta" label="Alternative source FASTA location from that supplied during mkmap" />
+        <param name="fasta" type="data" format="fasta,fastq.gz" label="Alternative source FASTA from that supplied during mkmap" />
     </inputs>
 
     <outputs>

@@ -7,7 +7,6 @@
     <expand macro="version_command" />
     <command detect_errors="exit_code"><![CDATA[
         bin3C mkmap
-        --max-image $max_image
         --min-extent $min_extent
         --min-reflen $min_reflen
         --min-signal $min_signal
@@ -29,7 +28,6 @@
     <inputs>
         <param name="ref" type="data" format="fasta,fastaq.gz" label="Reference fasta sequence" />
         <param name="bam" type="data" format="bam" label="Input bam file in query order" />
-        <param name="max_image" type="integer" min="1" value="4000" label="Maximum image size for plots"/>
         <param name="min_extent" type="integer" min="1" value="50000" label="Minimum cluster extent used in output"/>
         <param name="min_reflen" type="integer" min="1" value="1000" label="Minimum acceptable reference length"/>
         <param name="min_signal" type="integer" min="1" value="5" label="Minimum acceptable signal"/>
