@@ -17,13 +17,15 @@
         $no_plot
         $no_fasta
         $only_large
-        $fasta
+        #if str($fasta) != "None":
+            $fasta
+        #end if
         --n-iter $iteration
         $contact_map out
     ]]>    </command>
 
     <inputs>
-        <param name="contact_map" type="data" format="tar.gz" label="Contact map" help="This file is generated from mkmap command" />
+        <param name="contact_map" type="data" format="binary" label="Contact map" help="This file is generated from mkmap command" />
         <param name="assembler" label="Assembly software used to create contigs" type="select">
             <option selected="true" value="generic">generic</option>
             <option value="megahit">megahit</option>
@@ -38,7 +40,7 @@
         <param name="no_plot" type="boolean" truevalue="--no-plot" falsevalue="" checked="false" label="Do not generate a clustered heatmap" />
         <param name="no_fasta" type="boolean" truevalue="--no-fasta" falsevalue="" checked="false" label="Do not generate cluster FASTA files" />
         <param name="only_large" type="boolean" truevalue="--only-large" falsevalue="" checked="false" label="Only write FASTA for clusters longer than min_extent" />
-        <param name="fasta" type="data" format="fasta,fastq.gz" label="Alternative source FASTA from that supplied during mkmap" />
+        <param name="fasta" type="data" format="fasta,fastq.gz" optional="true" label="Alternative source FASTA from that supplied during mkmap" />
     </inputs>
 
     <outputs>
@@ -52,10 +54,6 @@
         <data name="fasta" format="fasta" label="{tool.name} on ${on_string} Per-cluster multi-fasta sequences" from_work_dir="out/infomap.log"/>
     </outputs>
 
-    <tests>
-        <test>
-        </test>
-    </tests>
     <help><![CDATA[
 
     Documentation can be found at `<https://github.com/cerebis/bin3C>`_.
