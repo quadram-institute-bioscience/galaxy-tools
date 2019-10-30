@@ -17,7 +17,7 @@
         
         --minimum_logfc $opt_args.minimum_logfc
         
-        --minimum_logcpm $opt_args.-minimum_logcpm
+        --minimum_logcpm $opt_args.minimum_logcpm
         
         --minimum_threshold $opt_args.minimum_threshold
         
