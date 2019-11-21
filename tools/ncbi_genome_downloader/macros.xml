@@ -1,0 +1,18 @@
+<macros>
+    <token name="@VERSION@">0.2.11</token>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="@VERSION@">ncbi-genome-download</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="version_command">
+        <version_command>ncbi-genome-download --version</version_command>
+    </xml>
+
+    <!-- <xml name="citations">
+        <citations>
+            <citation type="doi">10.7717/peerj.5233</citation>
+        </citations>
+    </xml> -->
+</macros>

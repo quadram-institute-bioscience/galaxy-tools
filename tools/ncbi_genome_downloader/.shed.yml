@@ -1,0 +1,9 @@
+categories: [Data Source]
+description: Scripts to download genomes from the NCBI FTP servers
+long_description: |
+  Some script to download bacterial and fungal genomes from NCBI after they restructured their FTP a while ago.
+homepage_url: https://github.com/kblin/ncbi-genome-download/
+name: ncbi_genome_download
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/ncbi_genome_download
+type: unrestricted

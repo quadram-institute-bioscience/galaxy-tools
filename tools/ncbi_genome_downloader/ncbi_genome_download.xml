@@ -1,0 +1,166 @@
+<tool id="ncbi_genome_download" name="ncbi_genome_download" version="@VERSION@">
+    <description> Downloading genomes from the NCBI FTP servers</description>
+    <macros>
+        <token name="@VERSION@">0.2.11</token>
+        <xml name="requirements">
+            <requirements>
+                <requirement type="package" version="@VERSION@">ncbi-genome-download</requirement>
+            </requirements>
+        </xml>
+        <xml name="version_command">
+            <version_command>ncbi-genome-download --version</version_command>
+        </xml>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+    <command detect_errors="exit_code"><![CDATA[
+        ncbi-genome-download
+        --section '$section'
+        --format '$format'
+        #if str($download_by.download_select) == "taxid"
+            --taxid '$download_by.taxid'
+        #end if
+        #if str($download_by.download_select) == "species_taxid"
+            --species-taxid '$download_by.species_taxid'
+        #end if
+        #if str($download_by.download_select) == "genus"
+            --genus '$download_by.genus'
+        #end if
+        #if str($download_by.download_select) == "assembly_accessions"
+            --assembly-accessions '$download_by.assembly_accessions_input.assembly_accessions'
+        #end if
+        --refseq-category '$refseq_category'
+        --assembly-level '$assembly_level'
+        --parallel 4
+        --retries $retries
+        --metadata-table meta.tsv
+        --no-cache
+        --type-material '$type_material'
+        $verbose
+        $debug
+        '$kingdom' 2>&1 | tee log.txt &&
+        mkdir output &&
+        #if str($section) == "refseq"
+            mv refseq/*/*/*.gz output/
+        #end if
+        #if str($section) == "genbank"
+            mv genbank/*/*/*.gz output/
+        #end if
+    ]]>
+    </command>
+    <inputs>
+        <conditional name="download_by">
+            <param name="download_select" type="select" label="Download with:">
+                <option value="taxid">TAXID</option>
+                <option value="genus" selected="True">GENUS</option>
+                <option value="species_taxid" selected="True">SPECIES_TAXID</option>
+                <option value="assembly_accessions" selected="True">ASSEMBLY_ACCESSIONS</option>
+            </param>
+            <when value="taxid">
+                <param name="taxid" type="text" label="Only download sequences of the provided NCBI taxonomy
+                        ID" help="A comma-separated list of taxids is also possible. For example: 9606,9685"/>
+            </when>
+            <when value="species_taxid">
+                <param name="species_taxid" type="text" label="Only download sequences of the provided species NCBI
+                        taxonomy ID" help="A comma-separated list of taxids is also possible. For example: 52342,12325"/>
+            </when>
+            <when value="assembly_accessions">
+                <conditional name="assembly_accessions_input">
+                    <param name="assembly_accessions_input_type" type="select" label="Input type">
+                        <option value="list" selected="True">A comma-separated list of
+                        accessions</option>
+                        <option value="file">A text file from history</option>
+                    </param>
+                    <when value="list">
+                        <param name="assembly_accessions" type="text" label="Only download sequences matching the provided NCBI
+                        assembly accession(s)"/>
+                    </when>
+                    <when value="file">
+                        <param name="assembly_accessions" type="data" format="tabular,text" label="Only download sequences matching the provided NCBI
+                        assembly accession(s)"/>
+                    </when>
+                </conditional>
+
+            </when>
+            <when value="genus">
+                <param name="genus" type="text" label="Only download sequences of the provided genus. A
+                        comma-seperated list of genera is also possible" help="For
+                        example: Streptomyces coelicolor,Escherichia coli"/>
+            </when>
+        </conditional>
+        <param name="kingdom" type="select" multiple="true" display="checkboxes" label="Kingdom">
+            <option value="archaea">archaea</option>
+            <option value="bacteria" selected="true">bacteria</option>
+            <option value="fungi">fungi</option>
+            <option value="invertebrate">invertebrate</option>
+            <option value="plant">plant</option>
+            <option value="protozoa">protozoa</option>
+            <option value="vertebrate_mammalian">vertebrate_mammalian</option>
+            <option value="vertebrate_other">vertebrate_other</option>
+            <option value="viral">viral</option>
+        </param>
+        <param name="section" type="select" label="NCBI section to download">
+            <option value="refseq" selected="true">refseq</option>
+            <option value="genbank">genbank</option>
+        </param>
+        <param name="format" type="select" multiple="true" display="checkboxes" label="Which format to download">
+            <option value="genbank">genbank</option>
+            <option value="fasta" selected="true">fasta</option>
+            <option value="rm">rm</option>
+            <option value="contig">contig</option>
+        </param>
+        <param name="assembly_level" type="select" multiple="true" display="checkboxes" label="Assembly level of genomes to download">
+            <option value="complete" selected="true">complete</option>
+            <option value="chromosome" selected="true">chromosome</option>
+            <option value="scaffold">scaffold</option>
+            <option value="contig">contig</option>
+            <option value="gff">gff</option>
+            <option value="protein-fasta">protein-fasta</option>
+            <option value="genpept">genpept</option>
+            <option value="wgs">wgs</option>
+            <option value="cds-fasta">cds-fasta</option>
+            <option value="rna-fna">rna-fna</option>
+            <option value="rna-fasta">rna-fasta</option>
+            <option value="assembly-report">assembly-report</option>
+            <option value="assembly-stats">assembly-stats</option>
+        </param>
+        <param name="refseq_category" type="select" label="Only download sequences of the provided refseq
+                        category">
+            <option value="all" selected="true">all</option>
+            <option value="reference">reference</option>
+            <option value="representative">representative</option>
+        </param>
+        <param name="type_material" type="select" multiple="true" display="checkboxes" label="Specifies the relation to type material for the
+                        assembly">
+            <option value="any" selected="true">any</option>
+            <option value="type">type</option>
+            <option value="reference">reference</option>
+            <option value="synonym">synonym</option>
+            <option value="proxytype">proxytype</option>
+            <option value="neotype">neotype</option>
+        </param>
+        <param argument="--retries" type="integer" min="0" value="5" label="Retry download N times when connection to NCBI fails"/>
+        <param argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="false" label="Increase output verbosity" />
+        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Print debugging information" />
+    </inputs>
+
+    <outputs>
+        <data name="metadata" format="tabular" label="${tool.name} on ${on_string}: Metadata" from_work_dir="meta.tsv"/>
+        <data name="log" format="txt" label="${tool.name} on ${on_string}: Log" from_work_dir="log.txt">
+            <filter>debug is True</filter>
+        </data>
+        <collection name="fasta" type="list" label="Genomes in fasta format">
+            <discover_datasets pattern="(?P&lt;name&gt;^.*\.fna\.gz$)" format="fasta.gz" directory="output"/>
+            <filter>'fasta' in format</filter>
+        </collection>
+        <collection name="genbank" type="list" label="Genomes in gff format">
+           <discover_datasets pattern="(?P&lt;name&gt;^.*\.gbff\.gz$)" format="genbank" directory="output"/>
+            <filter>'genbank' in format</filter>
+        </collection>
+    </outputs>
+
+    <help><![CDATA[   
+    Documentation can be found at `<https://github.com/kblin/ncbi-genome-download/>`_.
+    ]]>
+    </help>
+</tool>
