@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools.svg?branch=master)](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools)
 
-#### Total: 36 tools
+#### Total: 37 tools
 - **[AMRFinderPlus](https://github.com/ncbi/amr/)** NCBI Antimicrobial Resistance Gene Finder Plus
 - **[abricate](https://github.com/tseemann/abricate)** Mass screening of contigs for antiobiotic resistance genes
 - **[albatradis](https://github.com/quadram-institute-bioscience/galaxy-tools)** Comparative TraDIS analysis
@@ -28,6 +28,7 @@
 - **[metabat2](https://bitbucket.org/berkeleylab/metabat)** MetaBAT Metagenome Binning based on Abundance and Tetranucleotide frequency
 - **[nanofilt](https://github.com/wdecoster/nanofilt)** Filtering and trimming of long read sequencing data
 - **[nanostat](https://github.com/wdecoster/nanostat)** Calculate various statistics from a long read sequencing dataset in fastq, bam or albacore sequencing summary format
+- **[ncbi_genome_download](https://github.com/kblin/ncbi-genome-download/)** Scripts to download genomes from the NCBI FTP servers
 - **[nullarbor](https://github.com/tseemann/nullarbor)** Pipeline to generate complete public health microbiology reports from sequenced isolates
 - **[pacbio](https://github.com/PacificBiosciences)** Pacbio Tool Set
 - **[parsnp](https://harvest.readthedocs.io)** Rapid core genome multi-alignment
