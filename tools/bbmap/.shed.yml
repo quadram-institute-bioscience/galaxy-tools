@@ -1,0 +1,7 @@
+categories: [Sequence Analysis]
+description: BBMap is a short read aligner, as well as various other bioinformatic tools
+long_description: BBMap is a short read aligner, as well as various other bioinformatic tools
+homepage_url: https://sourceforge.net/projects/bbmap
+name: bbmap
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/bbmap

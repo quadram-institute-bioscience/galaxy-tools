@@ -1,0 +1,18 @@
+<macros>
+    <token name="@VERSION@">38.73</token>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="@VERSION@">bbmap</requirement>
+        </requirements>
+    </xml>
+
+    <xml name="version_command">
+        <version_command>echo "38.73"</version_command>
+    </xml>
+
+    <xml name="citations">
+        <citations>
+            <citation type="doi">10.1371/journal.pone.0185056</citation>
+        </citations>
+    </xml>
+</macros>

@@ -1,0 +1,46 @@
+<tool id="bbmap_sendsketch" name="sendsketch" version="@VERSION@">
+    <description> Identifying species using sketch</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+
+    <command detect_errors="exit_code"><![CDATA[
+        sendsketch.sh
+        #if $printall
+            printall=t
+        #endif
+        in=$input
+        out=output.txt
+        outsketch=sketch
+        $db
+    ]]>    </command>
+
+    <inputs>
+        <param name="input" type="data" format="fasta,fasta.gz" label="Input sequence"/>
+        <param name="db" type="select" label="Sketch Database"/>
+            <option value="refseq" selected="true">Refseq</option> 
+            <option value="nt">nt</option> 
+            <option value="silva">silva</option> 
+            <option value="protein">RefSeq prokaryotic amino acid sketches</option> 
+        </param>
+        <param name="write_sketch" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="Write sketch?">
+        <param name="printall" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="Print all column?">
+    </inputs>
+
+    <outputs>
+        <data name="Output" format="txt" from_work_dir="sketch.txt"/>
+        <data name="Sketch" format="binary" from_work_dir="sketch">
+            <filter>write_sketch is True</filter>
+        </data>
+    </outputs>
+    <help><![CDATA[
+    Compares query sketches to reference sketches hosted on a
+    remote server via the Internet.  The input can be sketches made by sketch.sh,
+    or fasta/fastq files from which SendSketch will generate sketches.
+    Only sketches will sent, not sequences.
+    ]]>    </help>
+    <expand macro="citations" />
+
+</tool>
