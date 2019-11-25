@@ -7,7 +7,9 @@
     <expand macro="version_command" />
 
     <command detect_errors="exit_code"><![CDATA[
-        ln -sf '$input' '$input.element_identifier' &&
+        #import re
+        #set $safename = re.sub('[^\w\-_\.]', '_', $input.element_identifier)
+        ln -sf '$input' '$safename' &&
         sendsketch.sh
         #if $printall
             printall=t
@@ -15,7 +17,7 @@
         #if $translate
             translate=t
         #end if
-        in='$input.element_identifier'
+        in='$safename'
         out=output.txt
         outsketch=sketch
         minhits=$minhits
