@@ -63,9 +63,11 @@
     </inputs>
 
     <outputs>
-        <data format="txt" name="pan_genome_results" label="${tool.name} on ${on_string} Results" from_work_dir="output" />
-        <collection name="Genes" type="list" label="Queried genes in faa format">
-            <discover_datasets pattern="(?P&lt;name&gt;^.*\.fa$)" format="fa" directory="output"/>
+        <data format="txt" name="pan_genome_results" label="${tool.name} on ${on_string} Results" from_work_dir="output">
+            <filter>actions['action'] != "gene_multifasta"</filter>
+        </data>
+        <collection name="Genes" type="list" label="${tool.name} on ${on_string} Queried genes">
+            <discover_datasets pattern="output_(?P&lt;designation&gt;.*)\.fa" format="fasta"/>
             <filter>actions['action'] == "gene_multifasta"</filter>
         </collection>
     </outputs>
