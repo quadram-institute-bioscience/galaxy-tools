@@ -31,7 +31,7 @@
         <conditional name="filter">
             <param name="filter_selector" type="select" label="Filter">
                 <option value="yes">Yes</option>
-                <option value="no" selected="true" >No</option>
+                <option value="no" selected="true">No</option>
             </param>
             <when value="yes">
                 <param name="cutoff" type="integer" min="0" value="0" label="Cut-off value"/>
@@ -55,5 +55,6 @@
         mBio 2015. Read counts per gene are compared using edgeR. This analysis
         requires experimental replicates.
     ]]>    </help>
+    <expand macro="citations" />
 
 </tool>

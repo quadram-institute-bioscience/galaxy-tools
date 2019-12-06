@@ -37,12 +37,12 @@
                     #end if
                     && tar cvzf insert_site_plot.tar.gz *insert_site_plot.gz
                     && tar cvzf mapped.tar.gz *mapped.bam*
-    ]]></command>
+    ]]>    </command>
     <inputs>
         <param name="input_files" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" multiple="true" label="Input files" />
         <param name="tag" type="text" optional="true" label="Tag" help="Tag to search for" />
         <param name="ref" type="data" format="fasta" label="Reference geome" help="Fasta format" />
-        <param name="tag_dir" type="select" label="Tag direction" help="3 or 5(optional. default = 3)" >
+        <param name="tag_dir" type="select" label="Tag direction" help="3 or 5(optional. default = 3)">
             <option value="3" selected="true">3</option>
             <option value="5">5</option>
         </param>
@@ -57,12 +57,12 @@
 
     <outputs>
         <data name="insert_size_plots" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="insert_site_plot.tar.gz"/>
-        <data name="mapped_bam" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="mapped.tar.gz"/>   
-        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/> 
+        <data name="mapped_bam" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="mapped.tar.gz"/>
+        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/>
     </outputs>
-  
+
     <help>
-    <![CDATA[
+        <![CDATA[
         Run a TraDIS analysis. This involves:
         1: filtering the data with tags matching that passed via -t option
         2: removing the tags from the sequences
@@ -88,6 +88,7 @@
         -v        : verbose debugging output
 
         Documentation can be found at `site <https://github.com/sanger-pathogens/Bio-Tradis>`_.
-    ]]></help>
+    ]]>    </help>
+    <expand macro="citations" />
 
 </tool>

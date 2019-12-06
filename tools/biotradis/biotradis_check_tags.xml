@@ -29,5 +29,5 @@
         -b  : bam file with tradis tags
         -v  : verbose debugging output
     ]]></help>
-
+    <expand macro="citations" />
 </tool>
