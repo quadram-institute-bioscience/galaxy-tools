@@ -12,8 +12,8 @@
     <inputs>
          <param name="input_bam" type="data" format="bam" label="BAM file" help="" />
          <param name="tag" type="text" label="Tags to filter" help="" />
-         <param name="mismatches" type="integer" value ="0" label="Number of mismatches to allow when matching tag" help="(optional. default = 0)" />
-         <param argument="--verbose" type="boolean" truevalue="-v" falsevalue="" checked="false" label="verbose debugging output" help="(Default:No)" />
+         <param name="mismatches" type="integer" min="0" value ="0" label="Number of mismatches to allow when matching tag" />
+         <param argument="--verbose" type="boolean" truevalue="-v" falsevalue="" checked="false" label="verbose debugging output" />
     </inputs>
 
     <outputs>

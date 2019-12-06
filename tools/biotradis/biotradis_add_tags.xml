@@ -10,7 +10,7 @@
 
     ]]></command>
     <inputs>
-         <param name="input_bam" type="data" format="bam" label="BAM file" help="" />
+         <param name="input_bam" type="data" format="bam" label="BAM file"/>
     </inputs>
 
     <outputs>
