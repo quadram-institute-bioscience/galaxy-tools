@@ -1,7 +1,7 @@
 <tool id="medaka" name="medaka" version="@VERSION@">
     <description> creates a consensus sequence from nanopore sequencing data</description>
     <macros>
-        <token name="@VERSION@">0.9.1</token>
+        <token name="@VERSION@">0.11.0</token>
     </macros>
     <requirements>
         <requirement type="package" version="@VERSION@">medaka</requirement>
@@ -25,11 +25,7 @@
             <option value="r941_prom_high">r941_prom_high</option>
             <option value="r10_min_high">r10_min_high</option>
         </param>
-<<<<<<< HEAD
         <param name="draft" type="data" format="fasta,fasta.gz" label="Draft assemblies" help="The input assembly should be
-=======
-        <param name="draft" type="data" format="fasta.fasta.gz" label="Draft assemblies" help="The input assembly should be
->>>>>>> c89b7c7b0cc586ca9177e02deffae21a4fd3969e
 preprocessed with racon"/>
     </inputs>
 
