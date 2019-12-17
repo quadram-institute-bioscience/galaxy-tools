@@ -3,7 +3,7 @@
       identifies AMR genes using either protein annotations or nucleotide sequence.
     </description>
     <macros>
-        <token name="@VERSION@">3.1.1b</token>
+        <token name="@VERSION@">3.2.3</token>
     </macros>
     <requirements>
         <requirement type="package" version="@VERSION@">ncbi-amrfinderplus</requirement>
@@ -114,7 +114,7 @@
         <test> <!-- dna input-->
             <param name="input_selection|input_source_selector" value="nuc"/>
             <param name="fasta_file" value="test_dna.fa" ftype="fasta"/>
-            <param name="amrfinder_databases" value="2019-08-27.1" />
+            <param name="amrfinder_databases" value="2019-10-30.1" />
             <output name="result" file="test_dna.expected" lines_diff="1"/>
         </test>
         <test> <!-- dna input and organism, plus gene-->
@@ -122,13 +122,13 @@
             <param name="fasta_file" value="test_dna.fa" ftype="fasta"/>
             <param name="organism" value="Escherichia" />
             <param name="plus" value="true" />
-            <param name="amrfinder_databases" value="2019-08-27.1" />
+            <param name="amrfinder_databases" value="2019-10-30.1" />
             <output name="result" file="test_dna_Escherichia.expected" lines_diff="1"/>
         </test>
         <test> <!-- AA input-->
             <param name="input_selection|input_source_selector" value="pro"/>
             <param name="fasta_file" value="test_prot.fa" ftype="fasta"/>
-            <param name="amrfinder_databases" value="2019-08-27.1" />
+            <param name="amrfinder_databases" value="2019-10-30.1" />
             <output name="result" file="test_prot.expected" lines_diff="1"/>
         </test>
         <test> <!-- DNA and AA input-->
@@ -138,7 +138,7 @@
             <param name="pro_file" value="test_prot.fa" ftype="fasta"/>
             <param name="input_selection|gff|use" value="gff_yes"/>
             <param name="gff_file" value="test_prot.gff" ftype="gff3"/>
-            <param name="amrfinder_databases" value="2019-08-27.1" />
+            <param name="amrfinder_databases" value="2019-10-30.1" />
             <output name="result" file="test_both.expected" lines_diff="1"/>
         </test>
     </tests>
