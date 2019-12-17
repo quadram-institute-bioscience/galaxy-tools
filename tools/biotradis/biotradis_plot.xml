@@ -8,14 +8,14 @@
     
     tradis_plot -b $input_bam -m $mapping_quality
 
-    ]]></command>
+    ]]>    </command>
     <inputs>
-         <param name="input_bam" type="data" format="bam" label="BAM file" help="" />
-         <param name="mapping_quality" type="integer" value="30" label="mapping quality must be greater than X " help="(optional. default: 30)" />
+        <param name="input_bam" type="data" format="bam" label="BAM file" />
+        <param name="mapping_quality" type="integer" min="0" value="30" label="mapping quality must be greater than X " />
     </inputs>
 
     <outputs>
-       <data name="output_bam" format="bam" label="${tool.name} on ${on_string}" from_work_dir="added.tr.bam" />
+        <data name="output_bam" format="bam" label="${tool.name} on ${on_string} Plot" from_work_dir="tradis.plot" />
     </outputs>
 
     <tests>
@@ -29,6 +29,7 @@
         Options:
         -b  : bam file with tradis tags
         -v  : verbose debugging output
-    ]]></help>
+    ]]>    </help>
+    <expand macro="citations" />
 
 </tool>

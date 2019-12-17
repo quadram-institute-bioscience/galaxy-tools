@@ -10,9 +10,9 @@
         <version_command>albatradis --version</version_command>
     </xml>
 
-    <!-- <xml name="citations">
+    <xml name="citations">
         <citations>
-            <citation type="doi">10.1101/543702</citation>
+            <citation type="doi">10.1101/593624</citation>
         </citations>
-    </xml> -->
+    </xml>
 </macros>

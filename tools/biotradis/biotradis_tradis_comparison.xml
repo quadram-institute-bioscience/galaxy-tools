@@ -31,10 +31,10 @@
         <conditional name="filter">
             <param name="filter_selector" type="select" label="Filter">
                 <option value="yes">Yes</option>
-                <option value="no" selected="true" >No</option>
+                <option value="no" selected="true">No</option>
             </param>
             <when value="yes">
-                <param name="cutoff" type="integer" value="" label="Cut-off value"/>
+                <param name="cutoff" type="integer" min="0" value="0" label="Cut-off value"/>
             </when>
             <when value="no"/>
         </conditional>
@@ -51,14 +51,10 @@
         </test>
     </tests>
     <help><![CDATA[
-        Adds transposon sequence and quality tags to the read strings and
-        outputs a BAM.
-
-        Usage: add_tags -b file.bam [options]
-
-        Options:
-        -b  : bam file with tradis tags
-        -v  : verbose debugging output
+        Compares two experimental conditions using the method of Dembek et al.
+        mBio 2015. Read counts per gene are compared using edgeR. This analysis
+        requires experimental replicates.
     ]]>    </help>
+    <expand macro="citations" />
 
 </tool>
