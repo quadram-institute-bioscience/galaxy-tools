@@ -1,0 +1,87 @@
+<tool id="query_pan_genome" name="Roary query_pan_genome" version="@VERSION@">
+    <description>Perform set operations on the pan genome to see the gene differences between groups of isolates.</description>
+
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">roary</requirement>
+    </requirements>
+
+    <command detect_errors="exit_code"><![CDATA[
+        #set $filenames = list()
+        #for $gff in $gff_input.gffs
+          cp '$gff' '${gff.element_identifier}.gff' &&
+          #set $filename = str($gff.element_identifier) + '.gff'
+          $filenames.append(str($filename))
+        #end for
+
+        query_pan_genome
+        -g $clustered_proteins
+        -a $actions.action
+        #if str($actions.action) == 'gene_multifasta'
+            -n $actions.gene_names
+        #end if
+        -c $pct
+        -o output
+        $verbose 
+        
+        #for $f in $filenames
+            '$f'
+        #end for
+
+    ]]>    </command>
+
+    <inputs>
+        <conditional name="gff_input">
+            <param name="gff_input_selector" type="select" label="Individual gff files or a dataset collection" help="Select between individual gff files or a collection of gff files">
+                <option value="individual">Individual</option>
+                <option value="collection">Collection</option>
+            </param>
+            <when value="individual">
+                <param name="gffs" type="data" multiple="true" format="gff,gff3" label="select gff inputs to Roary" help="Select the files you wish to send to Roary, must be in gff3 format with the sequence data at the end of the file." />
+            </when>
+            <when value='collection'>
+                <param name="gffs" type="data_collection" collection_type="list" format="gff,gff3" label="Dataset collection to submit to Roary" help="A dataset list collection of gff3 files to send to Roary for analysis." />
+            </when>
+        </conditional>
+        <conditional name="actions">
+            <param name="action" type="select" label="Action">
+                <option value="union" selected="true">union</option>
+                <option value="intersection">intersection</option>
+                <option value="complement">complement</option>
+                <option value="gene_multifasta">gene_multifasta</option>
+                <option value="difference">difference</option>
+            </param>
+            <when value="gene_multifasta">
+                <param name="gene_names" type="text" optional="true" label="Comma separated list of gene names for use with gene_multifasta action" />
+            </when>
+        </conditional>
+        <param name="clustered_proteins" type="data" format="txt" label="clustered_proteins" help="To have this file, you mush select output Clustered proteins file when running Roary"/>
+        <param name="pct" type="float" value="99" label="Percentage of isolates a gene must be in to be core" />
+        <param name="verbose" type="boolean" truevalue="-v" falsevalue="" checked="False" label="Print verbose?" />
+    </inputs>
+
+    <outputs>
+        <data format="txt" name="pan_genome_results" label="${tool.name} on ${on_string} Results" from_work_dir="output">
+            <filter>actions['action'] != "gene_multifasta"</filter>
+        </data>
+        <collection name="Genes" type="list" label="${tool.name} on ${on_string} Queried genes">
+            <discover_datasets pattern="output_(?P&lt;designation&gt;.*)\.fa" format="fasta"/>
+            <filter>actions['action'] == "gene_multifasta"</filter>
+        </collection>
+    </outputs>
+
+    <tests>
+    </tests>
+
+    <help><![CDATA[
+    For further info see: http://sanger-pathogens.github.io/Roary/
+
+    ]]>    </help>
+
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/btv421</citation>
+    </citations>
+
+</tool>
