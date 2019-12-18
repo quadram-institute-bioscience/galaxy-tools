@@ -1,0 +1,10 @@
+categories: [Phylogenetics]
+description:  Efficient phylogenomic software by maximum likelihood 
+long_description: |
+  A fast and effective stochastic algorithm to infer phylogenetic trees by maximum likelihood. IQ-TREE compares favorably to RAxML and PhyML in terms of likelihoods with similar computing time.
+  This test version tries to fix the model specification issue with the official galaxy wrapper.
+homepage_url: http://www.iqtree.org/ 
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/iqtree
+type: unrestricted
+name: iqtree
+owner: leomrtns

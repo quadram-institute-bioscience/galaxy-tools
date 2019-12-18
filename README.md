@@ -3,15 +3,13 @@
 
 [![Build Status](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools.svg?branch=master)](https://travis-ci.com/quadram-institute-bioscience/galaxy-tools)
 
-#### Total: 37 tools
+#### Total: 30 tools
 - **[AMRFinderPlus](https://github.com/ncbi/amr/)** NCBI Antimicrobial Resistance Gene Finder Plus
-- **[abricate](https://github.com/tseemann/abricate)** Mass screening of contigs for antiobiotic resistance genes
 - **[albatradis](https://github.com/quadram-institute-bioscience/galaxy-tools)** Comparative TraDIS analysis
-- **[ariba](https://github.com/quadram-institute-bioscience/galaxy-tools)** Antimicrobial Resistance Identification By Assembly
+- **[bbmap](https://sourceforge.net/projects/bbmap)** BBMap is a short read aligner, as well as various other bioinformatic tools
 - **[bin3c](https://github.com/cerebis/bin3C)** Extract metagenome-assembled genomes (MAGs) from metagenomic data using Hi-C
 - **[biotradis](https://github.com/quadram-institute-bioscience/galaxy-tools)** A set of tools to analyse the output from TraDIS analyses
 - **[bracken](https://github.com/quadram-institute-bioscience/galaxy-tools)** Bayesian Reestimation of Abundance with KrakEN
-- **[canu](https://github.com/marbl/canu)** Canu is a hierarchical assembly pipeline designed for high-noise single-molecule sequencing (such as the PacBio RS II/Sequel or Oxford Nanopore MinION). Adapted from bgruening's wrapper
 - **[checkm_lineage_wf](https://github.com/Ecogenomics/CheckM)** Assess the quality of microbial genomes recovered from isolates, single cells, and metagenomes -- Lineage-specific Workflow
 - **[circlator](https://sanger-pathogens.github.io/circlator/)** A tool to circularize genome assemblies
 - **[coverm](https://github.com/wwood/CoverM)** Read coverage calculator for metagenomics
@@ -21,7 +19,6 @@
 - **[flye](https://github.com/fenderglass/Flye/)** Assembly of long and error-prone reads. Adapted from bgruening's wrapper
 - **[gtdbtk](https://github.com/Ecogenomics/GTDBTk)** A toolkit for assigning objective taxonomic classifications to bacterial  and archaeal genomes
 - **[iqtree](http://www.iqtree.org/)** Efficient phylogenomic software by maximum likelihood
-- **[kraken2](https://github.com/quadram-institute-bioscience/galaxy-tools)** Kraken taxonomic sequence classification system
 - **[krocus](https://github.com/quadram-institute-bioscience/galaxy-tools)** Predict MLST directly from uncorrected long reads
 - **[krona](https://github.com/marbl/Krona/)** Interactively explore metagenomes and more from a web browser
 - **[medaka](https://github.com/nanoporetech/medaka)** Create a consensus sequence from nanopore sequencing data
@@ -34,10 +31,6 @@
 - **[parsnp](https://harvest.readthedocs.io)** Rapid core genome multi-alignment
 - **[plasmidtron](https://github.com/sanger-pathogens/plasmidtron)** Assembling the cause of phenotypes and genotypes from NGS data
 - **[qc3c](https://github.com/cerebis/qc3C)** Quality control for Hi-C DNA sequencing libraries
-- **[qiime_add_label](http://www.qiime.org)** QIIME to perform microbial community analysis
 - **[rebaler](https://github.com/rrwick/Rebaler)** Conducts reference-based assemblies using long reads
-- **[snippy](https://github.com/quadram-institute-bioscience/galaxy-tools)** Snippy finds SNPs between a haploid reference genome and your NGS sequence reads. Test version, please do not use.
 - **[socru](https://github.com/quadram-institute-bioscience/galaxy-tools)** Order and orientation of complete bacterial genomes
-- **[sortmerna](http://bioinfo.lifl.fr/RNA/sortmerna/)** (adapted from rnateam, don not use) SortMeRNA is a software designed to rapidly filter ribosomal RNA fragments from metatransriptomic data produced by next-generation sequencers.
 - **[super_distance](https://github.com/quadram-institute-bioscience/super_distance)** Matrix Representation with Distances: calculates pairwise distances between gene leaves, and estimates species trees from summary distance matrices
-- **[tiptoft](https://github.com/quadram-institute-bioscience/galaxy-tools)** Predict plasmids from uncorrected long read data
