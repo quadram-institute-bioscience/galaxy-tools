@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<tool id="bbmap_filterbyname" name="bbmap_filterbyname" version="@TOOL_VERSION@.1">
+    <description>Filters reads by name</description>
+    <macros>
+        <import>macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="version_command" />
+
+    <command><![CDATA[
+    #if $singlePaired.sPaired == "single":
+            #if $singlePaired.input_singles.is_of_type("fastq.gz"):
+                #set read1 = 'input_1.fastq.gz'
+                #set compressed = 'gz'
+            #else
+                #set read1 = 'input_1.fastq'
+            #end if
+            
+            #set fil_input = 'in=${read1} out=f_${read1}'
+
+            ln -s '${singlePaired.input_singles}' ${read1} &&
+        #elif $singlePaired.sPaired == "paired":
+            #if $singlePaired.input_mate1.is_of_type("fastq.gz"):
+                #set read1 = 'input_1.fastq.gz'
+                #set compressed = 'gz'
+            #else
+                #set read1 = 'input_1.fastq'
+            #end if
+
+            ln -s '${singlePaired.input_mate1}' ${read1} &&
+
+            #if $singlePaired.input_mate2.is_of_type("fastq.gz"):
+                #set read2 = 'input_2.fastq.gz'
+            #else
+                #set read2 = 'input_2.fastq'
+            #end if
+            ln -s '${singlePaired.input_mate2}' ${read2} &&
+            #set fil_input = 'in=${read1} in2=${read2} out=f_${read1} out2=f_${read2}'
+        #else:
+            #if $singlePaired.input_mate_pairs.forward.is_of_type("fastq.gz"):
+                #set read1 = 'input_1.fastq.gz'
+                #set compressed = 'gz'
+            #else
+                #set read1 = 'input_1.fastq'
+            #end if
+            ln -s '${singlePaired.input_mate_pairs.forward}' ${read1} &&
+
+            #if $singlePaired.input_mate_pairs.reverse.is_of_type("fastq.gz"):
+                #set read2 = 'input_2.fastq.gz'
+            #else
+                #set read2 = 'input_2.fastq'
+            #end if
+            ln -s '${singlePaired.input_mate_pairs.reverse}' ${read2} &&
+            #set fil_input = 'in=${read1} in2=${read2} out=f_${read1} out=f_${read2}'
+        #end if
+
+        filterbyname.sh
+        ${fil_input}
+        #if ${source} == "input_string"
+            names=${in_string}
+        #end if
+        #if ${source} == "name"
+            names=${name_list}
+        #end if 
+        
+    ]]>    </command>
+    <inputs>
+        <conditional name="singlePaired">
+            <param name="sPaired" type="select" label="Is the input paired- or single-end?">
+                <option value="single">Single-end</option>
+                <option value="paired">Paired-end</option>
+                <option value="paired_collection">Paired Collection</option>
+            </param>
+            <when value="single">
+                <param name="input_singles" type="data" format="fastqsanger,fastqsanger.gz,fastq,fastq.gz" label="Reads in FASTQ format" />
+            </when>
+            <when value="paired">
+                <param name="input_mate1" type="data" format="fastqsanger,fastqsanger.gz,fastq,fastq.gz" label="Forward read" />
+                <param name="input_mate2" type="data" format="fastqsanger,fastqsanger.gz,fastq,fastq.gz" label="Reversed read" />
+            </when>
+            <when value="paired_collection">
+                <param name="input_mate_pairs" format="fastqsanger,fastqsanger.gz,fastq,fastq.gz" type="data_collection" collection_type="paired" label="Select a paired collection" help="See help section for an explanation of dataset collections"/>
+            </when>
+        </conditional>
+        <conditional name="source">
+            <param name="type" type="select" label="Select source of sequence choices">
+                <option value="input_string">Text</option>
+                <option value="name">FASTA/Q ID list</option>
+            </param>
+            <when value="input_string">
+                <param name="in_string" type="text" label="Input string" help="string1,string2,string3,...,stringn"/>
+            </when>
+            <when value="name">
+                <param name="name_list" type="data" format="txt" label="Input ID list"/>
+            </when>
+        </conditional>
+        <param name="include" type="boolean" truevalue="t" falsevalue="f" checked="true" label="Include the filtered names" />
+    </inputs>
+    <outputs>
+        <data name="default" format_source="in_file" label="Selected sequences from $in_file.name">
+            <change_format>
+                <when input="t" value="-t" format="tabular"/>
+            </change_format>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="in_file" value="seqtk_subseq.fa"/>
+            <param name="type" value="name"/>
+            <param name="t" value="False" />
+            <param name="name_list" value="seqtk_subseq_list.txt"/>
+            <output name="default" file="seqtk_subseq.out" ftype="fasta"/>
+        </test>
+        <test>
+            <param name="in_file" value="seqtk_subseq.fa.gz" ftype="fasta.gz"/>
+            <param name="type" value="name"/>
+            <param name="t" value="False" />
+            <param name="name_list" value="seqtk_subseq_list.txt"/>
+            <output name="default" file="seqtk_subseq.out.gz" ftype="fasta.gz"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+**What it does**
+
+Given a list of newline separated IDs from a fasta file, this will extract those named fasta sequences from the input file.
+
+::
+
+    # Input ID list
+    seq1
+
+    # Input fasta
+    >seq1
+    ACGTMRWSYK
+    >seq2
+    RWSYKACGTM
+
+results in
+
+::
+
+    # Output result
+    >seq1
+    ACGTMRWSYK
+
+@ATTRIBUTION@
+    ]]>    </help>
+    <expand macro="citation" />
+</tool>
