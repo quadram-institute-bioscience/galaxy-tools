@@ -25,14 +25,14 @@
                         -m $m
                     #if $smalt:
                         $smalt
-                        #if str($smalt_k)!=""
-                        --smalt_k $smalt_k
+                        #if str($smalt_settings.smalt_k)!=""
+                        --smalt_k $smalt_settings.smalt_k
                         #end if
-                        #if str($smalt_s)!=""
-                            --smalt_s $smalt_s
+                        #if str($smalt_settings.smalt_s)!=""
+                            --smalt_s $smalt_settings.smalt_s
                         #end if
-                        --smalt_y $smalt_y
-                        --smalt_r $smalt_r
+                        --smalt_y $smalt_settings.smalt_y
+                        --smalt_r $smalt_settings.smalt_r
                         -n "\${GALAXY_SLOTS:-2}"
                     #end if
                     $verbose
@@ -52,10 +52,12 @@
         <param name="m" type="integer" value="30" label="Mapping quality cutoff score"/>
         <param name="out_bam" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="Output mapped bam files"/>
         <param name="smalt" type="boolean" truevalue="--smalt" falsevalue="" checked="false" label="Use smalt as the mapper" help="Default mapper is bwa" />
-        <param argument="--smalt_k" type="integer" value="" optional="True" label="Custom k-mer value for SMALT mapping"/>
-        <param argument="--smalt_s" type="integer" value="" optional="True" label="Custom step size for SMALT mapping"/>
-        <param argument="--smalt_y" type="float" value="0.96" label="Custom y parameter for SMALT"/>
-        <param argument="--smalt_r" type="integer" value="-1" label="Custom r parameter for SMALT"/>
+        <section name="smalt_settings" title="Optional setting for SMALT" expanded="False">
+            <param argument="--smalt_k" type="integer" value="" optional="True" label="Custom k-mer value for SMALT mapping"/>
+            <param argument="--smalt_s" type="integer" value="" optional="True" label="Custom step size for SMALT mapping"/>
+            <param argument="--smalt_y" type="float" value="0.96" label="Custom y parameter for SMALT"/>
+            <param argument="--smalt_r" type="integer" value="-1" label="Custom r parameter for SMALT"/>
+        </section>
         <param argument="--verbose" type="boolean" truevalue="-v" falsevalue="" checked="false" label="verbose debugging output" help="(Default:No)" />
     </inputs>
 
@@ -67,7 +69,7 @@
             <filter>out_bam is True</filter>
             <discover_datasets pattern="__name_and_ext__" directory="bams" visible="true" />
         </collection>
-        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/>
+        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fq.stats"/>
     </outputs>
 
     <help>
