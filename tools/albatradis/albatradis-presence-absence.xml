@@ -6,17 +6,25 @@
     <expand macro="requirements" />
     <expand macro="version_command" />
     <command detect_errors="exit_code"><![CDATA[
+        #set $named_input_files = ''
+        #for $input_file in $gene_reports
+            ## Add single quotes around each input file identifier
+            #set $_input_file = "'{}'".format($input_file.element_identifier)
+            ln -s '${input_file}' ${_input_file} &&
+            #set $named_input_files = $named_input_files + ' ' + $_input_file
+        #end for
 
         albatradis-presence_absence
         -v 
-        $embl $gene_reports
+        $embl $named_input_files
+
         > $log
     
     ]]></command>
     
     <inputs>
         <param name="embl" type="data" format="embl" label="Select EMBLfile" help=""/>
-        <param name="gene_reports" type="data" format="tabular" label="Select Gene report spreadsheets" help=""/>
+        <param name="gene_reports" type="data" multiple="True" format="tabular" label="Select Gene report spreadsheets" help=""/>
         <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
     </inputs>
 

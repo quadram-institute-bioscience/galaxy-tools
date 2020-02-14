@@ -23,42 +23,53 @@
                         -td $tag_dir
                         -mm $mm
                         -m $m
-                    #if str($smalt_k)!=""
-                        --smalt_k $smalt_k
-                    #end if
-                    #if str($smalt_s)!=""
-                        --smalt_s $smalt_s
-                    #end if
-                        --smalt_y $smalt_y
-                        --smalt_r $smalt_r
+                    #if $smalt:
+                        $smalt
+                        #if str($smalt_settings.smalt_k)!=""
+                        --smalt_k $smalt_settings.smalt_k
+                        #end if
+                        #if str($smalt_settings.smalt_s)!=""
+                            --smalt_s $smalt_settings.smalt_s
+                        #end if
+                        --smalt_y $smalt_settings.smalt_y
+                        --smalt_r $smalt_settings.smalt_r
                         -n "\${GALAXY_SLOTS:-2}"
-                    #if $verbose
-                        --verbose
                     #end if
-                    && tar cvzf insert_site_plot.tar.gz *insert_site_plot.gz
-                    && tar cvzf mapped.tar.gz *mapped.bam*
+                    $verbose
+                    && mkdir plots bams
+                    && mv *insert_site_plot.gz ./plots
+                    && mv *mapped.bam* ./bams
     ]]>    </command>
     <inputs>
-        <param name="input_files" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" multiple="true" label="Input files" />
+        <param name="input_files" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" multiple="true" label="Input files" help="Support multiple files"/>
         <param name="tag" type="text" optional="true" label="Tag" help="Tag to search for" />
         <param name="ref" type="data" format="fasta" label="Reference geome" help="Fasta format" />
         <param name="tag_dir" type="select" label="Tag direction" help="3 or 5(optional. default = 3)">
             <option value="3" selected="true">3</option>
             <option value="5">5</option>
         </param>
-        <param name="mm" type="integer" value="0" label="Number of mismatches allowed when matching tag" />
-        <param name="m" type="integer" value="30" label="Mapping quality cutoff score" />
-        <param argument="--smalt_k" type="integer" value="" optional="True" label="Custom k-mer value for SMALT mapping" />
-        <param argument="--smalt_s" type="integer" value="" optional="True" label="Custom step size for SMALT mapping" />
-        <param argument="--smalt_y" type="float" value="0.96" label="Custom y parameter for SMALT" />
-        <param argument="--smalt_r" type="integer" value="-1" label="Custom r parameter for SMALT" />
+        <param name="mm" type="integer" value="0" label="Number of mismatches allowed when matching tag"/>
+        <param name="m" type="integer" value="30" label="Mapping quality cutoff score"/>
+        <param name="out_bam" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="Output mapped bam files"/>
+        <param name="smalt" type="boolean" truevalue="--smalt" falsevalue="" checked="false" label="Use smalt as the mapper" help="Default mapper is bwa" />
+        <section name="smalt_settings" title="Optional setting for SMALT" expanded="False">
+            <param argument="--smalt_k" type="integer" value="" optional="True" label="Custom k-mer value for SMALT mapping"/>
+            <param argument="--smalt_s" type="integer" value="" optional="True" label="Custom step size for SMALT mapping"/>
+            <param argument="--smalt_y" type="float" value="0.96" label="Custom y parameter for SMALT"/>
+            <param argument="--smalt_r" type="integer" value="-1" label="Custom r parameter for SMALT"/>
+        </section>
         <param argument="--verbose" type="boolean" truevalue="-v" falsevalue="" checked="false" label="verbose debugging output" help="(Default:No)" />
     </inputs>
 
     <outputs>
-        <data name="insert_size_plots" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="insert_site_plot.tar.gz"/>
-        <data name="mapped_bam" format="tar.gz" label="${tool.name} on ${on_string}: Insert size plot" from_work_dir="mapped.tar.gz"/>
-        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fastqs.stats"/>
+        <collection name="insert_plots" format="gz" type="list" label="Insert size plots">
+            <discover_datasets pattern="__name_and_ext__" directory="plots" visible="true" />
+        </collection>
+        <collection name="mapped_bam" type="list" format="bam" label="Mapped bam files">
+            <filter>out_bam is True</filter>
+            <discover_datasets pattern="__name_and_ext__" directory="bams" visible="true" />
+        </collection>
+        <data name="fastq_stats" format="txt" label="${tool.name} on ${on_string}: Fastq Stats" from_work_dir="fq.stats"/>
     </outputs>
 
     <help>
@@ -69,24 +80,6 @@
         3: mapping
         4: creating an insertion site plot
         5: creating a stats summary
-
-        Usage: bacteria_tradis [options]
-
-        Options:
-        -f        : text file listing fastq files with tradis tags attached
-        -t        : tag to search for
-        -r        : reference genome in fasta format (.fa)
-        -td       : tag direction - 3 or 5 (optional. default = 3)
-        -mm       : number of mismatches allowed when matching tag (optional. default = 0)
-        -m        : mapping quality cutoff score (optional. default = 30)
-        --smalt_k : custom k-mer value for SMALT mapping (optional)
-        --smalt_s : custom step size for SMALT mapping (optional)
-        --smalt_y : custom y parameter for SMALT (optional. default = 0.96)
-        --smalt_r : custom r parameter for SMALT (optional. default = -1)
-        -n        : number of threads to use for SMALT and samtools sort (optional. default = 1)
-        -e        : set defaults for essentiality experiment (smalt_r = 0, -m = 0)
-        -v        : verbose debugging output
-
         Documentation can be found at `site <https://github.com/sanger-pathogens/Bio-Tradis>`_.
     ]]>    </help>
     <expand macro="citations" />
