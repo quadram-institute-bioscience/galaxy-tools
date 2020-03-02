@@ -1,0 +1,54 @@
+<tool id="quickmerge" name="quickmerge" version="@VERSION@">
+    <description> improves contiguity of genome assemblies based on long molecule sequences</description>
+    <macros>
+        <token name="@VERSION@">0.3</token>
+    </macros>
+    <requirement type="package" version="@VERSION@">quickmerge</requirement>
+    <version_command><![CDATA[ echo @VERSION@]]></version_command>
+
+    <command detect_errors="exit_code"><![CDATA[
+        merge_wrapper.py
+        -hco $hco
+        -c $c_params
+        -l $length_cutoff
+        $no_nucmer
+        $no_delta
+        $stop_after_nucmer
+        $stop_after_df
+        -ml $merging_length_cutoff
+        -t \${GALAXY_SLOTS:-1}
+        $version4
+        $clean_only
+        $hybrid_assembly
+        $self_assembly
+    ]]>    </command>
+
+    <inputs>
+        <param name="hybrid_assembly" type="data" format="fasta.fasta.gz" label="Hybrid assembly"/>
+        <param name="self_assembly" type="data" format="fasta.fasta.gz" label="Self assembly"/>
+        <param name="hco" type="float" min="0" value="0.5" label="Quickmerge hco parameter" />
+        <param name="c_params" type="float" min="0" value="1.5" label="Quickmerge c parameter" />
+        <param name="length_cutoff" type="integer" min="0" value="0" label="Minimum seed contig length to be merged" />
+        <param name="no_nucmer" type="boolean" truevalue="--no_nucmer" falsevalue="" checked="false" label="Skip the nucmer step" />
+        <param name="no_delta" type="boolean" truevalue="--no_delta" falsevalue="" checked="false" label="Skip the nucmer and delta-filter steps" />
+        <param name="stop_after_nucmer" type="boolean" truevalue="--stop_after_nucmer" falsevalue="" checked="false" label="Do not perform the delta-filter and merger steps" />
+        <param name="stop_after_df" type="boolean" truevalue="--stop_after_df" falsevalue="" checked="false" label="Do not perform the merger step" />
+        <param name="merging_length_cutoff" type="integer" min="0" value="5000" label="set the merging length cutoff necessary for use in quickmerge" />
+        <param name="version4" type="boolean" truevalue="--version4" falsevalue="" checked="false" label="Do not perform the merger step" />
+        <param name="clean_only" type="boolean" truevalue="--clean_only" falsevalue="" checked="false" label="Generate safe FASTA files for merging, but do not merge" />
+    </inputs>
+
+    <outputs>
+        <data name="merged_qm" format="fasta" label="${tool.name} on ${on_string}: merged" from_work_dir="merged_qm.fasta"/>
+        <data name="hybrid_oneline" format="fasta" label="${tool.name} on ${on_string}: hybrid_oneline" from_work_dir="hybrid_oneline.fa"/>
+        <data name="self_oneline" format="fasta" label="${tool.name} on ${on_string}: self_oneline" from_work_dir="self_oneline.fa"/>
+        <data name="param_summary" format="tsv" label="${tool.name} on ${on_string}: param summary" from_work_dir="param_summary_qm.txt"/>
+        <data name="anchor_summary_qm" format="tsv" label="${tool.name} on ${on_string}: anchor summary" from_work_dir="anchor_summary_qm.txt"/>
+        <data name="aln_summary_qm" format="tsv" label="${tool.name} on ${on_string}: anchor summary" from_work_dir="aln_summary_qm.tsv"/>
+    </outputs>
+    <help><![CDATA[
+    ]]>    </help>
+    <citations>
+        <citation type="doi">10.1093/nar/gkw654</citation>
+    </citations>
+</tool>

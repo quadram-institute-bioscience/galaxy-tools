@@ -1,0 +1,9 @@
+categories: [Sequence Analysis]
+description:  Improve contiguity of genome assemblies based on long molecule sequences
+long_description: |
+  The program uses information from assemblies made with Illumina short reads and Pacific Biosciences or Oxford Nanopore long reads to improve contiguities of an assembly generated with long reads alone.
+homepage_url: https://github.com/mahulchak/quickmerge
+name: quickmerge
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/quickmerge
+type: unrestricted
