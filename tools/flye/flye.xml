@@ -1,9 +1,11 @@
-<tool id="flye" name="Flye assembler" version="2.5">
+<tool id="flye" name="Flye assembler" version="@VERSION@">
     <description>of long and error-prone reads</description>
     <macros>
-        <import>macros.xml</import>
+        <token name="@VERSION@">2.7</token>
     </macros>
-    <expand macro="requirements" />
+    <requirements>
+    <requirement type="package" version="@VERSION@">flye</requirement>
+    </requirements>
     <version_command>flye --version</version_command>
     <command detect_errors="exit_code">
         <![CDATA[
@@ -48,14 +50,13 @@
     #if $meta:
         '$meta'
     #end if
-    #if $no_trestle:
-        '$no_trestle'
-    #end if
+    '$keep_haplotypes'
+    '$trestle'
     2>&1
     ]]>    </command>
     <inputs>
-        <param name="inputs" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Input reads" >
-        <help><![CDATA[
+        <param name="inputs" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Input reads">
+            <help><![CDATA[
 
     Input reads could be in FASTA or FASTQ format, uncompressed
     or compressed with gz. Currenlty, raw and corrected reads
@@ -65,8 +66,8 @@
     sets of high-quality contigs. You may specify multiple
     files with reads (separated by spaces). Mixing different read
     types is not yet supported.
-     ]]>        </help>
-     </param>
+     ]]>            </help>
+        </param>
         <param name="mode" type="select" label="Mode">
             <option value="--nano-raw">Nanopore raw</option>
             <option value="--nano-corr">Nanopore corrected</option>
@@ -98,14 +99,15 @@
         <param argument="--asm_coverage" type="integer" optional="true" label="reduced coverage for initial contig assembly (default: not set)" />
         <param argument="--plasmid" type="boolean" truevalue="--plasmid" falsevalue="" checked="False" label="rescue short unassmebled plasmids" />
         <param argument="--meta" type="boolean" truevalue="--meta" falsevalue="" checked="False" label="metagenome / uneven coverage mode" />
-        <param argument="--no_trestle" type="boolean" truevalue="--no-trestle" falsevalue="" checked="False" label="skip Trestle stage" help="After resolving bridged repeats, Trestle module attempts to resolve simple unbridged repeats (of multiplicity 2) using the heterogeneities between repeat copies"/>
+        <param argument="--keep_haplotypes" type="boolean" truevalue="--keep-haplotypes" falsevalue="" checked="False" label="Do not collapse alternative haplotypes"/>
+        <param argument="--trestle" type="boolean" truevalue="--trestle" falsevalue="" checked="False" label="Enable Trestle" help="After resolving bridged repeats, Trestle module attempts to resolve simple unbridged repeats (of multiplicity 2) using the heterogeneities between repeat copies"/>
     </inputs>
     <outputs>
-        <data name="assembly" format="fasta" from_work_dir="out_dir/assembly.fasta" label="${tool.name} on ${on_string} (scaffolds)"/>
         <data name="assembly_info" format="tabular" from_work_dir="out_dir/assembly_info.txt" label="${tool.name} on ${on_string} (assembly_info)"/>
         <data name="assembly_graph" format="graph_dot" from_work_dir="out_dir/assembly_graph.gv" label="${tool.name} on ${on_string} (assembly_graph)"/>
         <data name="assembly_gfa" format="txt" from_work_dir="out_dir/assembly_graph.gfa" label="${tool.name} on ${on_string} (Graphical Fragment Assembly)"/>
         <data name="flye_log" format="txt" from_work_dir="out_dir/flye.log" label="${tool.name} on ${on_string} (log)"/>
+        <data name="scaffolds" format="fasta" from_work_dir="out_dir/assembly.fasta" label="${tool.name} on ${on_string} (scaffolds)"/>
     </outputs>
     <tests>
         <test>
@@ -136,7 +138,7 @@
         </test>
     </tests>
     <help>
-    <![CDATA[
+        <![CDATA[
     Flye output
     The main output files are:
 
@@ -169,5 +171,8 @@
     scaffolds.fasta file is a symlink to assembly.fasta, which is retained for the backward compatibility.
     ]]>
     </help>
-    <expand macro="citations" />
+    <citations>
+        <citation type="doi">10.1073/pnas.1604560113</citation>
+        <citation type="doi">10.1038/s41587-019-0072-8</citation>
+    </citations>
 </tool>
