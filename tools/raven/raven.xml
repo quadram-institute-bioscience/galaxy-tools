@@ -1,0 +1,46 @@
+<tool id="raven" name="raven" version="@VERSION@">
+    <description>A tool for Racon polishing of miniasm assemblies</description>
+    <macros>
+        <token name="@VERSION@">0.0.8</token>
+    </macros>
+    <requirements>
+    <requirement type="package" version="@VERSION@">raven-assembler</requirement>
+    </requirements>
+    <version_command>minipolish --version</version_command>
+    <command detect_errors="exit_code">
+        <![CDATA[
+            minipolish -t \${GALAXY_SLOTS:-4}
+            --rounds $rounds
+            $pacbio
+            $reads
+            $assembly
+            > polished.gfa
+    ]]>    </command>
+    <inputs>
+        <param name="reads" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="false" label="Input reads" />
+        <param name="polishing_round" type="integer" min="1" value="2" label="Polishing round(s)" />
+        <param name="match" type="integer" min="1" value="3" label="Score for matching bases" />
+        <param name="mismatch" type="integer" value="-5" label="score for mismatching bases" />
+        <param name="gap" type="integer" value="-4" label="Gap penalty" />
+        <conditional name="cuda">
+            <param name="use_cuda" label="Use GPU-CUDA?">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </param>
+            <when value="yes">
+                <param name="cuda_batches" type="integer" min="0" value="1" label="Number of batches for CUDA accelerated polishing" />
+                <param name="baned_alignment" type="boolean" truevalue="-b" falsevalue="" checked="False" label="Use banding approximation for polishing on GPU" />
+                <param name="cuda_alignment_batches" type="integer" min="0" value="1" label="Number of batches for CUDA accelerated alignment" />
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <data name="polished" format="graph_dot" from_work_dir="polioshed.gfa" label="${tool.name} on ${on_string} Polished contigs"/>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+        <![CDATA[
+    ]]>
+    </help>
+</tool>
