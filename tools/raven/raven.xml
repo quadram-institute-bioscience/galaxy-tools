@@ -6,7 +6,7 @@
     <requirements>
     <requirement type="package" version="@VERSION@">raven-assembler</requirement>
     </requirements>
-    <version_command>minipolish --version</version_command>
+    <version_command>raven --version</version_command>
     <command detect_errors="exit_code">
         <![CDATA[
             minipolish -t \${GALAXY_SLOTS:-4}
@@ -14,6 +14,11 @@
             $pacbio
             $reads
             $assembly
+            #if str($cuda.use_cuda) == "yes
+                -c $cuda.cuda_batches
+                $cuda.baned_alignment
+                -a $cuda.cuda_alignment_batches
+            #end if
             > polished.gfa
     ]]>    </command>
     <inputs>
@@ -23,7 +28,7 @@
         <param name="mismatch" type="integer" value="-5" label="score for mismatching bases" />
         <param name="gap" type="integer" value="-4" label="Gap penalty" />
         <conditional name="cuda">
-            <param name="use_cuda" label="Use GPU-CUDA?">
+            <param name="use_cuda" type="select" label="Use GPU-CUDA?">
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
             </param>
