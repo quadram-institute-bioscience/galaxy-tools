@@ -1,0 +1,33 @@
+<tool id="minipolish" name="minipolish" version="@VERSION@">
+    <description>A tool for Racon polishing of miniasm assemblies</description>
+    <macros>
+        <token name="@VERSION@">0.1.2</token>
+    </macros>
+    <requirements>
+    <requirement type="package" version="@VERSION@">minipolish</requirement>
+    </requirements>
+    <version_command>minipolish --version</version_command>
+    <command detect_errors="exit_code">
+        <![CDATA[
+            minipolish -t \${GALAXY_SLOTS:-4}
+            --rounds $rounds
+            $pacbio
+            $reads
+            $assembly
+            > polished.gfa
+    ]]>    </command>
+    <inputs>
+        <param name="reads" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="false" label="Input reads" />
+        <param name="assembly" type="data" format="txt,graph_dot" multiple="false" label="Assembly Graph from Miniasm" />
+        <param argument="--pacbio" type="boolean" truevalue="--pacbio" falsevalue="" checked="False" label="Pacbio data?"/>
+    </inputs>
+    <outputs>
+        <data name="polished" format="graph_dot" from_work_dir="polioshed.gfa" label="${tool.name} on ${on_string} Polished contigs"/>
+    </outputs>
+    <tests>
+    </tests>
+    <help>
+        <![CDATA[
+    ]]>
+    </help>
+</tool>
