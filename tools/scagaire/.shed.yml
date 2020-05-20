@@ -1,0 +1,18 @@
+categories: [Sequence Analysis]
+description: Filter gene predictions from a metagenomic sample by bacterial/pathogenic species
+long_description: |
+  Scagaire allows you to take in gene predictions from a metagenomic sample and
+  filter them by bacterial/pathogenic species. This allows you to focus only on
+  medically relevant pathogens, and the resistance found within, rather than on
+  resistance in commensals. We can use the information from the public databses
+  to perform a genomic information to survey the AMR gene landscape in the
+  public domain. We focus only on acquired genes causing resistance rather than
+  point mutations, plasmids and virulence factors. It comes bundled with a
+  database of the 40 most frequently sequenced bacterial species (see Table X)
+  from the RefSeq database, allowing it to be used out of the box. It supports
+  as input many commonly used gene prediction tools.
+homepage_url: https://github.com/quadram-institute-bioscience/scagaire
+name: scagaire
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/scagaire
+type: unrestricted

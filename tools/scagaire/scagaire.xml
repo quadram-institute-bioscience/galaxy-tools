@@ -1,0 +1,65 @@
+<tool id="scagaire" name="scagaire" version="@VERSION@">
+    <description>Filter AMR results by species</description>
+    <macros>
+        <token name="@VERSION@">0.0.4</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">scagaire</requirement>
+    </requirements>
+    <version_command>scagaire --version</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        #set $clean_species = re.sub("_"," ",$scagaire_species.fields.name)
+        scagaire
+        -n $db_name
+        #if str($amr_type) != "auto"
+            -t $amr_type
+        #end if
+        '$clean_species'
+        -m $minimum_occurances
+        $debug
+        $verbose
+        $amr > $output
+    ]]>    </command>
+
+    <inputs>
+        <param name="amr" type="data" format="tabular,text" label="Select AMR result"/>
+        <param name="amr_type" type="select" optional="false" label="Source of AMR results">
+            <option value="auto">auto</option>
+            <option value="abricate">abricate</option>
+            <option value="rgi">rgi</option>
+            <option value="staramr">staramr</option>
+        </param>
+        <param name="db_name" type="select" optional="false" label="Database">
+            <option value="argannot">argannot</option>
+            <option value="card">card</option>
+            <option value="ncbi">ncbi</option>
+            <option value="plasmidfinder">plasmidfinder</option>
+            <option value="resfinder" selected="True">resfinder</option>
+            <option value="vfdb">vfdb</option>
+        </param>
+        <!-- DATABASE INPUT-->
+        <param label="Select a species" name="scagaire_species" type="select">
+            <options from_data_table="scagaire_species">
+                <validator message="No species is available" type="no_options" />
+            </options>
+        </param>
+        <param name="minimum_occurances" type="integer" min="0" value="0" label="Minimum number of occurances of a gene in the database"/>
+        <param name="debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" />
+        <param name="verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="false" label="Turn on verbose output" />
+    </inputs>
+
+    <outputs>
+        <data name="output" format="tabular" label="${tool.name} on ${on_string} Output"/>
+        <data name="summary" format="tabular" label="${tool.name} on ${on_string} Summary" from_work_dir="gene_summary.tsv"/>
+        <data name="log" format="text" label="${tool.name} on ${on_string} Log">
+            <filter>debug is True</filter>
+        </data>
+    </outputs>
+
+    <help><![CDATA[
+
+    Documentation can be found at `<https://github.com/quadram-institute-bioscience/scagaire>`_.
+
+    ]]>    </help>
+</tool>
