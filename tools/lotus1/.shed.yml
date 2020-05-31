@@ -1,0 +1,16 @@
+categories: [Sequence Analysis]
+description: complete 16S amplicon pipeline and quality filtering of sequences
+long_description: |
+  Lotus is a fast and user-friendly open-source tool to calculate denoised,
+  chimera-checked, operational taxonomic units (OTUs). These are the basis to
+  generate taxonomic abundance tables and phylogenetic trees from multiplexed,
+  next-generation sequencing data (454, illumina MiSeq and HiSeq). LotuS is
+  outstanding in its execution speed, as it can process 16S rDNA data up to two
+  orders of magnitude faster than other existing pipelines. This is partly due
+  to an included stand-alone fast simultaneous demultiplexer and quality filter
+  C++ program, simple demultiplexer (sdm), which comes packaged with LotuS.
+homepage_url: http://psbweb05.psb.ugent.be/lotus/
+name: lotus
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/lotus
+type: unrestricted

@@ -1,0 +1,151 @@
+<tool id="lotus" name="lotus" version="@VERSION@">
+    <description> complete 16S amplicon pipeline and quality filtering of sequences</description>
+    <macros>
+        <token name="@VERSION@">1.0.0</token>
+    </macros>
+    <version_command>echo "1.0.0"</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        mkdir input
+        &&
+        #for $i, $paired in enumerate( $input_type_options.list_paired_reads )
+                #set $filenameFWD = os.path.basename(str($paired.forward)) + "." + $paired.forward.ext
+                ln -sf '${paired.forward}' './input/${filenameFWD}' &&
+                #set $filenameREV = os.path.basename(str($paired.reverse)) + "." + $paired.reverse.ext
+                ln -sf '${paired.reverse}' './input/${filenameREV}' &&
+        #end for
+        lotus.pl 
+        -i ./input
+        -m '$mapping_file'
+        -t tmp_folder
+        -keepTmpFiles $opt_args.keep_tmp_files
+        -thr "\${GALAXY_SLOTS:-1}"
+        -p $opt_args.platform
+        -CL $clu_args.clutering
+        -id $clu_args.id
+        
+        -derepMin $clu_args.derepmin
+        -chim_skwe $clu_args.chim_skew
+        -readOverlap  $clu_args.readoverlap
+        -deactivateChimeraCheck $clu_args.deactivatechimeracheck
+        -xtalk $clu_args.xtalk
+        
+        -rdp_thr $tax_args.rdp_thr
+        -utax_thr $tax_args.utax_thr
+        -LCA_frac $tax_args.lca_frac
+        -TaxOnly $tax_args.taxonly
+        -keepUnclassified $tax_args.keepunclassified
+        -simBasedTaxo $tax_args.simbasedtaxo
+        -refDB $tax_args.refdb
+        -tax4refDB $tax_args.tax4refdb
+        -amplicon_type $tax_args.amplicon_type
+        -tax_group $tax_args.tax_group
+        -useBestBlastHitOnly $tax_args.usebestblasthitonly
+        -redoTaxOnly $tax_args.redotaxonly
+        -greegenesSpecies $tax_args.greengenesspecies
+        -pseudoRefOTUcalling $tax_args.pseudorefotucalling
+        
+        -o output &&
+        tar -czf ./ouput/primary ./output/primary.tar.gz &&
+        tar -czf ./ouput/higherLvl ./output/higherLvl.tar.gz
+    ]]>    </command>
+
+    <inputs>
+        <param name="input_files" type="data_collection" collection_type="list:paired" format="fastqsanger,fastqsanger.gz" label="FASTA/FASTQ dataset collection with R1/R2 pair" help="Can be lists of pair dataset collection"/>
+        <param name="mapping_file" type="data" format="txt" label="Select mapping file" help="Mapping file configuration: http://psbweb05.psb.ugent.be/lotus/documentation.html#MapFile"/>
+        <section name="opt_args" title="Optional Arguments">
+            <param name="barcode" argument="-barcode" type="data" format="fasta" optional="True" label="Barcode" help="File path to fastq formated file with barcodes (this is a processed mi/hiSeq format). The complementary option in a mapping file would be the column MIDfqFile" />
+            <param name="quality" argument="-q" type="data" format="txt" optional="True" label="Quality" help="input qual file (not defined in case of fastq or input directory)" />
+            <param name="keep_tmp_files" argument="-keepTmpFiles" type="boolean" truevalue="1" falsevalue="0" checked="true" label="Keep temp files" help="save extra tmp files like chimeric OTUs or the raw blast output in extra dir (Default:Yes)" />
+            <param name="platform" argument="-platform" type="select" label="Sequencing platform">
+                <option value="miseq" selected="True">miseq</option>
+                <option value="hiseq">hiseq</option>
+                <option value="454">454</option>
+            </param>
+        </section>
+        <section name="clu_args" title="Clustering Options">
+            <param name="clutering" argument="-clustering" type="select" label="Clustering Algorithm">
+                <option value="1" selected="True">UPARSE</option>
+                <option value="2">swarm</option>
+                <option value="3">cd-hit</option>
+            </param>
+            <param name="id" argument="-id" type="float" min="0" value="0.97" label="Clustering threshold"/>
+            <param name="derepmin" argument="-derepmin" type="integer" min="0" value="1" label="Minimum size of dereplicated clustered"/>
+            <param name="chim_skew" argument="-chim_skew" type="integer" min="0" value="2" label="Skew in chimeric fragment abundance"/>
+            <param name="readoverlap" argument="-readoverlap" type="integer" min="0" value="300" label="Maximum number of basepairs that two reads are overlapping"/>
+            <param name="deactivatechimeracheck" argument="-deactivatechimeracheck" type="select" label="Clustering Algorithm">
+                <option value="0" selected="True">OTU chimera checks</option>
+                <option value="1">No chimera Check at all</option>
+                <option value="2">Deactivate deNovo chimera check</option>
+                <option value="3">Deactivate ref based chimera check</option>
+            </param>
+            <param name="xtalk" argument="-xtalk" type="integer" min="0" value="0" label="Check for crosstalk" help=
+            "Requires in most cases 64bit usearch"/>
+        </section>
+        <section name="tax_args" title="Taxonomy Options">
+            <param name="rdp_thr" argument="-rdp_thr" type="float" min="0" value="0.8" label="Confidence threshold for RDP"/>
+            <param name="utax_thr" argument="-utax_thr" type="float" min="0" value="0.8" label="Confidence thresshold for UTAX"/>
+            <param name="lca_frac" argument="-lca_frac" type="float" min="0" value="0.9" label="Min fraction of reads with identical taxonomy"/>
+            <param name="taxonly" argument="-taxonly" type="boolean" truevalue="1" falsevalue="0" checked="false" label="Skip most of the lotus pipeline and only run a taxonomic classification on a fasta file" />
+            <param name="keepunclassified" argument="-keepunclassified" type="integer" min="0" value="1" label="Includes unclassified OTUs"/>
+            <param name="simbasedtaxo" argument="-simbasedtaxo" type="select" label="simBasedTaxo">
+                <option value="0" selected="True">RDP</option>
+                <option value="1">Blast</option>
+                <option value="2">Lambda</option>
+                <option value="3">Utax</option>
+            </param>
+            <param name="refdb" argument="-refdb" type="select" display="checkboxes" label="Ref Database">
+                <option value="SLV" selected="True">Silva LSU (23/28S) or SSU (16/18S)</option>
+                <option value="GG">Greengenes</option>
+                <option value="UNITE">ITS focused on fungi</option>
+                <option value="PR2">SSU focused on Protists</option>
+                <option value="beetax">Bee gut specific database and tax names</option>
+                <option value="HITdb">Human gut microbiota</option>
+            </param>
+            <param name="amplicon_type" argument="-amplicon_type" type="select" label="Amplicon type">
+                <option value="LSU">Large subunit (23S/28S)</option>
+                <option value="SSU" selected="True">small subunit (16S/18S)</option>
+                <option value="ITS">internal transcribed spacer, only supported for fungal data using UINTE database</option>
+            </param>
+            <param name="tax_group" argument="-tax_group" type="select" label="Tax group">
+                <option value="bacteria" selected="True">specialized 16S rDNA annnotation</option>
+                <option value="fungi">fungal 18S/23S/ITS annotation</option>
+            </param>
+            <param name="usebestblasthitonly" argument="-usebestblasthitonly" type="boolean" truevalue="1" falsevalue="0" checked="false" label="Use best blast hit only" />
+            <param name="redotaxonly" argument="-redotaxonly" type="boolean" truevalue="1" falsevalue="0" checked="false" label="Only redo the taxonomic assignments" />
+            <param name="greengenesspecies" argument="-greengenesspecies" type="boolean" truevalue="1" falsevalue="0" checked="false" label="Create greengenes output labels instead of OTU" />
+            <param name="pseudorefotucalling" argument="-pseudorefotucalling" type="boolean" truevalue="1" falsevalue="0" checked="false" label="Create Reference based (open) OTUs" />
+        </section>
+    </inputs>
+
+    <outputs>
+        <data name="acceptsperfile" format="tabular" label="${tool.name} on ${on_string}: Number and percentage of reads" from_work_dir="./output/LotuSLogS/demulti.acceptsPerFile.log"/>
+        <data name="acceptspersample" format="tabular" label="${tool.name} on ${on_string}: Percentage of reads " from_work_dir="./output/LotuSLogS/demulti.acceptsPerSample"/>
+        <data name="demulti_lenhist" format="tabular" label="${tool.name} on ${on_string}: Length histogram of sequences that passed sdm" from_work_dir="./output/LotuSLogS/demulti_lenHist.txt"/>
+        <data name="demulti_qualhist" format="tabular" label="${tool.name} on ${on_string}: Quality histogram of sequences that passed sdm" from_work_dir="./output/LotuSLogS/demulti_qualHist.txt"/>
+        <data name="seedextensionstats" format="tabular" label="${tool.name} on ${on_string}: Stats on Seed sequence length" from_work_dir="./output/LotuSLogS/SeedExtensionStats.txt"/>
+        <data name="lotus_runlog" format="tabular" label="${tool.name} on ${on_string}: Tracks overall progression and if certain steps failed" from_work_dir="./output/LotuSLogS/LotuS_runlog.txt"/>
+        <data name="primary" format="tar" label="${tool.name} on ${on_string}: Copies of sdm options and mapping file" from_work_dir="./output/primary.tar.gz"/>
+        <data name="higherlvl" format="tar" label="${tool.name} on ${on_string}: Abundance matrices" from_work_dir="./output/higherLvl.tar.gz"/>
+        <data name="hiera_blast" format="tabular" label="${tool.name} on ${on_string}: OTU taxonomy assignments based on Blastn" from_work_dir="./output/hiera_BLAST.txt"/>
+        <data name="hiera_rdp" format="tabular" label="${tool.name} on ${on_string}: OTU taxonomy assignments based on RDP classifier" from_work_dir="./output/hiera_RDP.txt"/>
+        <data name="otu" format="tabular" label="${tool.name} on ${on_string}: OTU abundance matrix" from_work_dir="./output/OTU.txt"/>
+        <data name="otu_biom" format="biom" label="${tool.name} on ${on_string}: biom formatted OTU abundance matrix" from_work_dir="./output/OTU.biom"/>
+        <data name="otumultalign" format="fasta" label="${tool.name} on ${on_string}: Multiple Alignment of OTU" from_work_dir="./output/otuMultAlign.fna"/>
+        <data name="otus" format="fasta" label="${tool.name} on ${on_string}: Fasta formatted extended OTU seed sequences" from_work_dir="./output/otus.fa"/>
+        <data name="tree" format="txt" label="${tool.name} on ${on_string}: Phylogenetic tree between sequences" from_work_dir="./output/Tree.tre"/>
+    </outputs>
+
+    <!-- <tests>
+        #TODO: add test
+        <test>
+        </test>
+    </tests> -->
+
+    <help><![CDATA[
+    Documentation can be found at `<http://psbweb05.psb.ugent.be/lotus/documentation.html>`_.
+    ]]>    </help>
+    <!-- <expand macro="citations" /> -->
+<citations>
+    <citation type="doi">10.1186/2049-2618-2-30</citation>
+</citations>
+</tool>
