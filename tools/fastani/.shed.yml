@@ -9,5 +9,5 @@ long_description: |
   Average Nucleotide Identity (ANI). ANI is defined as mean nucleotide identity
   of orthologous gene pairs shared between two microbial genomes. FastANI
   supports pairwise comparison of both complete and draft genome assemblies.
-remote_repository_url: https://github.com/bgruening/galaxytools/tree/master/tools/fastani
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/fastani
 type: unrestricted
