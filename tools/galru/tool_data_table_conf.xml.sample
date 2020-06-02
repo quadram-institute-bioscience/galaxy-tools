@@ -1,7 +1,0 @@
-<tables>
-    <!-- Locations of ariba database in the required format -->
-    <table name="galru_species" comment_char="#" allow_duplicate_entries="False">
-        <columns>value, name</columns>
-        <file path="tool-data/galru.loc" />
-    </table>
-</tables>

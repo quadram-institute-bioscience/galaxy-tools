@@ -1,36 +1,33 @@
 <tool id="galru" name="galru" version="@VERSION@">
-    <description>Identify CRISPR types from uncorrected long reads</description>
+    <description>Long read spoligotyping for Mycobacterium tuberculosis</description>
     <macros>
-        <token name="@VERSION@">0.0.1</token>
+        <token name="@VERSION@">1.0.0</token>
     </macros>
     <requirements>
-        <container type="singularity">/qib/platforms/Informatics/transfer/outgoing/singularity/galru/galru.sif</container>
+        <requirement type="package" version="@VERSION@">galru</requirement>
     </requirements>
     <version_command>galru --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
         galru
         --technology $technology
+        #if str($cas_input.cas_select) == "history":
+            --cas_fasta '$cas_input.cas_file'
+        #end if
         --gene_start_offset $gene_start_offset
         --min_mapping_quality $min_mapping_quality
-        #if str($cas_input.cas_select) == "history":
-            --cas_fasta $cas_input.cas_file
-        #end if
+        --qcov_margin $qcov_margin
+        --min_bitscore $min_bitscore
+        --min_identity $min_identity
+        --threads \${GALAXY_SLOTS:-4}
         $extended
         $debug
         $verbose
         --output_file $output
-        '$galru_species.fields.name'
         $fastq
     ]]>    </command>
 
     <inputs>
         <param name="fastq" type="data" format="fastq,fastq.gz,fastqsanger,fastqsanger.gz" label="Uncorrected long reads"/>
-        <!-- DATABASE INPUT-->
-        <param label="Select a species" name="galru_species" type="select">
-            <options from_data_table="galru_species">
-                <validator message="No species is available" type="no_options" />
-            </options>
-        </param>
         <conditional name="cas_input">
             <param name="cas_select" type="select" label="CAS file">
                 <option selected="true" value="bundle">Use bundled CAS file</option>
@@ -46,13 +43,15 @@
                 <option value="ava-ont">ava-ont</option>
                 <option value="ava-pb">ava-pb</option>
             </param>
-            <param name="extended" type="boolean" truevalue="--extended_results" falsevalue="" checked="false" label="Output extended results" />
-            <param name="gene_start_offset" type="integer" min="0" value="30" label="Only count CRISPR reads which cover this base"/>
-            <param name="min_mapping_quality" type="integer" min="0" value="10" label="Minimum mapping quality score"/>
+            <param name="extended" argument="--extended_results" type="boolean" truevalue="--extended_results" falsevalue="" checked="false" label="Output extended results" />
+            <param name="gene_start_offset" argument="--gene_start_offset" type="integer" min="0" value="30" label="Only count CRISPR reads which cover this base"/>
+            <param name="min_mapping_quality" argument="--min_mapping_quality" type="integer" min="0" value="10" label="Minimum mapping quality score"/>
+            <param name="qcov_margin" argument="--qcov_margin" type="integer" min="0" value="100" label="Maximum perc coverage difference between CRISPR and read"/>
+            <param name="min_bitscore" argument="--min_bitscore" type="integer" min="0" value="38" label="Minimum blast bitscore"/>
+            <param name="min_identity" argument="--min_identity" type="integer" min="0" value="95" label="Minimum blast identity"/>
             <param name="debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" />
             <param name="verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="false" label="Turn on verbose output" />
         </inputs>
-
         <outputs>
             <data name="output" format="tabular" label="${tool.name} on ${on_string} Output"/>
             <data name="log" format="text" label="${tool.name} on ${on_string} Log">
@@ -65,4 +64,7 @@
     Documentation can be found at `<https://github.com/quadram-institute-bioscience/galru>`_.
 
     ]]>        </help>
+    <citations>
+        <citation type="doi">10.1101/2020.05.31.126490v1</citation>
+    </citations>
     </tool>

@@ -1,7 +1,11 @@
 categories: [Sequence Analysis]
-description: Galru is a Python 3 program that defines CRISPR spacer repertoire directly from uncorrected metagenomic long reads.
+description: Long read spoligotyping for Mycobacterium tuberculosis.
 long_description: |
-  Galru first identifies long reads that map to CRISPR-associated genes and searches along the read for the CRISPR spacer array. This array is compared to a database of known arrays to identify the sequence type (MLST).
+  Galru allows for rapid spoligotyping for Mycobacterium tuberculosis directly
+  from long read sequencing. It is fast and accurate. It requires a minimal
+  amount of information to produce a spoligotype, and allows for near real-time
+  typing when used to process sequencing data as it is produced by a Nanopore
+  sequencer.
 homepage_url: https://github.com/quadram-institute-bioscience/galru
 name: galru
 owner: thanhlv
