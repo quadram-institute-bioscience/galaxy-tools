@@ -33,11 +33,10 @@
             $opt_args.strict_signal
         #end if
         
-        #if $opt_args.use_annotation
-            $opt_args.use_annotation
+        #if str($opt_args.use_annotation) == "yes"
+            --use_annotation
+            --prime_feature_size $opt_args.prime_feature_size
         #end if
-
-        --prime_feature_size $opt_args.prime_feature_size
         
         --window_interval $opt_args.window_interval
         
@@ -52,63 +51,75 @@
         $embl $case_plots $control_plots
         > $log
     
-    ]]></command>
-    
+    ]]>    </command>
+
     <inputs>
         <param name="embl" type="data" format="embl" label="Select EMBLfile" help=""/>
-        <param name="case_plots" type="data" format="fastq.gz" label="Select case plot files" help=""/>
-        <param name="control_plots" type="data" format="fastq.gz" label="Select control plot files" help=""/>
-        
-        <section name="opt_args" title="Optional Arguments">
-        <param argument="--span_gaps" type="integer" value="1" optional="True" label="Only look at this number of bases from start and end of fragment" help="When blocks of significat change in insertions are detected they can be fragmented, possibly being at the start and end of a gene and missing in the middle. This option allows you to span these gaps to form more contigous blocks, giving neater results. If you set this too high, then different distinct mechanisms will be merged together, giving you erroneous results." />
-        <param argument="--iterations" type="integer" value="100" optional="True" label="Only look at this number of bases from start and end of fragment" help="You can iteratively look for the highest signals, identify them, report them, then mask them out, and start again. This allows you to progressively identify weaker signals which may be overwhelmed ordinarily. There is no automatic stop, so if you do too many iterations, you will increase the number of false positives." />
-        <param argument="--minimum_block" type="integer" value="100" label="Minimum number of reads which must be in 1 block in
+        <param name="case_plots" type="data" format="gz" label="Select case plot files" help=""/>
+        <param name="control_plots" type="data" format="gz" label="Select control plot files" help=""/>
+        <section name="opt_args" title="Optional Arguments" expanded="true">
+            <param argument="--span_gaps" type="integer" value="1" optional="True" label="Only look at this number of bases from start and end of fragment" help="When blocks of significat change in insertions are detected they can be fragmented, possibly being at the start and end of a gene and missing in the middle. This option allows you to span these gaps to form more contigous blocks, giving neater results. If you set this too high, then different distinct mechanisms will be merged together, giving you erroneous results." />
+            <param argument="--iterations" type="integer" value="1" optional="True" label="No. of times to rescan" help="You can iteratively look for the highest signals, identify them, report them, then mask them out, and start again. This allows you to progressively identify weaker signals which may be overwhelmed ordinarily. There is no automatic stop, so if you do too many iterations, you will increase the number of false positives." />
+            <param argument="--minimum_block" type="integer" value="100" label="Minimum number of reads which must be in 1 block in
                         comparison" help="This is the minimum number of reads which must be in a block/gene to be considered. If you do a scatter plot experimental variation, low abundance equates to greater variability. This hard minimum threshold eliminates a great deal of noise." />
-        <param argument="--minimum_logfc" type="integer" value="1" label="Minimum log fold change +/-" help="The minimum log fold change in insertion sites between conditions to consider as significant. It must be an integer." />
-        <param argument="--minimum_logcpm" type="float" value="8.0" label="Minimum log counts per million +/-" help="The minimum log counts per million to consider. It must be an integer and this is approximately equivalent to relative abundance." />
-        <param argument="--minimum_threshold" type="integer" value="5" label="Only include insert sites with this number or greater
+            <param argument="--minimum_logfc" type="integer" value="1" label="Minimum log fold change +/-" help="The minimum log fold change in insertion sites between conditions to consider as significant. It must be an integer." />
+            <param argument="--minimum_logcpm" type="float" value="8.0" label="Minimum log counts per million +/-" help="The minimum log counts per million to consider. It must be an integer and this is approximately equivalent to relative abundance." />
+            <param argument="--minimum_threshold" type="integer" value="5" label="Only include insert sites with this number or greater
                         insertions" help="There can be random bits of DNA which makes it through to sequencing, but they are generally uniformly scattered throughout at low frequency. This controls the minimum threshold. Any insert site with less than this number will be set to zero at the start of the experiment." />
-        <param argument="--minimum_proportion_insertions" type="float" value="0.1" label="If the proportion of insertions is too low compared to
+            <param argument="--minimum_proportion_insertions" type="float" value="0.1" label="If the proportion of insertions is too low compared to
                         control, dont call decreased insertions below this
                         level" help="Often experiments produce different numbers of insertions, its just a natural part of the protocol. If the difference between the condition and controls are too extreme, then the statistics start to break down, particularly when calling decreased numbers of insertions, since the absense of data is probably due to the overall number of insertions/reads rather than something real. This is the minimum proportion allowable." />
-        <param argument="--dont_normalise_plots" type="boolean" truevalue="--dont_normalise_plots" falsevalue="" checked="false" label="Don't normalise input plots" help="By default plots are normalised to the number of reads in the largest plot file, helping to make the statistics and plots look more uniform. You can turn this off if you wish." />
-        <param argument="--pvalue" type="float" value="0.05" label="Dont report anything above this p-value" help="You may want to reduce the value further, depending on how adventurous you are. If you set it too high you will get more erroneous results, if you set it too low you may not get any results at all." />
-        <param argument="--strict_signal" type="boolean" truevalue="--strict_signal" falsevalue="" checked="false" label="A result must be present in the combined plots to be
+            <param argument="--dont_normalise_plots" type="boolean" truevalue="--dont_normalise_plots" falsevalue="" checked="false" label="Don't normalise input plots" help="By default plots are normalised to the number of reads in the largest plot file, helping to make the statistics and plots look more uniform. You can turn this off if you wish." />
+            <param argument="--pvalue" type="float" value="0.05" label="Dont report anything above this p-value" help="You may want to reduce the value further, depending on how adventurous you are. If you set it too high you will get more erroneous results, if you set it too low you may not get any results at all." />
+            <param argument="--strict_signal" type="boolean" truevalue="--strict_signal" falsevalue="" checked="false" label="A result must be present in the combined plots to be
                         returned" help="By default if there is a strong signal in the forward or reverse directions above the thresholds, it get reported. You can make this even stricter, by also requiring that the combined data must also have a significant signal. This will reduce the number of genes identified, however may also reduce erroneous signals." />
-        <param argument="--use_annotation" type="boolean" truevalue="--use_annotation" falsevalue="" checked="false" label="Use the reference annotation rather than a sliding
-                        window" help="By default the software uses a sliding window to identify significant signals. You can choose instead to use the annotated genes passed in via the input EMBL file. Each gene also has a 5' and 3' feature added, so that you dont miss signals in the intergenic regions and also to identify up and down regulation." />
-        <param argument="--prime_feature_size" type="integer" value="198" label="Prime Feature Size" help="When you --use_annotation 5' and 3' features are created around each gene. This controls the size of those features in bases." />
-        <param argument="--window_interval" type="integer" value="25" label="Minimum alignment length " help="The number of bases to move along when using sliding windows. Ensure it is less than or equal to the windows_size otherwise you will miss parts of the genome. Ideally it should be a maximum of half the window_size." />
-        <param argument="--window_size" type="integer" value="100" label="Minimum alignment length " help="The size of the sliding window in bases. If you set this too high you will only get very strong signals so will miss quite a bit. If you set this too low you will get a huge amount of false positives due to the natural experimental variation. The window size should be about 10 times the average insertion density, so if there are insertions every 10 bases, the window size should be 100 bases." />
-        <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
+            <conditional name="annotation">
+                <param name="use_annotation" type="select" label="Use the reference annotation rather than a sliding window">
+                    <option value="yes">Yes</option>
+                    <option selected="true" value="no">No</option>
+                </param>
+                <when value="yes">
+                    <param name="prime_feature_size" argument="--prime_feature_size" type="integer" min="0" value="198" label="Prime Feature Size" help="When you --use_annotation 5' and 3' features are created around each gene. This controls the size of those features in bases." />
+                </when>
+            </conditional>
+            <param argument="--window_interval" type="integer" value="25" label="Minimum alignment length " help="The number of bases to move along when using sliding windows. Ensure it is less than or equal to the windows_size otherwise you will miss parts of the genome. Ideally it should be a maximum of half the window_size." />
+            <param argument="--window_size" type="integer" value="100" label="Minimum alignment length " help="The size of the sliding window in bases. If you set this too high you will only get very strong signals so will miss quite a bit. If you set this too low you will get a huge amount of false positives due to the natural experimental variation. The window size should be about 10 times the average insertion density, so if there are insertions every 10 bases, the window size should be 100 bases." />
+            <param argument="--debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Turn on debugging" help="(Default:No)" />
         </section>
     </inputs>
 
     <outputs>
         <data name="log" format="txt" label="${tool.name} on ${on_string}: Log"/>
+        <data name="ess" format="csv" label="original ess">
+            <discover_datasets pattern="(?P&lt;designation&gt;.+)\.insert_site_plot_shortoriginal\.ess" ext="ess" directory="output" visible="true"/>
+        </data>
         <data name="annotation" format="txt" label="${tool.name} on ${on_string}: annotation" from_work_dir="output/annotation.embl"/>
+        <data name="regulated_gene_report" format="csv" label="${tool.name} on ${on_string}: regulated_gene_report" from_work_dir="output/regulated_gene_report.csv"/>
         <data name="gene_report" format="tabular" label="${tool.name} on ${on_string}: gene_report" from_work_dir="output/gene_report.csv"/>
-        <data name="combined" format="tabular" label="${tool.name} on ${on_string}: combined" from_work_dir="output/combined.csv"/>      
-        <data name="forward" format="tabular" label="${tool.name} on ${on_string}: forward" from_work_dir="output/forward.csv"/>
-        <data name="reverse" format="tabular" label="${tool.name} on ${on_string}: reverse" from_work_dir="output/reverse.csv"/>
-        <data name="combined" format="txt" label="${tool.name} on ${on_string}: combined" from_work_dir="output/combined.plot"/>
-        <data name="forward" format="txt" label="${tool.name} on ${on_string}: forward" from_work_dir="output/forward.plot"/>
-        <data name="reverse" format="txt" label="${tool.name} on ${on_string}: reverse" from_work_dir="output/reverse.plot"/>
+        <data name="original_csv" format="csv" label="${tool.name} on ${on_string}: original" from_work_dir="output/original.csv"/>
+        <data name="combined_csv" format="csv" label="${tool.name} on ${on_string}: combined csv" from_work_dir="output/combined.csv"/>
+        <data name="forward_csv" format="csv" label="${tool.name} on ${on_string}: forward csv" from_work_dir="output/forward.csv"/>
+        <data name="reverse_csv" format="csv" label="${tool.name} on ${on_string}: reverse csv" from_work_dir="output/reverse.csv"/>
+        <data name="original_plot" format="txt" label="${tool.name} on ${on_string}: gene_report" from_work_dir="output/original.plot"/>
+        <data name="combined_plot" format="txt" label="${tool.name} on ${on_string}: combined plot" from_work_dir="output/combined.plot"/>
+        <data name="forward_plot" format="txt" label="${tool.name} on ${on_string}: forward plot" from_work_dir="output/forward.plot"/>
+        <data name="reverse_plot" format="txt" label="${tool.name} on ${on_string}: reverse plot" from_work_dir="output/reverse.plot"/>
+        <data name="essentiality" format="txt" label="${tool.name} on ${on_string}: Essentiality" from_work_dir="output/Essentiality.txt"/>
     </outputs>
 
     <tests>
         <test>
-        <param name="embl" value="annotation.embl"/>
-        <param name="case_plots" value="small_case.insert_site_plot.gz"/>
-        <param name="control_plots" value="small_control.insert_site_plot.gz" />
-        <output name="annotation" ftype="txt" file="out/annotation.embl"/>
-        <output name="gene_report" ftype="tabular" file="out/gene_report.csv"/>
-        <output name="combined" ftype="tabular"  file="out/combined.csv"/>      
-        <output name="forward" ftype="tabular" file="out/forward.csv"/>
-        <output name="reverse" ftype="tabular" file="out/reverse.csv"/>
-        <output name="combined" ftype="txt"  file="out/combined.plot"/>
-        <output name="forward" ftype="txt" file="out/forward.plot"/>
-        <output name="reverse" ftype="txt" file="out/reverse.plot"/>
+            <param name="embl" value="annotation.embl"/>
+            <param name="case_plots" value="small_case.insert_site_plot.gz"/>
+            <param name="control_plots" value="small_control.insert_site_plot.gz" />
+            <output name="annotation" ftype="txt" file="out/annotation.embl"/>
+            <output name="gene_report" ftype="tabular" file="out/gene_report.csv"/>
+            <output name="combined" ftype="tabular" file="out/combined.csv"/>
+            <output name="forward" ftype="tabular" file="out/forward.csv"/>
+            <output name="reverse" ftype="tabular" file="out/reverse.csv"/>
+            <output name="combined" ftype="txt" file="out/combined.plot"/>
+            <output name="forward" ftype="txt" file="out/forward.plot"/>
+            <output name="reverse" ftype="txt" file="out/reverse.plot"/>
         </test>
     </tests>
 
@@ -118,6 +129,6 @@
         Tradis analysis
         
         Documentation can be found at `<https://github.com/quadram-institute-bioscience/albatradis>`_.
-    ]]></help>
- <!-- <expand macro="citations" /> -->
+    ]]>    </help>
+    <expand macro="citations" />
 </tool>

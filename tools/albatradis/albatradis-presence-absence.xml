@@ -49,5 +49,5 @@
         
         Documentation can be found at `<https://github.com/quadram-institute-bioscience/albatradis>`_.
     ]]></help>
- <!-- <expand macro="citations" /> -->
+ <expand macro="citations" />
 </tool>
