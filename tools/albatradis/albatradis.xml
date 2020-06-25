@@ -70,8 +70,8 @@
 
     <inputs>
         <param name="embl" type="data" format="embl" label="Select EMBLfile" help=""/>
-        <param name="case_plots" type="data" format="txt" multiple="true" label="Select case plot files" help=""/>
-        <param name="control_plots" type="data" format="txt" multiple="true" label="Select control plot files" help=""/>
+        <param name="case_plots" type="data" format="txt,.gz" multiple="true" label="Select case plot files" help=""/>
+        <param name="control_plots" type="data" format="txt,.gz" multiple="true" label="Select control plot files" help=""/>
         <section name="opt_args" title="Optional Arguments" expanded="true">
             <param argument="--span_gaps" type="integer" value="1" optional="True" label="Only look at this number of bases from start and end of fragment" help="When blocks of significat change in insertions are detected they can be fragmented, possibly being at the start and end of a gene and missing in the middle. This option allows you to span these gaps to form more contigous blocks, giving neater results. If you set this too high, then different distinct mechanisms will be merged together, giving you erroneous results." />
             <param argument="--iterations" type="integer" value="1" optional="True" label="No. of times to rescan" help="You can iteratively look for the highest signals, identify them, report them, then mask them out, and start again. This allows you to progressively identify weaker signals which may be overwhelmed ordinarily. There is no automatic stop, so if you do too many iterations, you will increase the number of false positives." />
