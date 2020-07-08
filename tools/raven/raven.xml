@@ -35,7 +35,7 @@
                 $cuda.baned_alignment
                 -a $cuda.cuda_alignment_batches
             #end if
-            $reads
+            reads.${ext}
             > assembly.fa
     ]]>    </command>
     <inputs>
