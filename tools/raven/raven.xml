@@ -9,6 +9,21 @@
     <version_command>raven --version</version_command>
     <command detect_errors="exit_code">
         <![CDATA[
+            #if $reads.is_of_type('fastqsanger', 'fastq'):
+                #set $ext = 'fastq'
+                #elif $reads.is_of_type('fastqsanger.gz'):
+                    #set $ext = 'fastq.gz'
+                #elif $reads.is_of_type('fastq'):
+                    #set $ext = 'fastq'
+                #elif $reads.is_of_type('fastq.gz'):
+                    #set $ext = 'fastq.gz'
+                #elif $reads.is_of_type('fasta.gz'):
+                    #set $ext = 'fasta.gz'
+                #elif $reads.is_of_type('fasta'):
+                    #set $ext = 'fasta'
+            #end if
+            ln -s '$reads' reads.${ext} &&
+
             raven -t \${GALAXY_SLOTS:-4}
             -p $polishing_round
             -m $match
