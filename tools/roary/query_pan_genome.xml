@@ -11,10 +11,19 @@
     <command detect_errors="exit_code"><![CDATA[
         #set $filenames = list()
         #for $gff in $gff_input.gffs
-          cp '$gff' '${gff.element_identifier}.gff' &&
-          #set $filename = str($gff.element_identifier) + '.gff'
-          $filenames.append(str($filename))
+            cp '$gff' '${gff.element_identifier}.gff' &&
+            #set $filename = str($gff.element_identifier) + '.gff'
+            $filenames.append(str($filename))
         #end for
+        
+        #if str($actions.action) == 'difference'
+            #set $set2_filenames = list()
+            #for $gff in $actions.gffs_set2
+                cp '$gff' '${gff.element_identifier}.gff' &&
+                #set $set2_filename = str($gff.element_identifier) + '.gff'
+                $set2_filenames.append(str($set2_filename))
+            #end for
+        #end if
 
         query_pan_genome
         -g $clustered_proteins
@@ -26,10 +35,14 @@
         -o output
         $verbose 
         
-        #for $f in $filenames
-            '$f'
-        #end for
-
+        #if str($actions.action) == 'difference'
+            --input_set_one ${','.join($filenames)}
+            --input_set_two ${','.join($set2_filenames)}
+        #else:
+            #for $f in $filenames
+                '$f'
+            #end for
+        #end if
     ]]>    </command>
 
     <inputs>
@@ -55,6 +68,9 @@
             </param>
             <when value="gene_multifasta">
                 <param name="gene_names" type="text" optional="true" label="Comma separated list of gene names for use with gene_multifasta action" />
+            </when>
+            <when value="difference">
+                <param name="gffs_set2" type="data_collection" collection_type="list" format="gff,gff3" label="Dataset collection to submit to Roary" help="A 2nd dataset list collection of gff3 files to send to Roary for difference analysis." />
             </when>
         </conditional>
         <param name="clustered_proteins" type="data" format="txt" label="clustered_proteins" help="To have this file, you mush select output Clustered proteins file when running Roary"/>
