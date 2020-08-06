@@ -1,4 +1,4 @@
-<tool id="flye" name="Flye assembler" version="2.8">
+<tool id="flye" name="Flye assembler" version="@VERSION@+galaxy0">
     <description>of long and error-prone reads</description>
     <macros>
         <import>macros.xml</import>
@@ -116,7 +116,7 @@
             <param name="inputs" ftype="fasta" value="nanopore.fasta"/>
             <param name="mode" value="--pacbio-raw"/>
             <param name="g" value="10000"/>
-            <output name="scaffolds" file="result1_scaffolds.fasta" ftype="fasta" compare="sim_size"/>
+            <!-- <output name="scaffolds" file="result1_scaffolds.fasta" ftype="fasta" compare="sim_size"/> -->
             <output name="assembly_info" file="result1_assembly_info.txt" ftype="tabular" compare="sim_size"/>
             <output name="assembly_graph" file="result1_assembly_graph.dot" ftype="graph_dot" compare="sim_size"/>
             <output name="assembly_gfa" file="result1_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
@@ -125,7 +125,7 @@
             <param name="inputs" ftype="fasta" value="nanopore.fasta"/>
             <param name="mode" value="--nano-raw"/>
             <param name="g" value="10000"/>
-            <output name="scaffolds" file="result2_scaffolds.fasta" ftype="fasta" compare="sim_size"/>
+            <!-- <output name="scaffolds" file="result2_scaffolds.fasta" ftype="fasta" compare="sim_size"/> -->
             <output name="assembly_info" file="result2_assembly_info.txt" ftype="tabular" compare="sim_size"/>
             <output name="assembly_graph" file="result2_assembly_graph.dot" ftype="graph_dot" compare="sim_size"/>
             <output name="assembly_gfa" file="result2_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
@@ -135,7 +135,7 @@
             <param name="mode" value="--pacbio-raw"/>
             <param name="g" value="10000"/>
             <param name="i" value="2"/>
-            <output name="scaffolds" file="result3_scaffolds.fasta" ftype="fasta" compare="sim_size"/>
+            <!-- <output name="scaffolds" file="result3_scaffolds.fasta" ftype="fasta" compare="sim_size"/> -->
             <output name="assembly_gfa" file="result2_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
         </test>
     </tests>
