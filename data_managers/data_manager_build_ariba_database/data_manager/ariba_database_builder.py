@@ -158,6 +158,7 @@ mlst_dict = {
 
 genes_dict = {
     "card" : "CARD",
+    "ncbi" : "ncbi",
     "resfinder" : "Resfinder",
     "plasmidfinder" : "Plasmidfinder",
     "megares" : "Megares",

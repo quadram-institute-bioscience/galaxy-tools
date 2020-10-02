@@ -25,6 +25,7 @@
         <when value="curated">
             <param name="db" type="select" multiple="false" label="Select partial library to download">
                 <option value="card">CARD</option>
+                <option value="ncbi">ncbi</option>
                 <option value="resfinder">Resfinder</option>
                 <option value="plasmidfinder">Plasmidfinder</option>
                 <option value="megares">Megares</option>
