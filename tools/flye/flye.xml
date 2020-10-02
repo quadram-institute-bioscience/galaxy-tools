@@ -1,4 +1,4 @@
-<tool id="flye" name="Flye assembler" version="2.5">
+<tool id="flye" name="Flye assembler" version="@VERSION@+galaxy0">
     <description>of long and error-prone reads</description>
     <macros>
         <import>macros.xml</import>
@@ -33,7 +33,9 @@
     #end for
 
     -o out_dir
-    -g '$g'
+    #if $g:
+        -g '$g'
+    #end if    
     -t \${GALAXY_SLOTS:-4}
     -i $i
     #if $m:
@@ -54,8 +56,8 @@
     2>&1
     ]]>    </command>
     <inputs>
-        <param name="inputs" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Input reads" >
-        <help><![CDATA[
+        <param name="inputs" type="data" format="fasta,fasta.gz,fastq,fastq.gz,fastqsanger.gz,fastqsanger" multiple="true" label="Input reads">
+            <help><![CDATA[
 
     Input reads could be in FASTA or FASTQ format, uncompressed
     or compressed with gz. Currenlty, raw and corrected reads
@@ -65,8 +67,8 @@
     sets of high-quality contigs. You may specify multiple
     files with reads (separated by spaces). Mixing different read
     types is not yet supported.
-     ]]>        </help>
-     </param>
+     ]]>            </help>
+        </param>
         <param name="mode" type="select" label="Mode">
             <option value="--nano-raw">Nanopore raw</option>
             <option value="--nano-corr">Nanopore corrected</option>
@@ -74,17 +76,19 @@
             <option value="--pacbio-corr">PacBio corrected</option>
             <option value="--subassemblies">high-quality contig-like input</option>
         </param>
-        <param argument="-g" type="text" label="estimated genome size (for example, 5m or 2.6g)">
+        <param argument="-g" optional="true" type="text" label="estimated genome size (for example, 5m or 2.6g)">
             <help>
                 <![CDATA[
+                <span>Since version 2.8, no longer required as input. However, it must be used in conjunction with --asm-coverage option. </span>
+                <br>
             <span>The genome size estimate is used for solid k-mer selection in the
             initial disjointig assembly stage. <b>Flye is not very sensitive to this
             parameter, and the estimate could be rough</b>. It is ok if the parameter is
             within 0.5x-2x of the actual genome size. If the final assembly size is
             very different from the initial guess, consider re-running the pipeline
             with an updated estimate for better results.</span>
-<br>
-<span>An alternative option is to run Flye in <b>--meta</b> mode, which uses a different
+            <br>
+            <span>An alternative option is to run Flye in <b>--meta</b> mode, which uses a different
             approach for solid k-mer selection. This mode is almost independent from the
             genome size parameter (you still need to provide an estimate for the selection
             of some other parameters). When assembly is completed, you can re-run in the
@@ -112,7 +116,7 @@
             <param name="inputs" ftype="fasta" value="nanopore.fasta"/>
             <param name="mode" value="--pacbio-raw"/>
             <param name="g" value="10000"/>
-            <output name="scaffolds" file="result1_scaffolds.fasta" ftype="fasta" compare="sim_size"/>
+            <!-- <output name="scaffolds" file="result1_scaffolds.fasta" ftype="fasta" compare="sim_size"/> -->
             <output name="assembly_info" file="result1_assembly_info.txt" ftype="tabular" compare="sim_size"/>
             <output name="assembly_graph" file="result1_assembly_graph.dot" ftype="graph_dot" compare="sim_size"/>
             <output name="assembly_gfa" file="result1_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
@@ -121,7 +125,7 @@
             <param name="inputs" ftype="fasta" value="nanopore.fasta"/>
             <param name="mode" value="--nano-raw"/>
             <param name="g" value="10000"/>
-            <output name="scaffolds" file="result2_scaffolds.fasta" ftype="fasta" compare="sim_size"/>
+            <!-- <output name="scaffolds" file="result2_scaffolds.fasta" ftype="fasta" compare="sim_size"/> -->
             <output name="assembly_info" file="result2_assembly_info.txt" ftype="tabular" compare="sim_size"/>
             <output name="assembly_graph" file="result2_assembly_graph.dot" ftype="graph_dot" compare="sim_size"/>
             <output name="assembly_gfa" file="result2_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
@@ -131,12 +135,12 @@
             <param name="mode" value="--pacbio-raw"/>
             <param name="g" value="10000"/>
             <param name="i" value="2"/>
-            <output name="scaffolds" file="result3_scaffolds.fasta" ftype="fasta" compare="sim_size"/>
+            <!-- <output name="scaffolds" file="result3_scaffolds.fasta" ftype="fasta" compare="sim_size"/> -->
             <output name="assembly_gfa" file="result2_assembly_graph.gfa" ftype="txt" compare="sim_size"/>
         </test>
     </tests>
     <help>
-    <![CDATA[
+        <![CDATA[
     Flye output
     The main output files are:
 
