@@ -1,0 +1,11 @@
+name: kleborate
+owner: thanhlv
+categories:
+  - Sequence Analysis
+description: Screen genes of interest for genome assemblies of Klebsiella pneumoniae and the Klebsiella pneumoniae species complex
+homepage_url: https://github.com/katholt/Kleborate
+long_description: |
+  Kleborate is a tool to screen genome assemblies of Klebsiella pneumoniae and the Klebsiella pneumoniae species complex: MLST sequence type; species (e.g. K. pneumoniae, K. quasipneumoniae, K. variicola, etc.); ICEKp associated virulence loci: yersiniabactin (ybt), colibactin (clb), salmochelin (iro), hypermucoidy (rmpA); virulence plasmid associated loci: salmochelin (iro), aerobactin (iuc), hypermucoidy (rmpA, rmpA2)
+acquired genes, SNPs, gene truncations and intrinsic β-lactamases; K (capsule) and O antigen (LPS) serotype prediction, via wzi alleles and Kaptive
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/kleborate
+type: unrestricted
