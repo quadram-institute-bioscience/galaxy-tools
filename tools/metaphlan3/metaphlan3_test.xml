@@ -14,7 +14,7 @@
         metaphlan 
             --force 
             --input_type fastq
-            --bowtie2db '~/transfer/outgoing/gmh/databases/metaphlan_databases/'
+            --bowtie2db '/qib/platforms/Informatics/transfer/outgoing/gmh/databases/metaphlan_databases/'
             --no_map
             --index $db
             --tax_lev $tax
