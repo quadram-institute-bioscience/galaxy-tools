@@ -1,0 +1,125 @@
+<tool id="metaphlan" name="MetaPhlAn3" version="0.1.0" python_template_version="3.5">
+
+    <description>to profile the composition of microbial communities</description>
+
+    <macros>
+        <import>metaphlan3_macros.xml</import>
+    </macros>
+
+    <expand macro="requirements" />
+
+    <version_command>metaphlan -v</version_command>
+
+    <command detect_errors="exit_code"><![CDATA[
+        metaphlan 
+            --force 
+            --input_type fastq
+            --bowtie2db '~/transfer/outgoing/gmh/databases/metaphlan_databases/'
+            --no_map
+            --index $db
+            --tax_lev $tax
+            $unknown 
+            #if $settings.advanced 
+                $settings.viruses
+                $settings.nobac
+                $settings.noarc
+                $settings.noeuk
+                --stat $settings.stat
+                -t $settings.analysis_type.analysis_type_select
+            #end if
+            --biom '$biom_output_file'
+            '$input' 
+            '$output'
+    ]]></command>
+    <inputs>
+        <param name="input" type="data" format="fastq,fasta,sam" label="Input File!"/>
+        <param name="db" type="select" label="Select database version">
+            <option value="latest">latest</option>
+            <option value="mpa_v30_CHOCOPhlAn_201901">mpa_v30_CHOCOPhlAn_201901</option>
+        </param>
+        <param name="unknown" type="boolean" label="Include unknown fraction?" checked="true" truevalue="--unknown_estimation" falsevalue=""/>
+        <param name="tax" type="select" label="Taxonomic level to profile">
+            <option value="a">all taxonomic levels</option>
+            <option value="k">kingdoms</option>
+            <option value="p">phyla only</option>
+            <option value="c">classes only</option>
+            <option value="o">orders only</option>
+            <option value="f">families only</option>
+            <option value="g">genera only</option>
+            <option value="s">species only</option>
+        </param> 
+        <conditional name="settings">
+            <param name="advanced" type="boolean" label="Specify advanced parameters?" checked="false">
+            </param>
+            <when value="false">
+            </when>
+            <when value="true">       
+                <param name="viruses" type="boolean" label="Include viruses" checked="false" truevalue="--add_viruses" falsevalue=""/>
+                <param name="nobac" type="boolean" label="Include bacterial organisms" checked="true" truevalue="" falsevalue="--ignore_bacteria"/>
+                <param name="noarc" type="boolean" label="Include archeal organisms" checked="true" truevalue="" falsevalue="--ignore_archaea"/>
+                <param name="noeuk" type="boolean" label="Include eukaryotic organisms" checked="true" truevalue="" falsevalue="--ignore_eukaryotes"/>
+                <param argument="--min_mapq_val MIN_MAPQ_VA" type="integer" value="5" label="Minimum mapping quality value (MAPQ)"/>
+                <param argument="--min_cu_len" type="integer" value="2000" label="Minimum total nucleotide length for the markers in a clade for estimating the abundance without considering sub-clade abundances"/>
+                <param argument="--min_alignment_len" type="integer" value="0" label="The sam records for aligned reads with the longest subalignment length smaller than this threshold will be discarded."/>
+                <param argument="--stat_q" type="float" value="0.2" label="Quantile value for the robust average"/>
+                <param argument="--perc_nonzero" type="float" value="0.33" label="Percentage of markers with a non zero relative abundance for misidentify a species"/>
+                <param argument="--ignore_markers" type="data" label="File containing a list of markers to ignore." optional="true"/>
+                <param name="stat" type="select" label="Statistical approach for converting marker abundances into clade abundances">
+                    <option value="tavg_g" selected="true">truncated clade global average at --stat_q quantile (default)</option>
+                    <option value="avg_g">clade global (i.e. normalizing all markers together) average</option>
+                    <option value="avg_l">average of length-normalized marker counts</option>
+                    <option value="tavg_l">truncated average of length-normalized marker counts (at --stat_q)</option>
+                    <option value="wavg_g">winsorized clade global average (at --stat_q)</option>
+                    <option value="wavg_l">winsorized average of length-normalized marker counts (at --stat_q)</option>
+                    <option value="med">median of length-normalized marker counts</option>
+                </param>
+                <conditional name="analysis_type">
+                    <param name="analysis_type_select" type="select" label="Type of analysis to perform" argument="-t">
+                        <option value="rel_ab" selected="true">Profiling a metagenome in terms of relative abundances (default)</option>
+                        <option value="rel_ab_w_read_stats">Profiling a metagenomes in terms of relative abundances and estimate the number of reads comming from each clade</option>
+                        <option value="reads_map">Mapping from reads to clades (only reads hitting a marker)</option>
+                        <option value="clade_profiles">Normalized marker counts for clades with at least a non-null marker</option>
+                        <option value="marker_ab_table">Normalized marker counts (only when > 0.0 and normalized by metagenome size if --nreads is specified)</option>
+                        <option value="marker_counts">Non-normalized marker counts (use with extreme caution)</option>
+                        <option value="marker_pres_table">List of markers present in the sample (threshold at 1.0 if not differently specified with --pres_th</option>
+                    </param>
+                    <when value="marker_ab_table">
+                        <param argument="--nreads" type="integer" value="0" label="Total number of reads in the original metagenome" help="It is used for normalizing the length-normalized counts with the metagenome size as well. No normalization applied if the value is not specified"/>
+                    </when>
+                    <when value="marker_pres_table">
+                        <output argument="--pres_th" type="integer" value="0" label=" Threshold for calling a marker present"/>
+                    </when>
+                </conditional>
+                <param name="cami" type="boolean" label="Report the profiling using the CAMI output format" checked="false" truevalue="--CAMI_format_output" falsevalue=""/>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" />
+        <data name="biom_output_file" format="biom1" label="${tool.name} on ${on_string}: BIOM file" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="forward.fastq"/>
+            <output name="output" file="output_metaphlan3"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
+**What it does**
+
+MetaPhlAn is a computational tool to profile the structure and the composition of microbial communities (Bacteria, Archaea, Eukaryotes and Viruses) from metagenomic shotgun sequencing data with species level resolution. For more information, check the `user manual <https://github.com/biobakery/biobakery/wiki/metaphlan3>`_.
+
+**Inputs**
+
+MetaPhlAn takes as input a sequence file in Fasta, FastQ, a SAM file.
+
+**Outputs**
+
+The main output file is a tab-separated file with the predicted taxon relative abundances.
+
+    ]]></help>
+
+    <expand macro="citations" />
+
+</tool>
