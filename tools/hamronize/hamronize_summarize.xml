@@ -1,0 +1,57 @@
+<tool id="hamronize_summarize" name="hamronize_summarize" version="@VERSION@">
+    <description> harmorize reports</description>
+    <macros>
+        <token name="@VERSION@">1.0.1</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">hamronize</requirement>
+    </requirements>
+    <version_command>hamronize --version</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #for $counter, $report in enumerate($reports):
+            #if $input.is_of_type('tsv', 'tabular'):
+                #set $ext = 'tsv'
+            #elif $input.is_of_type('json'):
+                #set $ext = 'json'
+            #end if
+        ln -s '$report' ./report_${counter}.${ext} &&
+        #end for
+
+        hamronize summarize
+        --summary_type $summary_type
+        #if $summary_type == "tsv" 
+            --output output.tsv
+        #elif $summary_type == "json"
+            --output output.json
+        #else 
+             --output output.html
+        #end if
+        *.json
+        *.tsv
+    ]]>    </command>
+
+    <inputs>
+        <param name="reports" type="data" multiple="true" format="tsv,json" label="Report files"/>
+        <param name="summary_type" type="select" label="Output format" multiple="false">
+            <option value="tsv">tsv</option>
+            <option value="json">json</option>
+            <option value="interactive">interactive</option>
+        </param>
+    </inputs>
+
+    <outputs>
+        <data format="tsv" name="output_tsv" label="${tool.name} on ${on_string}: Output" from_work_dir="output.tsv">
+            <filter>summary_type == "tsv"</filter>
+        </data>
+        <data format="json" name="output_json" label="${tool.name} on ${on_string}: Output" from_work_dir="output.json">
+            <filter>summary_type == "json"</filter>
+        </data>
+        <data format="html" name="output_html" label="${tool.name} on ${on_string}: Output" from_work_dir="output.html">
+            <filter>summary_type == "interactive"</filter>
+        </data>
+    </outputs>
+    <help>
+    <![CDATA[
+    ]]>
+    </help>
+</tool>
