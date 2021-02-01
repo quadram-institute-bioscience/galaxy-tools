@@ -9,9 +9,9 @@
     <version_command>hamronize --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
         #for $counter, $report in enumerate($reports):
-            #if $input.is_of_type('tsv', 'tabular'):
+            #if $report.is_of_type('tsv', 'tabular'):
                 #set $ext = 'tsv'
-            #elif $input.is_of_type('json'):
+            #elif $report.is_of_type('json'):
                 #set $ext = 'json'
             #end if
         ln -s '$report' ./report_${counter}.${ext} &&
@@ -26,8 +26,8 @@
         #else 
              --output output.html
         #end if
-        *.json
         *.tsv
+        *.json
     ]]>    </command>
 
     <inputs>
@@ -52,9 +52,9 @@
     </outputs>
     <tests>
         <test expect_num_outputs="1">
-            <param name="reports" value="hamronized_abricate.tsv,hamronized_abricate.json,hamronized_ariba.tsv,hamronized_ariba.json,hamronized_rgi.tsv,hamronized_rgi.json" ftype="tsv" />
+            <param name="reports" value="hamronized_abricate.tsv,hamronized_abricate.json,hamronized_ariba.tsv,hamronized_ariba.json,hamronized_rgi.tsv,hamronized_rgi.json" />
             <param name="summary_type" value="tsv" />
-            <output name="output_tsv" ftype="tsv" file="summary.tsv">
+            <output name="output_tsv" ftype="tsv" file="summary.tsv" />
         </test>
     </tests>
     <help>
