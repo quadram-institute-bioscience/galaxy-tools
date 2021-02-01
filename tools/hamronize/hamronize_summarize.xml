@@ -50,6 +50,13 @@
             <filter>summary_type == "interactive"</filter>
         </data>
     </outputs>
+    <tests>
+        <test expect_num_outputs="1">
+            <param name="reports" value="hamronized_abricate.tsv,hamronized_abricate.json,hamronized_ariba.tsv,hamronized_ariba.json,hamronized_rgi.tsv,hamronized_rgi.json" ftype="tsv" />
+            <param name="summary_type" value="tsv" />
+            <output name="output_tsv" ftype="tsv" file="summary.tsv">
+        </test>
+    </tests>
     <help>
     <![CDATA[
     ]]>
