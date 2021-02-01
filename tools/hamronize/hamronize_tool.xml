@@ -53,7 +53,9 @@
                 <option value="resfams">resfams</option>
                 <option value="groot">groot</option>
             </param>
-
+            <when value="abricate" />
+            <when value="resfinder" />
+            <when value="staramr" />
             <when value="amrfinderplus">
                  <param name="input_file_name" type="text" label="Input file name" help="A string of sample name which the tool scanned for..."></param>
             </when>
@@ -134,7 +136,7 @@
             <param name="output_format" value="tsv" />
             <param name="reference_database_version" value="db_v_1" />
             <param name="analysis_software_version" value="tool_v_1" />
-            <output name="tsv" ftype="tsv" file="hamronized_abricate.tsv" />
+            <output name="output_tsv" ftype="tsv" file="hamronized_abricate.tsv" />
         </test>
         <test expect_num_outputs="1">
             <param name="report" value="abricate/report.tsv" ftype="tsv" />
@@ -142,7 +144,7 @@
             <param name="output_format" value="json" />
             <param name="reference_database_version" value="db_v_1" />
             <param name="analysis_software_version" value="tool_v_1" />
-            <output name="json" ftype="json" file="hamronized_abricate.json" />
+            <output name="output_json" ftype="json" file="hamronized_abricate.json" />
         </test> 
         <!-- ariba -->
         <test expect_num_outputs="1">
@@ -153,7 +155,7 @@
             <param name="analysis_software_version" value="ariba_v1" />
             <param name="input_file_name" value="ariba_report" />
             <param name="reference_database_id" value="dbname" />
-            <output name="tsv" ftype="tsv" file="hamronized_ariba.tsv" />
+            <output name="output_tsv" ftype="tsv" file="hamronized_ariba.tsv" />
         </test>
         <!-- rgi -->
         <test expect_num_outputs="1">
@@ -163,9 +165,10 @@
             <param name="reference_database_version" value="card_v1" />
             <param name="analysis_software_version" value="rgi_v1" />
             <param name="input_file_name" value="rgi_report" />
-            <output name="tsv" ftype="tsv" file="hamronized_rgi.tsv" />
+            <output name="output_tsv" ftype="tsv" file="hamronized_rgi.tsv" />
         </test>
     </tests>
     <help><![CDATA[
+    Hamronize parse multiple Antimicrobial Resistance Analysis Reports into a common data structure
     ]]>    </help>
 </tool>
