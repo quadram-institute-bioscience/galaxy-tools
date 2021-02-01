@@ -51,11 +51,24 @@
         </data>
     </outputs>
     <tests>
+    <!-- tsv output -->
         <test expect_num_outputs="1">
             <param name="reports" value="hamronized_abricate.tsv,hamronized_abricate.json,hamronized_ariba.tsv,hamronized_ariba.json,hamronized_rgi.tsv,hamronized_rgi.json" />
             <param name="summary_type" value="tsv" />
             <output name="output_tsv" ftype="tsv" file="summary.tsv" />
         </test>
+    <!-- json output -->
+    <test expect_num_outputs="1">
+            <param name="reports" value="hamronized_abricate.tsv,hamronized_abricate.json,hamronized_ariba.tsv,hamronized_ariba.json,hamronized_rgi.tsv,hamronized_rgi.json" />
+            <param name="summary_type" value="json" />
+            <output name="output_json" ftype="json">
+                <assert_contents>
+                    <has_text text="GCF_010120755.1_ASM1012075v1_genomic" />
+                    <has_text text="H_NS.3000676.BA000007.3.1737690_1738104.5476" />
+                    <has_text text="NODE_9_length_203843_cov_42.4911_20" />
+                </assert_contents>
+            </output>
+    </test>
     </tests>
     <help>
     <![CDATA[
