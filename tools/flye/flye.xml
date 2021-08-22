@@ -70,8 +70,9 @@
      ]]>            </help>
         </param>
         <param name="mode" type="select" label="Mode">
-            <option value="--nano-raw">Nanopore raw</option>
-            <option value="--nano-corr">Nanopore corrected</option>
+            <option value="--nano-raw">ONT regular reads, pre-Guppy5</option>
+            <option value="--nano-corr">ONT reads that were corrected with other methods</option>
+            <option value="--nano-hq">ONT high-quality reads Guppy5+ or Q20</option>
             <option value="--pacbio-raw">PacBio raw</option>
             <option value="--pacbio-corr">PacBio corrected</option>
             <option value="--subassemblies">high-quality contig-like input</option>
@@ -100,7 +101,7 @@
         <param argument="-i" type="integer" value="1" label="number of polishing iterations" />
         <param argument="-m" type="integer" optional="true" label="minimum overlap between reads (default: auto)" help="This sets a minimum overlap length for two reads to be considered overlapping. In the latest Flye versions, this parameter is chosen automatically based on the read length distribution (reads N90) and does not require manual setting. Typical value is 3k-5k (and down to 1k for datasets with shorter read length). Intuitively, we want to set this parameter as high as possible, so the repeat graph is less tangled. However, higher values might lead to assembly gaps. In some rare cases (for example in case of biased read length distribution) it makes sense to set this parameter manualy."/>
         <param argument="--asm_coverage" type="integer" optional="true" label="reduced coverage for initial contig assembly (default: not set)" />
-        <param argument="--plasmid" type="boolean" truevalue="--plasmid" falsevalue="" checked="False" label="rescue short unassmebled plasmids" />
+        <param argument="--plasmid" type="boolean" truevalue="--plasmid" falsevalue="" checked="False" label="rescue short unassmebled plasmids" help = "Deprecated since version 2.9"/>
         <param argument="--meta" type="boolean" truevalue="--meta" falsevalue="" checked="False" label="metagenome / uneven coverage mode" />
         <param argument="--no_trestle" type="boolean" truevalue="--no-trestle" falsevalue="" checked="False" label="skip Trestle stage" help="After resolving bridged repeats, Trestle module attempts to resolve simple unbridged repeats (of multiplicity 2) using the heterogeneities between repeat copies"/>
     </inputs>

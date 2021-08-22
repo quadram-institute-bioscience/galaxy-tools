@@ -1,5 +1,5 @@
 <macros>
-    <token name="@VERSION@">2.8</token>
+    <token name="@VERSION@">2.9</token>
     <xml name="requirements">
         <requirements>
         <requirement type="package" version="@VERSION@">flye</requirement>
