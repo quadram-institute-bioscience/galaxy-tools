@@ -3,7 +3,7 @@
         <token name="@VERSION@">0.9.0</token>
     </macros>
     <requirements>
-        <container type="singularity">/home/ubuntu/galaxy-tools/tools/operams/singularity/opera-ms.sif</container>
+        <container type="singularity">singularity/opera-ms.sif</container>
     </requirements>
     <command detect_errors="exit_code"><![CDATA[
 ## Preparing files
