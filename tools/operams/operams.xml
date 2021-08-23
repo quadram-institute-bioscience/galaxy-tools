@@ -79,7 +79,7 @@ tar -czf intermediate_files.tar.gz ./output/intermediate_files
     ]]></command>
     <inputs>
         <conditional name="paired_unpaired">
-            <param name="fastq_input_selector" type="select" label="Paired or Single end data?" help="Select between paired and single end data">
+            <param name="fastq_input_selector" type="select" label="Short reads" help="">
                 <option selected="True" value="paired">Paired</option>
                 <option value="paired_collection">Paired Collection</option>
             </param>
