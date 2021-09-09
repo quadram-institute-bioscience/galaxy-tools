@@ -45,7 +45,7 @@
         #end if
 
         out &&
-        if [ ! -e '${ariba_databases.fields.path}/pubmlst.profile.txt' ] ; then touch out/mlst_report.tsv out/mlst_report.details.tsv ; fi
+        if [ ! -e 'out/mlst_report.tsv' ] ; then touch out/mlst_report.tsv out/mlst_report.details.tsv ; fi
     ]]>    </command>
     <inputs>
         <conditional name="library">
