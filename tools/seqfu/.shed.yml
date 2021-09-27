@@ -1,5 +1,6 @@
 categories:
-- Sequence Analysis
+- Fasta Manipulation
+- Fastq Manipulation
 description: Collections of SeqFu utility tools for manipulating fasta and fastq files
 name: seqfu
 owner: skt_bi
