@@ -1,4 +1,4 @@
-<tool id="seqfu_head" name="seqfu_tail" version="1.6.0">
+<tool id="seqfu_tail" name="seqfu_tail" version="1.6.0">
     <description>Select a number of sequences from the end of a file </description>
     
     <macros>
