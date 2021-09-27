@@ -1,0 +1,22 @@
+categories:
+- Sequence Analysis
+description: SeqFu toolkit wrappers
+name: seqfu
+owner: thanhlv
+long_description: |
+   SeqFu is a general-purpose program to manipulate and parse information from FASTA/FASTQ files, supporting gzipped input files.
+   Includes functions to interleave and de-interleave FASTQ files, to rename sequences and to count and print statistics on sequence lengths. 
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/seqfu
+homepage_url: https://github.com/telatin/seqfu2
+type: unrestricted
+auto_tool_repositories:
+    name_template: "{{ tool_id }}"
+    description_template: "Wrapper for SeqFu tools: {{ tool_name }}."
+suite:
+    name: "suite_seqfu"
+    description: "Collections of SeqFu utility tools for manipulating fasta and fastq files"
+    long_description: |
+      SeqFu is a general-purpose program to manipulate and parse information from FASTA/FASTQ files, supporting gzipped input files.
+      Includes functions to interleave and de-interleave FASTQ files, to rename sequences and to count and print statistics on sequence lengths.
+       
+

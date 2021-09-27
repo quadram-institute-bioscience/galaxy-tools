@@ -1,0 +1,91 @@
+<tool id="seqfu_head" name="seqfu_tail" version="1.6.0">
+    <description>Select a number of sequences from the end of a file </description>
+    
+    <macros>
+        <import>seqfu_macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+   
+    <command detect_errors="exit_code"><![CDATA[
+        seqfu tail
+                -n $num
+                -k $skip
+                #if $header.prefix
+                -p $header.string
+                #end if
+                $strip_comments
+                $basename
+                #set $sequence_format = $out_format.sequence_format
+                #if $sequence_format == "fa"
+                "${$out_format.fasta_out}"
+                #elif $sequence_format== "fq"
+                "${$out_format.fastq_out}" -q "${$out_format.fastq_qual}"
+                #end if
+                --sep $separator
+                '$input1' > '$output1'
+    ]]></command>
+    <inputs>
+        <param name="input1" type="data" format="fasta,fastqsanger"/>
+        <param name="num" type="integer" label="--num" value="10" help="Print the first NUM sequences [default: 10]"/>
+        <param name="skip" type="integer" label="--skip (-k)" value="0" help="Print one sequence every SKIP [default: 0]"/>
+        <conditional name="header">
+            <param name="prefix" type="boolean" label="Rename sequences" help="Rename sequences with prefix + incremental number"/>
+            <when value="true">
+                <param name="string" type="text" label="--prefix" help="(-p)"/>
+            </when>
+            <when value="false">
+            </when>
+        </conditional>
+        <conditional name="out_format">
+            <param name="sequence_format" type="select" label="Select output format">
+                <option value = "fa" selected="true">FASTA</option>
+                <option value= "fq">FASTQ</option>
+            </param>
+            <when value="fa">
+                <param name="fasta_out" type="text" value="--fasta"/>
+            </when>
+            <when value="fq">
+                <param name="fastq_out" type="text" value="--fastq"/>
+                <param name="fastq_qual" type="integer" value="33" help="FASTQ default quality [default: 33]"/>
+            </when>
+        </conditional>
+        <param name="strip_comments" type="boolean" label="--keep-name (-k)" truevalue="-s" falsevalue="" help="Remove comments"/>
+        <param name="basename" type="boolean" label="--basename (-b)" truevalue="-b" falsevalue="" help="Prepend basename to sequence name"/>
+        <param name="separator" type="text" label="--separator (-sep)" value="_" help="Sequence name separator [default: _]"/>
+    </inputs>
+    <outputs>
+        <data name="output1" format="fasta">
+            <change_format>
+                <when input="out_format.sequence_format" value="fq" format="fastq"/>
+            </change_format>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input1" value="asv_mod.fa"/>
+            <output name="output1" file="asv_out.fa"/>
+        </test>
+    </tests>
+    <help><![CDATA[ 
+        Usage: head [options] [<inputfile> ...]
+
+        Select a number of sequences from the end of a file, allowing
+        to select a fraction of the reads (for example to print 100 reads,
+        selecting one every 10).
+            
+        Options:
+            -n, --num NUM          Print the first NUM sequences [default: 10]
+            -k, --skip SKIP        Print one sequence every SKIP [default: 0]
+            -p, --prefix STRING    Rename sequences with prefix + incremental number
+            -s, --strip-comments   Remove comments
+            -b, --basename         prepend basename to sequence name
+            --fasta                Force FASTA output
+            --fastq                Force FASTQ output
+            --sep STRING           Sequence name fields separator [default: _ ]
+            -q, --fastq-qual INT   FASTQ default quality [default: 33]
+            -v, --verbose          Verbose output
+            --help                 Show this help
+        ]]>
+    </help>
+    <expand macro="citations"/>
+</tool>

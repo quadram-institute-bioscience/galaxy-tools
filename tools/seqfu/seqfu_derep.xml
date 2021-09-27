@@ -1,0 +1,82 @@
+<tool id="seqfu_derep" name="seqfu_derep" version="1.6.0">
+    
+    <description>The program will add the number of identical sequences found to the sequence name </description>
+    
+    <macros>
+        <import>seqfu_macros.xml</import>
+    </macros>
+    <expand macro="requirements"/>
+
+    <command detect_errors="exit_code"><![CDATA[
+        seqfu derep
+                $keep_name
+                $ignore_size
+                -p $prefix
+                -m $min_size
+                $md5
+                #if $json_file
+                $json_file $metadata
+                #end if
+                -s $separator
+                -w $line_width
+                -l $min_length
+                -x $max_length
+                $size_as_comment
+                $add_len
+                '$input1' > '$output1'
+    ]]></command>
+    <inputs>
+        <param name="input1" type="data" label="Input" format="fasta,fastq"/>
+        <param name="keep_name" type="boolean" label="--keep-name (-k)" truevalue="-k" falsevalue="" help="Do not rename sequence (see -p), but use the first sequence name"/>
+        <param name="ignore_size" type="boolean" label="--ignore-size (-i)" truevalue="-i" falsevalue="" help="Do not count 'size=INT;' annotations (they will be stripped in any case)"/>
+        <param name="min_size" type="integer" label= "--min-size (-m)" value="0" min="0" help="Print clusters with size equal or bigger than INT sequences"/>
+        <param name="prefix" type="text" label="--p (Prefix)" value="seq" help="Sequence name prefix [default: seq]"/>
+        <param name="md5" type="boolean" label="Use MD5 as sequence name" truevalue="-5" falsevalue="" help="Use MD5 as sequence name (overrides other parameters)"/>
+        <param name="json_file" type="select" label="Metadata ouput (Format: JSON)">
+            <option value = "">No</option>
+            <option value = "-j">Yes</option>
+        </param>
+        <param name="separator" type="text" label="--separator (-s)" value="." help="Sequence name separator [default: .]"/>
+        <param name="line_width" type="integer" label="--line-width (-w)" value="0" help="FASTA line width (0: unlimited) [default: 0]"/>
+        <param name="min_length" type="integer" label="--min-length (-l)" value="0" help="Discard sequences shorter than MIN_LEN [default: 0]"/>
+        <param name="max_length" type="integer" label="--max-length (-x)" value="0" help="Discard sequences longer than MAX_LEN [default: 0]"/>
+        <param name="size_as_comment" type="boolean" label="--size-as-comment (-c)" truevalue="-c" falsevalue="" help="Print cluster size as comment, not in sequence name"/>
+        <param name="add_len" type="boolean" label="Add length to sequence (--add-len)" truevalue="--add-len" falsevalue="" help=""/>
+    </inputs>
+    <outputs>
+        <data name="output1" format="fasta" label="sequence output"></data>
+        <data name="metadata" format="json" label="metadata output">
+            <filter>json_file == "-j" </filter>
+        </data>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input1" value="asv.fa"/>
+            <output name="output1" file="asv_mod.fasta"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+            derep is one of the core subprograms of SeqFu, that allows the dereplication of FASTA and FASTQ files.
+            By default the program will add the number of identical sequences found to the sequence name
+            
+            Usage: derep [options] [<inputfile> ...]
+
+            Options:
+              -k, --keep-name              Do not rename sequence (see -p), but use the first sequence name
+              -i, --ignore-size            Do not count 'size=INT;' annotations (they will be stripped in any case)
+              -m, --min-size=MIN_SIZE      Print clusters with size equal or bigger than INT sequences [default: 0]
+              -p, --prefix=PREFIX          Sequence name prefix [default: seq]
+              -5, --md5                    Use MD5 as sequence name (overrides other parameters)
+              -j, --json=JSON_FILE         Save dereplication metadata to JSON file
+              -s, --separator=SEPARATOR    Sequence name separator [default: .]
+              -w, --line-width=LINE_WIDTH  FASTA line width (0: unlimited) [default: 0]
+              -l, --min-length=MIN_LENGTH  Discard sequences shorter than MIN_LEN [default: 0]
+              -x, --max-length=MAX_LENGTH  Discard sequences longer than MAX_LEN [default: 0]
+              -c, --size-as-comment        Print cluster size as comment, not in sequence name
+              --add-len                    Add length to sequence
+              -v, --verbose                Print verbose messages
+              -h, --help                   Show this help
+        
+        ]]></help>
+    <expand macro="citations"/>
+</tool>

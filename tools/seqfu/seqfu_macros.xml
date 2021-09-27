@@ -1,0 +1,26 @@
+<macros>
+    <xml name="requirements">
+        <requirements>
+            <requirement type="package" version="1.6.0">seqfu</requirement>
+        </requirements>
+    </xml>
+    <xml name="citations">
+        <citations>
+            <citation type="bibtex">
+                @article{Telatin_2021,
+                    title={SeqFu: A Suite of Utilities for the Robust and Reproducible Manipulation of Sequence Files},
+                    volume={8},
+                    ISSN={2306-5354},
+                    url={http://dx.doi.org/10.3390/bioengineering8050059},
+                    DOI={10.3390/bioengineering8050059},
+                    number={5},
+                    journal={Bioengineering},
+                    publisher={MDPI AG},
+                    author={Telatin, Andrea and Fariselli, Piero and Birolo, Giovanni},
+                    year={2021},
+                    month={May},
+                    pages={59}}
+            </citation>
+        </citations>
+    </xml>
+</macros>
