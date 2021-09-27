@@ -67,7 +67,7 @@
         </test>
     </tests>
     <help><![CDATA[ 
-        Usage: head [options] [<inputfile> ...]
+        Usage: tail [options] [<inputfile> ...]
 
         Select a number of sequences from the end of a file, allowing
         to select a fraction of the reads (for example to print 100 reads,
