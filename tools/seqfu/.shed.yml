@@ -1,6 +1,6 @@
 categories:
 - Sequence Analysis
-description: SeqFu toolkit wrappers
+description: Collections of SeqFu utility tools for manipulating fasta and fastq files
 name: seqfu
 owner: skt_bi
 long_description: |
