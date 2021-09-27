@@ -2,7 +2,7 @@ categories:
 - Sequence Analysis
 description: SeqFu toolkit wrappers
 name: seqfu
-owner: thanhlv
+owner: skt_bi
 long_description: |
    SeqFu is a general-purpose program to manipulate and parse information from FASTA/FASTQ files, supporting gzipped input files.
    Includes functions to interleave and de-interleave FASTQ files, to rename sequences and to count and print statistics on sequence lengths. 
