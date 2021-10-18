@@ -1,0 +1,36 @@
+
+Assembly: exact_match
+---------------------
+    Best match locus: O2v2
+    Match confidence: Very high
+    Problems: None
+    Coverage: 100.00%
+    Identity: 98.43%
+    Length discrepancy: 0 bp
+
+    Locus assembly pieces:
+        NODE_2 (84349-95160, - strand)  ATGAAG...TGGCAT (10812 bp)
+
+    Expected genes in locus: 10 / 10 (100%)
+        O1/O2v2_01_wzm   Contig: NODE_2 (94392-95160, - strand)  Cov: 100.00%  ID: 100.00%
+        O1/O2v2_02_wzt   Contig: NODE_2 (93652-94393, - strand)  Cov: 100.00%  ID:  99.19%
+        O1/O2v2_03_wbbM  Contig: NODE_2 (91741-93637, - strand)  Cov: 100.00%  ID:  98.58%
+        O1/O2v2_04_glf   Contig: NODE_2 (90571-91726, - strand)  Cov: 100.00%  ID:  99.22%
+        O1/O2v2_05_wbbN  Contig: NODE_2 (89681-90575, - strand)  Cov: 100.00%  ID:  98.32%
+        O1/O2v2_06_wbbO  Contig: NODE_2 (88538-89669, - strand)  Cov: 100.00%  ID:  99.20%
+        O1/O2v2_07_kfoC  Contig: NODE_2 (87234-88443, - strand)  Cov: 100.00%  ID:  98.76%
+        O1/O2v2_08_gmlC  Contig: NODE_2 (85704-87165, + strand)  Cov: 100.00%  ID:  97.95%
+        O1/O2v2_09_gmlB  Contig: NODE_2 (84722-85703, + strand)  Cov: 100.00%  ID:  99.08%
+        O1/O2v2_10_gmlA  Contig: NODE_2 (84348-84726, + strand)  Cov: 100.00%  ID: 100.00%
+
+    Expected genes outside locus: 0 / 10 (0%)
+
+    Missing expected genes: 0 / 10 (0%)
+
+    Other genes in locus: 0
+
+    Other genes outside locus: 0
+
+    wzc allele: Not found
+    wzi allele: Not found
+

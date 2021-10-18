@@ -1,0 +1,9 @@
+categories: [Sequence Analysis]
+description: reports information about surface polysaccharide loci for Klebsiella and Acinetobacter baumannii genome
+long_description: |
+  Kaptive reports information about surface polysaccharide loci for Klebsiella and Acinetobacter baumannii genome assemblies.
+homepage_url: https://github.com/katholt/Kaptive
+name: kaptive
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/kaptive
+type: unrestricted
