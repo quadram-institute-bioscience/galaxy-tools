@@ -1,0 +1,80 @@
+<tool id="kaptive" name="kaptive" version="@VERSION@">
+    <description> reports surface polysaccharide loci for Klebsiella and Acinetobacter baumannii genome assemblies</description>
+    <macros>
+        <token name="@VERSION@">0.7.3</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">kaptive</requirement>
+    </requirements>
+    <version_command>kaptive.py --version</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        #for $counter, $input in enumerate($assemblies):
+            #set $name = re.sub('[^\w\-\.]', '_', str($input.element_identifier))
+            ln -s '$input' ${name}.fasta &&
+        #end for
+        kaptive.py
+        --verbose
+        -a *.fasta
+        -k '$ref'
+        #if $allelic_typing:
+            -g '$allelic_typing'
+        #end if
+        -t \${GALAXY_SLOTS:-4}
+        $no_seq_out
+        $no_json
+        --start_end_margin '$start_end_margin'
+        --min_gene_cov '$min_gene_cov'
+        --min_gene_id '$min_gene_id'
+        --low_gene_id '$low_gene_id'
+        --min_assembly_piece '$min_assembly_piece'
+        --gap_fill_size '$gap_fill_size'
+        #if $locus_label:
+            --locus_label '$locus_label'
+        #end if
+        > $output
+    ]]>    </command>
+
+    <inputs>
+        <param name="assemblies" type="data" format="fasta" multiple="true" label="Assembly"/>
+        <param name="ref" type="data" format="genbank" label="Reference" help="Genbank format"/>
+        <param name="allelic_typing" type="data" format="fasta" optional="true" label="Allelic Typing input" help="Optional"/>
+        <param argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="True" label="Suppress output files of sequences matching locus" />
+        <param argument="--no_seq_out" type="boolean" truevalue="--no_seq_out" falsevalue="" checked="False" label="Suppress output files of sequences matching locus" />
+        <param argument="--no_json" type="boolean" truevalue="--no_json" falsevalue="" checked="True" label="Suppress output of JSON file" />
+        <param argument="--start_end_margin" type="integer" value="10" label="Missing bases at the ends of locus allowed in a perfect match" />
+        <param argument="--min_gene_cov" type="float" value="90.0" max="100.0" label="Minimum required percent coverage for genes" />
+        <param argument="--min_gene_id" type="float" value="80.0" max="100.0" label="Minimum required percent identity for genes" />
+        <param argument="--low_gene_id" type="float" value="95.0" max="100.0" label="Genes with a percent identity below this value will be flagged as low identity" />
+        <param argument="--min_assembly_piece" type="integer" value="100" label="Minimum locus matching assembly piece to return" />
+        <param argument="--gap_fill_size" type="integer" value="100" label="Gap fill size" help="When separate parts of the assembly are found within this distance, they will be merged" />
+        <param argument="--locus_label" type="text" label="Locus label" optional="true" help="In the Genbank file, the source feature must have a note identifying the locus name, starting with this label followed by a colon (e.g. /note='K locus: K1')" />
+    </inputs>
+
+    <outputs>
+        <data name="output" format="txt" label="${tool.name} on ${on_string} Log"/>
+        <data name="results_table" format="tabular" from_work_dir="kaptive_results_table.txt" label="${tool.name} on ${on_string} Result table"/>
+        <data name="results_json" format="json" from_work_dir="kaptive_results_table.txt" label="${tool.name} on ${on_string} Result json">
+            <filter>no_json is False</filter>
+        </data>
+        <collection name="list_fasta" type="list" label="Locus matching sequences">
+            <filter>no_seq_out is False</filter>
+            <discover_datasets pattern="kaptive_results(?P&lt;designation&gt;[a-zA-Z0-9\-\_]+)\.fasta$" ext="fasta" directory="./" />
+        </collection>
+    </outputs>
+    <tests>
+    <test>
+        <param name="assemblies" value="exact_match" />
+        <param name="ref" value="Klebsiella_o_locus_primary_reference.gbk" />
+        <param name="allelic_typing" value="wzi_wzc_db.fasta" />
+        <output name="output" file="output.txt" ftype="txt" />
+        <output name="results_table" file="kaptive_results_table.txt" ftype="tabular" />
+    </test>
+    </tests>
+    <help><![CDATA[
+    ]]>    </help>
+    <citations>
+        <citation type="doi">10.1099/mgen.0.000102</citation>
+        <yield />
+    </citations>
+</tool>
