@@ -37,7 +37,7 @@
 
     <inputs>
         <param name="assemblies" type="data" format="fasta" multiple="true" label="Assembly"/>
-        <param name="ref" type="data" format="genbank" multiple="true" label="Reference" help="Genbank format"/>
+        <param name="ref" type="data" format="genbank" label="Reference" help="Genbank format"/>
         <param name="allelic_typing" type="data" format="fasta" optional="true" label="Allelic Typing input" help="Optional"/>
         <param argument="--verbose" type="boolean" truevalue="--verbose" falsevalue="" checked="True" label="Suppress output files of sequences matching locus" />
         <param argument="--no_seq_out" type="boolean" truevalue="--no_seq_out" falsevalue="" checked="False" label="Suppress output files of sequences matching locus" />
