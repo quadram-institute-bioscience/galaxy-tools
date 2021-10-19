@@ -1,5 +1,5 @@
 <tool id="kaptive" name="kaptive" version="@VERSION@">
-    <description> Minimal but speedy quality control for nanopore reads</description>
+    <description> reports surface polysaccharide loci for Klebsiella and Acinetobacter baumannii genome assemblies</description>
     <macros>
         <token name="@VERSION@">0.7.3</token>
     </macros>
