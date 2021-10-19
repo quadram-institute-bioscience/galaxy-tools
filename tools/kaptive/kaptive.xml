@@ -28,8 +28,9 @@
         --min_gene_id '$min_gene_id'
         --low_gene_id '$low_gene_id'
         --min_assembly_piece '$min_assembly_piece'
-        #if $gap_fill_size:
-            --gap_fill_size '$gap_fill_size'
+        --gap_fill_size '$gap_fill_size'
+        #if $locus_label:
+            --locus_label '$locus_label'
         #end if
         > $output
     ]]>    </command>
@@ -47,7 +48,7 @@
         <param argument="--low_gene_id" type="float" value="95.0" max="100.0" label="Genes with a percent identity below this value will be flagged as low identity" />
         <param argument="--min_assembly_piece" type="integer" value="100" label="Minimum locus matching assembly piece to return" />
         <param argument="--gap_fill_size" type="integer" value="100" label="Gap fill size" help="When separate parts of the assembly are found within this distance, they will be merged" />
-        <param argument="--gap_fill_size" type="text" label="Locus label" optional="true" help="In the Genbank file, the source feature must have a note identifying the locus name, starting with this label followed by a colon (e.g. /note='K locus: K1')" />
+        <param argument="--locus_label" type="text" label="Locus label" optional="true" help="In the Genbank file, the source feature must have a note identifying the locus name, starting with this label followed by a colon (e.g. /note='K locus: K1')" />
     </inputs>
 
     <outputs>
@@ -72,4 +73,8 @@
     </tests>
     <help><![CDATA[
     ]]>    </help>
+    <citations>
+        <citation type="doi">10.1099/mgen.0.000102</citation>
+        <yield />
+    </citations>
 </tool>
