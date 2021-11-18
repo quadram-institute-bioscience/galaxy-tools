@@ -1,0 +1,71 @@
+<tool id="kmerfinder" name="Kmerfinder" version="@VERSION@+galaxy0">
+    <description> Species identification using kmer</description>
+    <macros>
+        <token name="@VERSION@">3.0.2</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">kmerfinder</requirement>
+        <!-- <container type="singularity">kmerfinder.sif</container> -->
+    </requirements>
+    <version_command>echo "3.0.2"</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        #if $input.is_of_type('fastqsanger', 'fastq'):
+            #set $ext = 'fastq'
+        #elif $input.is_of_type('fastqsanger.gz'):
+            #set $ext = 'fastq.gz'
+        #elif $input.is_of_type('fastq'):
+            #set $ext = 'fastq'
+        #elif $input.is_of_type('fastq.gz'):
+            #set $ext = 'fastq.gz'
+        #elif $input.is_of_type('fasta.gz'):
+            #set $ext = 'fasta.gz'
+        #elif $input.is_of_type('fasta'):
+            #set $ext = 'fasta'
+        #end if
+        #set $safename = re.sub('[^\w\-_\.]', '_', $input.element_identifier)
+        ln -fs '$input' $safename.$ext &&
+
+        kmerfinder.py 
+        -i '$safename.$ext'
+        -db '${kmerfinder_databases.fields.path}.ATG'
+        -tax '${kmerfinder_databases.fields.path}.tax'
+        -o output
+    ]]>    </command>
+    <inputs>
+        <param name="input" type="data" format="fasta,fasta.gz,fastqsanger,fastqsanger.gz" multiple="false" label="Sequence files" help="Fasta for Fastq"/>
+        <!-- DATABASE INPUT-->
+        <param label="Select a database" name="kmerfinder_databases" type="select">
+            <options from_data_table="kmerfinder_databases">
+                <validator message="No database is available" type="no_options" />
+            </options>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="results" format="tabular" label="${tool.name} on ${on_string} Results" from_work_dir="output/results.txt"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" value="test.fastq.gz" ftype="fastqsanger.gz"/>
+            <param name="kmerfinder_databases" value="pseudomonas"/>
+            <output name="results">
+                <assert_contents>
+                    <has_text text="Pseudomonas aeruginosa genome assembly PAO1OR" />
+                    <has_text text="NZ_LN871187.1" />
+                </assert_contents>
+            </output>
+        </test>
+     </tests>
+    <help><![CDATA[
+        Kmerfinder finds the best match (species identification) to the reads in one or more fastq files or one fasta file in a (kmer) database produced using the KMA program. The method outputs the best matches, along with additional taxonomic information, if that option is selected.
+
+        _`Document`:  https://bitbucket.org/genomicepidemiology/kmerfinder
+
+    ]]></help>
+    <citations>
+        <citation type="doi">10.1128/JCM.02981-13</citation>
+        <citation type="doi">10.1128/JCM.02452-13</citation>
+        <citation type="doi">10.1186/s12859-018-2336-6</citation>
+    </citations>
+
+</tool>

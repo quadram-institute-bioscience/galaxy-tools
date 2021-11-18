@@ -1,0 +1,13 @@
+categories: [Sequence Analysis]
+description: Species identification using kmer
+long_description: |
+  kmerfinder finds the best match (species identification) to the reads in one or more fastq files or one fasta file in a (kmer) database produced using the KMA program. The method outputs the best matches, along with additional taxonomic information, if that option is selected
+homepage_url: https://bitbucket.org/genomicepidemiology/kmerfinder
+name: kmerfinder
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/kmerfinder
+type: unrestricted
+exclude:
+  - kmerfinder
+  - kmerfinder_db
+  - test-data
