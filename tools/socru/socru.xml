@@ -8,9 +8,22 @@
     <command detect_errors="exit_code"><![CDATA[
         #import re
         #import os.path
-        
+        #if $assembly.is_of_type('fastqsanger', 'fastq'):
+            #set $ext = 'fastq'
+        #elif $assembly.is_of_type('fastqsanger.gz'):
+            #set $ext = 'fastq.gz'
+        #elif $assembly.is_of_type('fastq'):
+            #set $ext = 'fastq'
+        #elif $assembly.is_of_type('fastq.gz'):
+            #set $ext = 'fastq.gz'
+        #elif $assembly.is_of_type('fasta.gz'):
+            #set $ext = 'fasta.gz'
+        #elif $assembly.is_of_type('fasta'):
+            #set $ext = 'fasta'
+        #end if
         #set $_input_file = re.sub(r'(\s|\(|\)|:|!)', '_', str($assembly.element_identifier))
-        ln -s '${assembly}' $_input_file && 
+        export TMPDIR=\${PWD} &&
+        ln -s '${assembly}' $_input_file.${ext} && 
         
         socru 
 
