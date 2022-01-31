@@ -1,0 +1,3 @@
+name	taxID	taxRank	genomeSize	numReads	numUniqueReads	abundance
+Ailuropoda melanoleuca	9646	species	556	6	2	0.230286
+Bos taurus	9913	species	517	10	6	0.769714

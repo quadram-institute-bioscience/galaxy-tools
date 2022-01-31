@@ -1,0 +1,436 @@
+<tool id="centrifuge" name="Centrifuge" version="1.0.4_beta">
+
+    <description>Read-based metagenome characterization</description>
+
+    <!-- ***************************************************************** -->
+
+    <requirements>
+        <requirement type="package" version="1.0.4_beta">centrifuge</requirement>
+    </requirements>
+
+    <!-- ***************************************************************** -->
+
+    <version_command>centrifuge --version | perl -wnE'print "$1\n" for /centrifuge\S+ version (\S+)/g'</version_command>
+
+    <!-- ***************************************************************** -->
+
+    <command detect_errors="aggressive">
+    <![CDATA[
+
+    centrifuge
+
+    ##--Output Options------------------------------
+
+        --out-fmt      $outputs.out_fmt
+        --tab-fmt-cols $outputs.tab_fmt_cols
+
+    ##--General Options-----------------------------
+
+        --threads      \${GALAXY_SLOTS:-1}
+
+        #if $general.skip != "":
+            --skip $general.skip
+        #end if
+        #if $general.upto != "":
+            --upto $general.upto
+        #end if
+        #if $general.trim5 != "":
+            --trim5 $general.trim5
+        #end if
+        #if $general.trim3 != "":
+            --trim3 $general.trim3
+        #end if
+
+        $general.ignore_quals
+        $general.nofw
+        $general.norc
+        $general.non_deterministic
+
+        #if $general.seed != "":
+            --seed $general.seed
+        #end if
+            
+    ##--Classification------------------------------
+
+        --min-hitlen $classification.min_hitlen
+        -k $classification.k_distinct
+        
+        #if $classification.min_totallen != "":
+            --min-totallen $classification.min_totallen
+        #end if
+
+        #if $classification.host_taxids != "":
+            --host-taxids $classification.host_taxids
+        #end if
+
+        #if $classification.exclude_taxids != "":
+            --exclude-taxids $classification.exclude_taxids
+        #end if
+
+    ##--Inputs--------------------------------------
+
+        -x '${inputs.db.fields.path}'
+
+        #for $s in $inputs.unpaired
+            -U '${s.u_reads}'
+        #end for
+
+        #for $s in $inputs.paired
+            -1 '${s.p_reads.forward}'
+            -2 '${s.p_reads.reverse}'
+        #end for
+
+        #if $inputs.sra:
+            --sra-acc $inputs.sra
+        #end if
+
+        #if $outputs.out_fmt == "tab":
+            -S $out_tab
+        #elif $outputs.out_fmt == "sam":
+            -S $out_sam
+        #end if
+
+        --report-file $report
+
+    ]]>
+    </command>
+
+    <!-- ***************************************************************** -->
+
+    <inputs>
+
+    <section name="inputs" title="Inputs" expanded="True">
+
+        <repeat name="unpaired" title="Unpaired reads" min="0" default="0">
+            <param name="u_reads" type="data" format="fastq" label="Unpaired reads"/>
+        </repeat>
+
+        <repeat name="paired" title="Paired reads" min="0" default="0">
+            <param name="p_reads" type="data_collection" collection_type="paired" format="fastq" label="Paired read collection"/>
+        </repeat>
+
+        <param name="sra" type="text" label="SRA accession">
+            <sanitizer invalid_char="">
+                <valid initial="string.letters,string.digits">
+                    <add value="," />
+                </valid>
+            </sanitizer>
+        </param>
+
+        <param name="db" type="select" label="Select a reference database">
+            <options from_data_table="centrifuge_indices">
+                <filter type="sort_by" column="2"/>
+                <validator type="no_options" message="No indexes are available for the selected input dataset"/>
+            </options>
+        </param>
+
+    </section>
+
+    <section name="outputs" title="Outputs" expanded="False">
+
+        <param argument="--out-fmt" name="out_fmt" type="select" label="Output format">
+            <option value="tab" selected="true">tabular</option>
+            <option value="sam">SAM</option>
+        </param>
+
+        <param argument="--tab-fmt-cols" name="tab_fmt_cols" type="text" label="Output columns" value="readID,seqID,taxID,score,2ndBestScore,hitLength,queryLength,numMatches">
+            <sanitizer invalid_char="">
+                <valid initial="string.letters,string.digits">
+                    <add value="," />
+                </valid>
+            </sanitizer>
+        </param>
+
+    </section>
+
+    <section name="general" title="General options" expanded="False">
+
+        <param argument="--skip"  type="integer" value="" optional="true" label="Initial reads to skip" />
+        <param argument="--upto"  type="integer" value="" optional="true" label="Stop after reads" />
+        <param argument="--trim5" type="integer" value="" optional="true" label="Trim 5' bases" />
+        <param argument="--trim3" type="integer" value="" optional="true" label="Trim 3' bases" />
+
+        <param argument="--ignore-quals" name="ignore_quals" type="boolean" truevalue="--ignore-quals" falsevalue="" checked="no" label="Ignore qualities" />
+
+        <param argument="--nofw" type="boolean" truevalue="--nofw" falsevalue="" checked="no" label="Don't map forward strand" />
+        <param argument="--norc" type="boolean" truevalue="--norc" falsevalue="" checked="no" label="Don't map rev-com strand" />
+
+        <param argument="--seed" type="integer" value="" min="0" optional="true" label="Starting seed" />
+        <param argument="--non-deterministic" name="non_deterministic" type="boolean" truevalue="--non-deterministic" falsevalue="" checked="no" label="Use non-deterministic seeding" />
+
+    </section>
+
+    <section name="classification" title="Classification" expanded="True">
+
+        <param argument="--min-hitlen" name="min_hitlen" type="integer" value="22" min="16" label="Minimum hit length" />
+        <param name="k_distinct" type="integer" value="5" min="5" label="Searching for at most k distinct, primary assignments for each read or pair." help="Primary assignments mean assignments whose assignment score is equal or higher than any other assignments. If there are more primary assignments than this value, the search will merge some of the assignments into a higher taxonomic rank. The assignment score for a paired-end assignment equals the sum of the assignment scores of the individual mates"/>
+        <param argument="--min-totallen" name="min_totallen" type="integer" optional="true"  min="0" label="Minimum summed length" />
+
+        <param argument="--host-taxids" name="host_taxids" type="text" label="Host taxonomic IDs">
+            <sanitizer invalid_char="">
+                <valid initial="string.digits">
+                    <add value="," />
+                </valid>
+            </sanitizer>
+        </param>
+        <param argument="--exclude-taxids" name="exclude_taxids" type="text" label="Excluded taxonomic IDs">
+            <sanitizer invalid_char="">
+                <valid initial="string.digits">
+                    <add value="," />
+                </valid>
+            </sanitizer>
+        </param>
+
+    </section>
+
+    </inputs>
+
+    <!-- ***************************************************************** -->
+
+    <outputs>
+
+        <data name="out_tab" format="tabular" label="Centrifuge on ${on_string}: Output">
+            <filter>(outputs['out_fmt'] == "tab")</filter>
+        </data>
+        <data name="out_sam" format="sam" label="Centrifuge on ${on_string}: Output">
+            <filter>(outputs['out_fmt'] == "sam")</filter>
+        </data>
+        <data name="report" format="tabular" label="Centrifuge on ${on_string}: Report" />
+
+    </outputs>
+
+    <!-- ***************************************************************** -->
+
+    <tests>
+        <!-- default unpaired -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="defaults.tsv" sort="true" />
+            <output name="report" file="defaults.report" />
+        </test>
+        <!-- default paired -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="p_reads">
+                <collection type="paired">
+                    <element name="forward" value="input_f.fq" />
+                    <element name="reverse" value="input_r.fq" />
+                </collection>
+            </param>
+            <output name="out_tab" file="paired.tsv" sort="true" />
+            <output name="report" file="paired.report" />
+        </test>
+        <!-- default combined -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <param name="p_reads">
+                <collection type="paired">
+                    <element name="forward" value="input_f.fq" />
+                    <element name="reverse" value="input_r.fq" />
+                </collection>
+            </param>
+            <output name="out_tab" file="both.tsv" sort="true" />
+            <output name="report" file="both.report" />
+        </test>
+        <!-- exclude IDs -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="exclude_taxids"  value="9913" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="exclude.tsv" sort="true" />
+            <output name="report" file="exclude.report" />
+        </test>
+        <!-- specify host -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="host_taxids"  value="9913" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="host.tsv" sort="true" />
+            <output name="report" file="host.report" />
+        </test>
+        <!-- minimum length -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="min_hitlen"  value="83" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="minlen83.tsv" sort="true" />
+            <output name="report" file="minlen83.report" />
+        </test>
+        <!-- norc -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="norc"  value="true" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="norc.tsv" sort="true" />
+            <output name="report" file="norc.report" />
+        </test>
+        <!-- nofw -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="nofw"  value="true" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="nofw.tsv" sort="true" />
+            <output name="report" file="nofw.report" />
+        </test>
+        <!-- set seed -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="seed"  value="123" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="seed123.tsv" sort="true" />
+            <output name="report" file="seed123.report" />
+        </test>
+        <!-- 5' trim -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="trim5"  value="10" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="trim5_10.tsv" sort="true" />
+            <output name="report" file="trim5_10.report" />
+        </test>
+        <!-- 3' trim -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="trim3"  value="5" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="trim3_5.tsv" sort="true" />
+            <output name="report" file="trim3_5.report" />
+        </test>
+        <!-- skip start -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="skip"  value="3" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="skip3.tsv" sort="true" />
+            <output name="report" file="skip3.report" />
+        </test>
+        <!-- skip end -->
+        <test>
+            <param name="db" value="test_db" />
+            <param name="upto"  value="6" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+            <output name="out_tab" file="upto6.tsv" sort="true" />
+            <output name="report" file="upto6.report" />
+        </test>
+        <!-- invalid parameter value -->
+        <test expect_failure="true">
+            <param name="db" value="test_db" />
+            <param name="tab_fmt_cols"  value="FooBar" />
+            <param name="u_reads" ftype="fastq" value="input_u.fq" />
+        </test>
+
+    </tests>
+
+    <!-- ***************************************************************** -->
+
+    <help>
+    <![CDATA[
+
+Overview
+--------
+
+**Credit**
+This wrapper was modified from the original version at https://github.com/jvolkening/galaxy-tools
+
+**Centrifuge** is a very rapid and memory-efficient system for the
+classification of DNA sequences from microbial samples, with better
+sensitivity than and comparable accuracy to other leading systems. The system
+uses a novel indexing scheme based on the Burrows-Wheeler transform (BWT) and
+the Ferragina-Manzini (FM) index, optimized specifically for the metagenomic
+classification problem. Centrifuge requires a relatively small index (e.g.,
+4.3 GB for ~4,100 bacterial genomes) yet provides very fast classification
+speed, allowing it to process a typical DNA sequencing run within an hour.
+Together these advances enable timely and accurate analysis of large
+metagenomics data sets on conventional desktop computers.
+
+Usage
+-----
+
+Following is the manpage for `centrifuge`, which can be linked with the
+options above using the help text. Note that not all options are available in
+the Galaxy wrapper.
+
+::
+
+    centrifuge [options]* -x <cf-idx> {-1 <m1> -2 <m2> | -U <r> | --sra-acc <SRA accession number>} [-S <filename>] [--report-file <report>]
+  
+    <cf-idx>   Index filename prefix (minus trailing .X.cf).
+    <m1>       Files with #1 mates, paired with files in <m2>.
+               Could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
+    <m2>       Files with #2 mates, paired with files in <m1>.
+               Could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
+    <r>        Files with unpaired reads.
+               Could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
+    <SRA accession number>        Comma-separated list of SRA accession numbers, e.g. --sra-acc SRR353653,SRR353654.
+    <filename>      File for classification output (default: stdout)
+    <report>   File for tabular report output (default: centrifuge_report.tsv)
+  
+    <m1>, <m2>, <r> can be comma-separated lists (no whitespace) and can be
+    specified many times.  E.g. '-U file1.fq,file2.fq -U file3.fq'.
+  
+  Options (defaults in parentheses):
+  
+   Input:
+    -q                 query input files are FASTQ .fq/.fastq (default)
+    --qseq             query input files are in Illumina's qseq format
+    -f                 query input files are (multi-)FASTA .fa/.mfa
+    -r                 query input files are raw one-sequence-per-line
+    -c                 <m1>, <m2>, <r> are sequences themselves, not files
+    -s/--skip <int>    skip the first <int> reads/pairs in the input (none)
+    -u/--upto <int>    stop after first <int> reads/pairs (no limit)
+    -5/--trim5 <int>   trim <int> bases from 5'/left end of reads (0)
+    -3/--trim3 <int>   trim <int> bases from 3'/right end of reads (0)
+    --phred33          qualities are Phred+33 (default)
+    --phred64          qualities are Phred+64
+    --int-quals        qualities encoded as space-delimited integers
+    --ignore-quals     treat all quality values as 30 on Phred scale (off)
+    --nofw             do not align forward (original) version of read (off)
+    --norc             do not align reverse-complement version of read (off)
+    --sra-acc          SRA accession ID
+  
+  Classification:
+    --min-hitlen <int>    minimum length of partial hits (default 22, must be greater than 15)
+    --min-totallen <int>  minimum summed length of partial hits per read (default 0)
+    --host-taxids <taxids> comma-separated list of taxonomic IDs that will be preferred in classification
+    --exclude-taxids <taxids> comma-separated list of taxonomic IDs that will be excluded in classification
+  
+   Output:
+    --out-fmt <str>       define output format, either 'tab' or 'sam' (tab)
+    --tab-fmt-cols <str>  columns in tabular format, comma separated 
+                            default: readID,seqID,taxID,score,2ndBestScore,hitLength,queryLength,numMatches
+    -t/--time             print wall-clock time taken by search phases
+    --un <path>           write unpaired reads that didn't align to <path>
+    --al <path>           write unpaired reads that aligned at least once to <path>
+    --un-conc <path>      write pairs that didn't align concordantly to <path>
+    --al-conc <path>      write pairs that aligned concordantly at least once to <path>
+    (Note: for --un, --al, --un-conc, or --al-conc, add '-gz' to the option name, e.g.
+    --un-gz <path>, to gzip compress output, or add '-bz2' to bzip2 compress output.)
+    --quiet               print nothing to stderr except serious errors
+    --met-file <path>     send metrics to file at <path> (off)
+    --met-stderr          send metrics to stderr (off)
+    --met <int>           report internal counters & metrics every <int> secs (1)
+  
+   Performance:
+    -o/--offrate <int> override offrate of index; must be >= index's offrate
+    -p/--threads <int> number of alignment threads to launch (1)
+    --mm               use memory-mapped I/O for index; many 'bowtie's can share
+  
+   Other:
+    --qc-filter        filter out reads that are bad according to QSEQ filter
+    --seed <int>       seed for random number generator (0)
+    --non-deterministic seed rand. gen. arbitrarily instead of using read attributes
+    --version          print version information and quit
+    -h/--help          print this usage message
+
+    ]]>
+    </help>
+
+    <!-- ***************************************************************** -->
+    
+    <citations>
+        <citation type="doi">10.1101/gr.210641.116</citation>
+    </citations>
+
+</tool>

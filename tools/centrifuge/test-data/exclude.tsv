@@ -1,0 +1,13 @@
+1_1	gi|4	9646	4225	0	80	80	1
+1_2	gi|4	9646	4225	0	80	80	1
+2_1	unclassified	0	0	0	0	80	1
+2_2	unclassified	0	0	0	0	80	1
+2_3	unclassified	0	0	0	0	80	1
+2_4	unclassified	0	0	0	0	80	1
+2_5	unclassified	0	0	0	0	80	1
+2_6	unclassified	0	0	0	0	80	1
+C_1	gi|4	9646	4225	0	80	80	1
+C_2	gi|4	9646	4225	0	80	80	1
+C_3	gi|4	9646	4225	0	80	80	1
+C_4	gi|4	9646	4225	0	80	80	1
+readID	seqID	taxID	score	2ndBestScore	hitLength	queryLength	numMatches

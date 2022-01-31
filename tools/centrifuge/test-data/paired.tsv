@@ -1,0 +1,5 @@
+1	gi|4	9646	4050	0	120	120	1
+2	gi|4	9646	4050	2025	120	120	1
+3	gi|7	9913	4050	0	120	120	1
+4	gi|7	9913	4050	2025	120	120	1
+readID	seqID	taxID	score	2ndBestScore	hitLength	queryLength	numMatches

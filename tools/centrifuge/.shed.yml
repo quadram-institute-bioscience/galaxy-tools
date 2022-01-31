@@ -1,0 +1,20 @@
+name: centrifuge
+owner: thanhlv
+description: Centrifuge - classifier for metagenomic sequences
+homepage_url: https://ccb.jhu.edu/software/centrifuge/
+long_description: |
+    Centrifuge is a very rapid and memory-efficient system for the
+    classification of DNA sequences from microbial samples, with better
+    sensitivity than and comparable accuracy to other leading systems. The
+    system uses a novel indexing scheme based on the Burrows-Wheeler transform
+    (BWT) and the Ferragina-Manzini (FM) index, optimized specifically for the
+    metagenomic classification problem. Centrifuge requires a relatively small
+    index (e.g., 4.3 GB for ~4,100 bacterial genomes) yet provides very fast
+    classification speed, allowing it to process a typical DNA sequencing run
+    within an hour. Together these advances enable timely and accurate
+    analysis of large metagenomics data sets on conventional desktop
+    computers. 
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/centrifuge
+type: unrestricted
+categories:
+- Metagenomics

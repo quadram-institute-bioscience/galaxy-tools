@@ -1,0 +1,8 @@
+<!-- Use the file tool_data_table_conf.xml.oldlocstyle if you don't want to update your loc files as changed in revision 4550:535d276c92bc-->
+<tables>
+    <!-- Locations of indexes in the GOTTCHA format -->
+    <table name="centrifuge_indices" comment_char="#">
+        <columns>value, name, path</columns>
+        <file path="tool-data/centrifuge_indices.loc" />
+    </table>
+</tables>

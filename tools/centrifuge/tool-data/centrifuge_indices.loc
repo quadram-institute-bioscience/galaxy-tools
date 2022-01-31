@@ -1,0 +1,17 @@
+# centrifuge_indices.loc.sample
+# This is a *.loc.sample file distributed with Galaxy that enables tools
+# to use a directory of indexed data files. This one is for GOTTCHA.
+# See the wiki: http://wiki.galaxyproject.org/Admin/NGS%20Local%20Setup
+# First create these data files and save them in your own data directory structure.
+# Then, create a bowtie_indices.loc file to use those indexes with tools.
+# Copy this file, save it with the same name (minus the .sample), 
+# follow the format examples, and store the result in this directory.
+# The file should include an one line entry for each index set.
+# The path points to the "basename" for the set, not a specific file.
+# It has three text columns seperated by TABS.
+#
+# <unique_id>	<display_name>	<file_base_path>
+#
+#bacteria_v20150825	Bacteria	/depot/data2/galaxy/gottcha/GOTTCHA_BACTERIA_c4937_k24_u30_xHUMAN3x.species
+#viruses_v20150825	Viruses	/depot/data2/galaxy/gottcha/GOTTCHA_VIRUSES_c5900_k24_u30_xHUMAN3x.species
+test	test	foo/bar/baz
