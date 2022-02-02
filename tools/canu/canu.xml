@@ -13,14 +13,22 @@
         GALAXY_MEMORY_GB=\$((GALAXY_MEMORY_MB / 1024)) ;
     fi ;
 
-    #if $input.ext in ['fastq.gz', 'fasta.gz', 'fastqsanger.gz']
-            ## linking does not work
-            cp '$input' ./input.gz &&
-    else if $input.ext in ['fastq', 'fastqsanger']
-            cp '$input' ./input.fastq &&
-    else if $input.ext in ['fasta']
-            cp '$input' ./input.fasta &&
+    #if $input.is_of_type('fastqsanger', 'fastq'):
+        #set $ext = 'fastq'
+    #elif $input.is_of_type('fastqsanger.gz'):
+        #set $ext = 'fastq.gz'
+    #elif $input.is_of_type('fastq'):
+        #set $ext = 'fastq'
+    #elif $input.is_of_type('fastq.gz'):
+        #set $ext = 'fastq.gz'
+    #elif $input.is_of_type('fasta.gz'):
+        #set $ext = 'fasta.gz'
+    #elif $input.is_of_type('fasta'):
+        #set $ext = 'fasta'
     #end if
+
+    cp $input ./input.${ext} &&
+    
     canu
         #if $stage != 'all':
             $stage
@@ -58,13 +66,7 @@
         cnsThreads=\${GALAXY_SLOTS:-4}
         useGrid=false
         $mode
-        #if $input.ext in ['fastq.gz', 'fasta.gz', 'fastqsanger.gz']
-            ./input.gz &&
-        else if $input.ext in ['fastq', 'fastqsanger']
-            ./input.fastq &&
-        else if $input.ext in ['fasta']
-            ./input.fasta &&
-        #end if
+        ./input.${ext}
         2>&1
         &&
         echo "Check echo"
