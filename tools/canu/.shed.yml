@@ -1,0 +1,14 @@
+categories: [Assembly]
+description: Canu is a hierarchical assembly pipeline designed for high-noise single-molecule sequencing (such as the PacBio RS II/Sequel or Oxford Nanopore MinION). Adapted from bgruening's wrapper
+long_description: |
+  Canu is a fork of the Celera Assembler, designed for high-noise single-molecule sequencing (such as the PacBio RS II/Sequel or Oxford Nanopore MinION).
+  Canu is a hierarchical assembly pipeline which runs in four steps:
+    - Detect overlaps in high-noise sequences using MHAP
+    - Generate corrected sequence consensus
+    - Trim corrected sequences
+    - Assemble trimmed corrected sequences
+homepage_url: https://github.com/marbl/canu
+name: canu
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/canu
+type: unrestricted
