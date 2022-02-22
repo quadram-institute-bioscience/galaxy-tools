@@ -1,0 +1,379 @@
+<tool id="metamlst" name="metamlst" version="@VERSION@">
+    <description> performs an in-silico Multi Locus Sequence Typing (MLST) Analysis on metagenomic samples</description>
+    <macros>
+        <token name="@VERSION@">1.2.2</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">metamlst</requirement>
+    </requirements>
+    <version_command>metamlst.py --version | head -n 1 | cut -f 2</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #import re
+        ## Link in the input files, so bowtie2 can tell their type
+        #set compressed="False"
+        #set reads_are_fastq = True
+        #if str($library.type) == 'paired':
+            #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.element_identifier))
+            #set name_2 = re.sub('[^\w\-\s]', '_', str($library.input_2.element_identifier))
+            #if $library.input_1.is_of_type("fastq.gz", "fastqsanger.gz"):
+                #set read1 = $name_1 + '.fastq.gz'
+                #set compressed = "GZ"
+            #else if $library.input_1.is_of_type("fastq.bz2", "fastqsanger.bz2"):
+                #set read1 = $name_1 + '.fastq.bz2'
+                #set compressed = "BZ2"
+            #else if $library.input_1.is_of_type('fasta'):
+                #set reads_are_fastq = False
+                #set read1 = $name_1 + '.fasta'
+            #else:
+                #set read1 = $name_1 + '.fastq'
+            #end if
+            ln -f -s '${library.input_1}' ${read1} &&
+
+            #if $library.input_2.is_of_type("fastq.gz", "fastqsanger.gz"):
+                #set read2 = $name_2 + '.fastq.gz'
+                #set compressed = "GZ"
+            #else if $library.input_2.is_of_type("fastq.bz2", "fastqsanger.bz2"):
+                #set read2 = $name_1 + '.fastq.bz2'
+                #set compressed = "BZ2"
+            #else if $library.input_2.is_of_type('fasta'):
+                #set read2 = $name_1 + '.fasta'
+            #else:
+                #set read2 = $name_1 + '.fastq'
+            #end if
+            ln -f -s '${library.input_2}' ${read2} &&
+        #else if str($library.type) == 'paired_collection':
+                #set pe_input_1 = $library.input_1.forward
+                #set pe_input_2 = $library.input_1.reverse
+                #set name_1 = re.sub('[^\w\-\s]', '_', str($library.pe_input_1.name)) + "_1"
+                #set name_2 = re.sub('[^\w\-\s]', '_', str($library.pe_input_2.name)) + "_2"
+            #if $library.input_1.forward.is_of_type("fastq.gz", "fastqsanger.gz"):
+                #set read1 = $name_1 + '.fastq.gz'
+                #set compressed = "GZ"
+            #else if $library.input_1.forward.is_of_type("fastq.bz2", "fastqsanger.bz2"):
+                #set read1 = $name_1 + '.fastq.bz2'
+                #set compressed = "BZ2"
+            #else if $library.input_1.forward.is_of_type('fasta'):
+                #set reads_are_fastq = False
+                #set read1 = $name_1 + '.fasta'
+            #else:
+                #set read1 = $name_1 + '.fastq'
+            #end if
+            ln -s '${library.input_1.forward}' ${read1} &&
+
+            #if $library.input_1.reverse.is_of_type("fastq.gz", "fastqsanger.gz"):
+                #set read2 = $name_2 + '.fastq.gz'
+                #set compressed = "GZ"
+            #else if $library.input_1.reverse.is_of_type("fastq.bz2", "fastqsanger.bz2"):
+                #set read2 = $name_2 + '.fastq.bz2'
+                #set compressed = "BZ2"
+            #else if $library.input_1.reverse.is_of_type("fasta"):
+                #set read2 = $name_2 + '.fasta'
+            #else:
+                #set read2 = $name_2 + '.fastq'
+            #end if
+            ln -s '${library.input_1.reverse}' ${read2} &&
+
+        #else if str($library.type) == 'paired_interleaved':
+            #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.element_identifier))
+            #if $library.input_1.is_of_type("fastq.gz", "fastqsanger.gz"):
+                #set read1 = $name_1 + '.fastq.gz'
+                #set compressed = "GZ"
+            #else if $library.input_1.is_of_type("fastq.bz2", "fastqsanger.bz2"):
+                #set read1 = $name_1 + '.fastq.bz2'
+                #set compressed = "BZ2"
+            #else if $library.input_1.is_of_type("fasta"):
+                #set reads_are_fastq = False
+                #set read1 = $name_1 + '.fasta'
+            #else:
+                #set read1 = $name_1 + '.fastq'
+            #end if
+            ln -s '${library.input_1}' ${read1} &&
+        #else:
+            #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.element_identifier))
+            #if $library.input_1.is_of_type("fastq.gz", "fastqsanger.gz"):
+                #set read1 = $name_1.fastq.gz
+                #set compressed = "GZ"
+            #else if $library.input_1.is_of_type("fastq.bz2", "fastqsanger.bz2"):
+                #set read1 = $name_1.fastq.bz2
+                #set compressed = "BZ2"
+            #else if $library.input_1.is_of_type("fasta"):
+                #set reads_are_fastq = False
+                #set read1 = $name_1 + '.fasta'
+            #else:
+                #set read1 = $name_1 + '.fastq'
+            #end if
+            ln -s '${library.input_1}' ${read1} &&
+        #end if
+        
+        metamlst-index.py
+        -i bowtie_MmetaMLST
+        -d '$metamlstdb.fields.path' &&
+        
+        bowtie2
+        --very-sensitive-local
+        -a
+        --no-unal
+        
+        ## number of threads
+        -p \${GALAXY_SLOTS:-4}
+
+        ## index file path
+        -x bowtie_MmetaMLST
+
+        ## Input reads
+        #if str( $library.type ) == "single":
+            -U '${read1}'
+        #elif str( $library.type ) == "paired_interleaved":
+            --interleaved '${read1}'
+        #else:
+            -1 '${read1}'
+            -2 '${read2}'
+        #end if 
+        | samtools view -bS -F 4 - > ${read1}.bam &&
+        metamlst.py 
+        #if $filter_species.filter=='yes'
+            #set species_list = ",".join([$species for $species in $filter_species.species])
+            --filter $species_list
+        #end if
+        --penalty $penalty
+        --minscore $minscore
+        --max_xM $max_xm
+        --min_read_len $min_read_len
+        --min_accuracy $min_accuracy
+        --nloci $nloci
+        $log
+        $write_sequences
+        ${read1}.bam 
+        -o ./out 
+        -d '$metamlstdb.fields.path' &&
+        metamlst-merge.py ./out -d '$metamlstdb.fields.path' &&
+        #if $log
+            cat ./out/*.out > log.txt &&
+        #end if
+        #if $write_sequences
+            cat ./out/*.nfo > sequences.txt
+        #end if
+    ]]>    </command>
+
+    <inputs>
+        <conditional name="library">
+            <param name="type" type="select" label="Is this single or paired library">
+                <option value="single">Single-end</option>
+                <option value="paired">Paired-end</option>
+                <option value="paired_collection">Paired-end Dataset Collection</option>
+                <option value="paired_interleaved">Paired-end data from single interleaved dataset</option>
+            </param>
+
+            <when value="single">
+                <param name="input_1" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" type="data" label="FASTA/Q file" help="Must be of datatype &quot;fastqsanger&quot; or &quot;fasta&quot;" />
+            </when>
+            <when value="paired">
+                <param name="input_1" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" type="data" label="FASTA/Q file #1" help="Must be of datatype &quot;fastqsanger&quot;or &quot;fasta&quot;" />
+                <param name="input_2" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" type="data" label="FASTA/Q file #2" help="Must be of datatype &quot;fastqsanger&quot;or &quot;fasta&quot;" />
+            </when>
+            <when value="paired_collection">
+                <param name="input_1" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" type="data_collection" collection_type="paired" label="FASTQ Paired Dataset" help="Must be of datatype &quot;fastqsanger&quot; or &quot;fasta&quot;" />
+            </when>
+            <when value="paired_interleaved">
+                <param name="input_1" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" type="data" label="Interleaved FASTQ file" help="Must be of datatype &quot;fastqsanger&quot; or &quot;fasta&quot;. --interleaved"/>
+            </when>
+        </conditional>
+        <param name="metamlstdb" label="Select a database" type="select">
+            <options from_data_table="metamlstdb">
+                <validator message="No database is available" type="no_options" />
+            </options>
+        </param>
+        <conditional name="filter_species">
+            <param name="filter" type="select" label="Filtering species">
+                <option value="yes">Yes</option>
+                <option value="no" selected="true">No</option>
+            </param>
+            <when value="yes">
+                <param name="species" type="select" multiple="true" label="Filter species">
+                    <option value="achromobacter">Achromobacter spp.</option>
+                    <option value="abaumannii1">Acinetobacter baumannii#1</option>
+                    <option value="abaumannii2">Acinetobacter baumannii#2</option>
+                    <option value="aeromonas">Aeromonas spp.</option>
+                    <option value="aactinomycetemcomitans">Aggregatibacter actinomycetemcomitans</option>
+                    <option value="aphagocytophilum">Anaplasma phagocytophilum</option>
+                    <option value="arcobacter">Arcobacter spp.</option>
+                    <option value="afumigatus">Aspergillus fumigatus</option>
+                    <option value="bcereus">Bacillus cereus</option>
+                    <option value="blicheniformis">Bacillus licheniformis</option>
+                    <option value="bsubtilis">Bacillus subtilis</option>
+                    <option value="bbacilliformis">Bartonella bacilliformis</option>
+                    <option value="bhenselae">Bartonella henselae</option>
+                    <option value="bwashoensis">Bartonella washoensis</option>
+                    <option value="bordetella">Bordetella spp.</option>
+                    <option value="borrelia">Borrelia spp.</option>
+                    <option value="bhampsonii">Brachyspira hampsonii</option>
+                    <option value="bhyodysenteriae">Brachyspira hyodysenteriae</option>
+                    <option value="bintermedia">Brachyspira intermedia</option>
+                    <option value="bpilosicoli">Brachyspira pilosicoli</option>
+                    <option value="brachyspira">Brachyspira spp.</option>
+                    <option value="brucella">Brucella spp.</option>
+                    <option value="bcepacia">Burkholderia cepacia complex</option>
+                    <option value="bpseudomallei">Burkholderia pseudomallei</option>
+                    <option value="cconcisus-curvus">Campylobacter concisus/curvus</option>
+                    <option value="cfetus">Campylobacter fetus</option>
+                    <option value="chelveticus">Campylobacter helveticus</option>
+                    <option value="chyointestinalis">Campylobacter hyointestinalis</option>
+                    <option value="cinsulaenigrae">Campylobacter insulaenigrae</option>
+                    <option value="cjejuni">Campylobacter jejuni</option>
+                    <option value="clanienae">Campylobacter lanienae</option>
+                    <option value="clari">Campylobacter lari</option>
+                    <option value="csputorum">Campylobacter sputorum</option>
+                    <option value="cupsaliensis">Campylobacter upsaliensis</option>
+                    <option value="calbicans">Candida albicans</option>
+                    <option value="cglabrata">Candida glabrata</option>
+                    <option value="ckrusei">Candida krusei</option>
+                    <option value="ctropicalis">Candida tropicalis</option>
+                    <option value="cliberibacter">Candidatus Liberibacter solanacearum</option>
+                    <option value="cmaltaromaticum">Carnobacterium maltaromaticum</option>
+                    <option value="chlamydiales">Chlamydiales spp.</option>
+                    <option value="cfreundii">Citrobacter freundii</option>
+                    <option value="csinensis">Clonorchis sinensis</option>
+                    <option value="cdifficile">Clostridioides difficile</option>
+                    <option value="cbotulinum">Clostridium botulinum</option>
+                    <option value="cperfringens">Clostridium perfringens</option>
+                    <option value="csepticum">Clostridium septicum</option>
+                    <option value="cdiphtheriae">Corynebacterium diphtheriae</option>
+                    <option value="cronobacter">Cronobacter spp.</option>
+                    <option value="dnodosus">Dichelobacter nodosus</option>
+                    <option value="edwardsiella">Edwardsiella spp.</option>
+                    <option value="ecloacae">Enterobacter cloacae</option>
+                    <option value="efaecalis">Enterococcus faecalis</option>
+                    <option value="efaecium">Enterococcus faecium</option>
+                    <option value="ecoli1">Escherichia coli#1</option>
+                    <option value="ecoli2">Escherichia coli#2</option>
+                    <option value="fpsychrophilum">Flavobacterium psychrophilum</option>
+                    <option value="ganatis">Gallibacterium anatis</option>
+                    <option value="geotrichum">Geotrichum spp.</option>
+                    <option value="gparasuis">Glaesserella parasuis</option>
+                    <option value="hinfluenzae">Haemophilus influenzae</option>
+                    <option value="hcinaedi">Helicobacter cinaedi</option>
+                    <option value="hpylori">Helicobacter pylori</option>
+                    <option value="hsuis">Helicobacter suis</option>
+                    <option value="kkingae">Kingella kingae</option>
+                    <option value="kaerogenes">Klebsiella aerogenes</option>
+                    <option value="koxytoca">Klebsiella oxytoca</option>
+                    <option value="kpneumoniae">Klebsiella pneumoniae</option>
+                    <option value="kseptempunctata">Kudoa septempunctata</option>
+                    <option value="lsalivarius">Lactobacillus salivarius</option>
+                    <option value="leptospira">Leptospira spp.</option>
+                    <option value="leptospira2">Leptospira spp.#2</option>
+                    <option value="leptospira3">Leptospira spp.#3</option>
+                    <option value="lmonocytogenes">Listeria monocytogenes</option>
+                    <option value="mcanis">Macrococcus canis</option>
+                    <option value="mcaseolyticus">Macrococcus caseolyticus</option>
+                    <option value="mhaemolytica">Mannheimia haemolytica</option>
+                    <option value="mplutonius">Melissococcus plutonius</option>
+                    <option value="mcatarrhalis">Moraxella catarrhalis</option>
+                    <option value="mycobacteria">Mycobacteria spp.</option>
+                    <option value="mabscessus">Mycobacterium abscessus</option>
+                    <option value="mmassiliense">Mycobacterium massiliense</option>
+                    <option value="magalactiae">Mycoplasma agalactiae</option>
+                    <option value="mbovis">Mycoplasma bovis (legacy)</option>
+                    <option value="mflocculare">Mycoplasma flocculare</option>
+                    <option value="mgallisepticum1">Mycoplasma gallisepticum#1</option>
+                    <option value="mgallisepticum2">Mycoplasma gallisepticum#2</option>
+                    <option value="mhominis">Mycoplasma hominis</option>
+                    <option value="mhyopneumoniae">Mycoplasma hyopneumoniae</option>
+                    <option value="mhyorhinis">Mycoplasma hyorhinis</option>
+                    <option value="miowae">Mycoplasma iowae</option>
+                    <option value="mpneumoniae">Mycoplasma pneumoniae</option>
+                    <option value="msynoviae">Mycoplasma synoviae</option>
+                    <option value="neisseria">Neisseria spp.</option>
+                    <option value="otsutsugamushi">Orientia tsutsugamushi</option>
+                    <option value="orhinotracheale">Ornithobacterium rhinotracheale</option>
+                    <option value="plarvae">Paenibacillus larvae</option>
+                    <option value="pmultocida1">Pasteurella multocida#1</option>
+                    <option value="pmultocida2">Pasteurella multocida#2</option>
+                    <option value="ppentosaceus">Pediococcus pentosaceus</option>
+                    <option value="pdamselae">Photobacterium damselae</option>
+                    <option value="psalmonis">Piscirickettsia salmonis</option>
+                    <option value="pgingivalis">Porphyromonas gingivalis</option>
+                    <option value="pacnes">Propionibacterium acnes</option>
+                    <option value="paeruginosa">Pseudomonas aeruginosa</option>
+                    <option value="pfluorescens">Pseudomonas fluorescens</option>
+                    <option value="pputida">Pseudomonas putida</option>
+                    <option value="rhodococcus">Rhodococcus spp.</option>
+                    <option value="ranatipestifer">Riemerella anatipestifer</option>
+                    <option value="senterica">Salmonella enterica</option>
+                    <option value="sparasitica">Saprolegnia parasitica</option>
+                    <option value="shewanella">Shewanella spp.</option>
+                    <option value="sinorhizobium">Sinorhizobium spp.</option>
+                    <option value="saureus">Staphylococcus aureus</option>
+                    <option value="schromogenes">Staphylococcus chromogenes</option>
+                    <option value="sepidermidis">Staphylococcus epidermidis</option>
+                    <option value="shaemolyticus">Staphylococcus haemolyticus</option>
+                    <option value="shominis">Staphylococcus hominis</option>
+                    <option value="slugdunensis">Staphylococcus lugdunensis</option>
+                    <option value="spseudintermedius">Staphylococcus pseudintermedius</option>
+                    <option value="smaltophilia">Stenotrophomonas maltophilia</option>
+                    <option value="sagalactiae">Streptococcus agalactiae</option>
+                    <option value="sbovis-equinus">Streptococcus bovis/equinus complex (SBSEC)</option>
+                    <option value="scanis">Streptococcus canis</option>
+                    <option value="sdysgalactiae">Streptococcus dysgalactiae equisimilis</option>
+                    <option value="sgallolyticus">Streptococcus gallolyticus</option>
+                    <option value="soralis">Streptococcus oralis</option>
+                    <option value="spneumoniae">Streptococcus pneumoniae</option>
+                    <option value="spyogenes">Streptococcus pyogenes</option>
+                    <option value="ssuis">Streptococcus suis</option>
+                    <option value="sthermophilus">Streptococcus thermophilus</option>
+                    <option value="sthermophilus2">Streptococcus thermophilus#2</option>
+                    <option value="suberis">Streptococcus uberis</option>
+                    <option value="szooepidemicus">Streptococcus zooepidemicus</option>
+                    <option value="streptomyces">Streptomyces spp</option>
+                    <option value="taylorella">Taylorella spp.</option>
+                    <option value="tenacibaculum">Tenacibaculum spp.</option>
+                    <option value="tpallidum">Treponema pallidum</option>
+                    <option value="tvaginalis">Trichomonas vaginalis</option>
+                    <option value="ureaplasma">Ureaplasma spp.</option>
+                    <option value="vcholerae">Vibrio cholerae</option>
+                    <option value="vcholerae2">Vibrio cholerae#2</option>
+                    <option value="vparahaemolyticus">Vibrio parahaemolyticus</option>
+                    <option value="vibrio">Vibrio spp.</option>
+                    <option value="vtapetis">Vibrio tapetis</option>
+                    <option value="vvulnificus">Vibrio vulnificus</option>
+                    <option value="wolbachia">Wolbachia </option>
+                    <option value="xfastidiosa">Xylella fastidiosa</option>
+                    <option value="ypseudotuberculosis">Yersinia pseudotuberculosis</option>
+                    <option value="yruckeri">Yersinia ruckeri</option>
+                </param>
+            </when>
+        </conditional>
+        <param argument="--penalty" type="integer" min="0" value="100" label="MetaMLST penaty for under-represented alleles" />
+        <param argument="--minscore" type="integer" min="0" value="80" label="Minimum alignment score for each alignment to be considered valid" />
+        <param argument="--max_xm" type="integer" min="0" value="5" label="Maximum SNPs rate for each alignment to be considered valid" />
+        <param argument="--min_read_len" type="integer" min="0" value="50" label="Minimum BowTie2 alignment length" />
+        <param argument="--min_accuracy" type="float" min="0" max="1" value="0.9" label="Minimum threshold on Confidence score to pass the reconstruction step" />
+        <param argument="--nloci" type="integer" min="0" value="100" label="Do not discard samples where at least NLOCI are detected" />
+        <param argument="--log" type="boolean" truevalue="--log" falsevalue="" checked="true" label="Generate log file" />
+        <param name="write_sequences" type="boolean" truevalue="-a" falsevalue=""  checked="false" label="Write known sequences" />
+    </inputs>
+
+    <outputs>
+        <collection name="report" type="list" label="${tool.name} on ${on_string} Report">
+            <discover_datasets pattern="(?P&lt;designation&gt;[a-zA-Z0-9\-\_]+)_report\.txt$" format="tabular" directory="./out/merged" visible="false"/>
+        </collection>
+        <collection name="st" type="list" label="${tool.name} on ${on_string} ST">
+            <discover_datasets pattern="(?P&lt;designation&gt;[a-zA-Z0-9\-\_]+)_ST\.txt$" format="tabular" directory="./out/merged" visible="false"/>
+        </collection>
+        <data name="log_file" format="txt" from_work_dir="log.txt" label="${tool.name} on ${on_string} Log">
+            <filter>log == True</filter>
+        </data>
+        <data name="sequence" format="txt" from_work_dir="sequences.txt" label="${tool.name} on ${on_string} Sequences">
+            <filter>write_sequences == True</filter>
+        </data>
+    </outputs>
+    <!-- <tests>
+    <test>
+    </test>
+    </tests> -->
+    <help><![CDATA[
+    ]]>    </help>
+    <citations>
+        <citation type="doi">10.1093/nar/gkw837</citation>
+    </citations>
+</tool>
