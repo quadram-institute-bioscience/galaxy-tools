@@ -1,7 +1,6 @@
 name: metamlst
 owner: thanhlv
-categories:
-  - [Sequence Analysis]
+categories: [Sequence Analysis]
 description: Multilocus Sequence Typing from metagenomic data
 homepage_url: https://github.com/SegataLab/metamlst
 long_description: |
