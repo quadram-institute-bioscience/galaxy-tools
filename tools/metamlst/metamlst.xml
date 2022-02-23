@@ -151,7 +151,7 @@
             cat ./out/*.out > log.txt &&
         #end if
         #if $write_sequences
-            cat ./out/*.nfo > sequences.txt
+            cat ./out/*.nfo > sequences.txt && 
         #end if
         echo "Finished"
     ]]>    </command>
