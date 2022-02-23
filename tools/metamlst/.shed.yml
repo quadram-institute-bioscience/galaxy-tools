@@ -8,3 +8,5 @@ long_description: |
   MetaMLST is a computational tool for strain level identification from metagenomic data. It exploits the Multi Locus Sequence Typing approach and performs and in-silico reconstruction of the MLST-specific loci.
 remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/metamlst
 type: unrestricted
+exclude:
+  - tmp
