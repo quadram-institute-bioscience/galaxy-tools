@@ -13,8 +13,8 @@
         #set compressed="False"
         #set reads_are_fastq = True
         #if str($library.type) == 'paired':
-            #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.element_identifier))
-            #set name_2 = re.sub('[^\w\-\s]', '_', str($library.input_2.element_identifier))
+            #set name_1 = re.sub('[^\w\-]', '_', str($library.input_1.element_identifier))
+            #set name_2 = re.sub('[^\w\-]', '_', str($library.input_1.element_identifier))
             #if $library.input_1.is_of_type("fastq.gz", "fastqsanger.gz"):
                 #set read1 = $name_1 + '.fastq.gz'
                 #set compressed = "GZ"
@@ -27,7 +27,7 @@
             #else:
                 #set read1 = $name_1 + '.fastq'
             #end if
-            ln -f -s '${library.input_1}' ${read1} &&
+            ln -f -s '${library.input_1}' '${read1}' &&
 
             #if $library.input_2.is_of_type("fastq.gz", "fastqsanger.gz"):
                 #set read2 = $name_2 + '.fastq.gz'
@@ -40,10 +40,12 @@
             #else:
                 #set read2 = $name_1 + '.fastq'
             #end if
-            ln -f -s '${library.input_2}' ${read2} &&
+            ln -f -s '${library.input_2}' '${read2}' &&
         #else if str($library.type) == 'paired_collection':
-                #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.forward.name)) + "_1"
-                #set name_2 = re.sub('[^\w\-\s]', '_', str($library.input_1.reverse.name)) + "_2"
+                #set pe_input_1 = $library.input_1.forward
+                #set pe_input_2 = $library.input_1.reverse
+                #set name_1 = re.sub('[^\w\-]', '_', str($library.input_1.name)) + "_1"
+                #set name_2 = re.sub('[^\w\-]', '_', str($library.input_1.name)) + "_2"
             #if $library.input_1.forward.is_of_type("fastq.gz", "fastqsanger.gz"):
                 #set read1 = $name_1 + '.fastq.gz'
                 #set compressed = "GZ"
@@ -56,7 +58,7 @@
             #else:
                 #set read1 = $name_1 + '.fastq'
             #end if
-            ln -s '${library.input_1.forward}' ${read1} &&
+            ln -s '${library.input_1.forward}' '${read1}' &&
 
             #if $library.input_1.reverse.is_of_type("fastq.gz", "fastqsanger.gz"):
                 #set read2 = $name_2 + '.fastq.gz'
@@ -69,10 +71,10 @@
             #else:
                 #set read2 = $name_2 + '.fastq'
             #end if
-            ln -s '${library.input_1.reverse}' ${read2} &&
+            ln -s '${library.input_1.reverse}' '${read2}' &&
 
         #else if str($library.type) == 'paired_interleaved':
-            #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.element_identifier))
+            #set name_1 = re.sub('[^\w\-]', '_', str($library.input_1.element_identifier))
             #if $library.input_1.is_of_type("fastq.gz", "fastqsanger.gz"):
                 #set read1 = $name_1 + '.fastq.gz'
                 #set compressed = "GZ"
@@ -85,9 +87,9 @@
             #else:
                 #set read1 = $name_1 + '.fastq'
             #end if
-            ln -s '${library.input_1}' ${read1} &&
+            ln -s '${library.input_1}' '${read1}' &&
         #else:
-            #set name_1 = re.sub('[^\w\-\s]', '_', str($library.input_1.element_identifier))
+            #set name_1 = re.sub('[^\w\-]', '_', str($library.input_1.element_identifier))
             #if $library.input_1.is_of_type("fastq.gz", "fastqsanger.gz"):
                 #set read1 = $name_1.fastq.gz
                 #set compressed = "GZ"
@@ -100,7 +102,7 @@
             #else:
                 #set read1 = $name_1 + '.fastq'
             #end if
-            ln -s '${library.input_1}' ${read1} &&
+            ln -s '${library.input_1}' '${read1}' &&
         #end if
         
         metamlst-index.py
@@ -146,10 +148,10 @@
         -d '$metamlstdb.fields.path' &&
         metamlst-merge.py ./out -d '$metamlstdb.fields.path' &&
         #if $log
-            cat ./out/*.out > log.txt &&
+            cat ./out/*.out > log.txt && 
         #end if
         #if $write_sequences
-            cat ./out/*.nfo > sequences.txt && 
+        cat ./out/*.nfo > sequences.txt && 
         #end if
         echo "Finished"
     ]]>    </command>
@@ -349,7 +351,7 @@
         <param argument="--min_accuracy" type="float" min="0" max="1" value="0.9" label="Minimum threshold on Confidence score to pass the reconstruction step" />
         <param argument="--nloci" type="integer" min="0" value="100" label="Do not discard samples where at least NLOCI are detected" />
         <param argument="--log" type="boolean" truevalue="--log" falsevalue="" checked="true" label="Generate log file" />
-        <param name="write_sequences" type="boolean" truevalue="-a" falsevalue=""  checked="false" label="Write known sequences" />
+        <param name="write_sequences" type="boolean" truevalue="-a" falsevalue="" checked="false" label="Write known sequences" />
     </inputs>
 
     <outputs>
