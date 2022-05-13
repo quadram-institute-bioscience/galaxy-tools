@@ -1,0 +1,63 @@
+<tool id="polypolish" name="polypolish" version="@VERSION@">
+    <description> Minimal but speedy quality control for nanopore reads</description>
+    <macros>
+        <token name="@VERSION@">0.5.0</token>
+    </macros>
+    <requirements>
+        <requirement type="package" version="@VERSION@">polypolish</requirement>
+        <requirement type="package" version="1.15.1">samtools</requirement>
+        <requirement type="package" version="0.7.17">bwa</requirement>
+    </requirements>
+    <version_command>polypolish --version</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #if $short_reads.sr_type == 'paired'
+            ln -s '$short_read.R1' reads_1.fastq.gz
+            ln -s '$short_read.R2' reads_2.fastq.gz
+        #end if
+        ln -s '${assembly}' draft.fa &&
+        bwa index draft.fa &&
+        bwa mem -t \${GALAXY_SLOTS:-4} -a draft.fa reads_1.fastq.gz > alignments_1.sam &&
+        bwa mem -t \${GALAXY_SLOTS:-4} -a draft.fa reads_2.fastq.gz > alignments_2.sam &&
+        polypolish_insert_filter.py --in1 alignments_1.sam --in2 alignments_2.sam --out1 filtered_1.sam --out2 filtered_2.sam &&
+        polypolish 
+        #if $debug
+            $debug debug.tsv
+        #end if
+        -d ${min_depth} 
+        -i ${fraction_invalid} 
+        -m ${max_errors} 
+        -v ${fraction_valid}
+        draft.fasta filtered_1.sam filtered_2.sam 
+        > polished.fasta
+    ]]>    </command>
+
+    <inputs>
+        <param name="basecalled" type="data" format="fastq,fastq.gz,fasta,fasta.gz" label="Basecalled data"/>
+        <conditional name="short_reads">
+            <param name="sr_type" type="select" label="Input reads type or collection" help="Select 'paired end' for a single library or 'collection' for a paired end collection">
+                <option value="paired" selected="true">Paired End</option>
+                <option value="collection">Paired Collection</option>
+            </param>
+            <when value="paired">
+                <param name="R1" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" label="Forward reads (R1)" help="The file of forward reads in FASTQ format"/>
+                <param name="R2" type="data" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" label="Reverse reads (R2)" help="The file of reverse reads in FASTQ format"/>
+            </when>
+            <when value="collection">
+                <param name="input1" format="fastqsanger,fastqsanger.gz,fastqsanger.bz2" type="data_collection" collection_type="paired" label="Paired collection" help="See help section for an explanation of dataset collections"/>
+            </when>
+        </conditional>
+        <param argument="min_depth" type="integer" value="5" min="1" label="Minimum depth" />
+        <param argument="fraction_invalid" type="float" value="0.2" min="0.0" max="1.0" label="Fraction value of the read depth to be considered invalid" />
+        <param argument="fraction_valid" type="integer" value="10" min="1" label="Ignore alignments with more than this many mismatches and indels" />
+        <param argument="max_errors" type="integer" value="10" min="1" label="Fraction value of the read depth to be considered invalid" />
+        <param argument="debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Debug output" />
+    </inputs>
+    <outputs>
+    <data name="polished" format="fasta" from_work_dir="polished.fasta" label="${tool.name} on ${on_string} Polished assembly" />
+    <data name="debug" format="tabular" from_work_dir="debug.tsv" label="${tool.name} on ${on_string} Polished assembly" >
+        <filter>debug is True</filter>
+    </data>
+    </outputs>
+    <help><![CDATA[
+    ]]>    </help>
+</tool>
