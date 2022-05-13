@@ -1,0 +1,8 @@
+categories: [Sequence Analysis]
+description: Polishing genome assemblies with short reads
+long_description: Polypolish is a tool for polishing genome assemblies with short reads. Unlike other tools in this category, Polypolish uses SAM files where each read has been aligned to all possible locations (not just a single best location). This allows it to repair errors in repeat regions that other alignment-based polishers cannot fix.
+homepage_url: https://github.com/rrwick/Polypolish
+name: polypolish
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/polypolish
+type: unrestricted
