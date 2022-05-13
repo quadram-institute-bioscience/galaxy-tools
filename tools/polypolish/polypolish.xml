@@ -1,5 +1,5 @@
 <tool id="polypolish" name="polypolish" version="@VERSION@">
-    <description> Minimal but speedy quality control for nanopore reads</description>
+    <description> Polishing genome assemblies with short reads</description>
     <macros>
         <token name="@VERSION@">0.5.0</token>
     </macros>
