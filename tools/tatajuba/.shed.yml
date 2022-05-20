@@ -1,0 +1,10 @@
+categories: [Sequence Analysis]
+description: Finding distribution of homopolymeric tracts
+long_description: |
+  Tatajubá also assumes that what we call a "tract" is a homopolymeric base flanked by a specific sequence (allowing for variability),
+  and it can discard homopolymers absent in reverse or forward reads to minimise "strand bias"..
+homepage_url: https://github.com/quadram-institute-bioscience/tatajuba
+name: tatajuba
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/tatajuba
+type: unrestricted
