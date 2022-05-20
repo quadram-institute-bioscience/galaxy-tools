@@ -11,9 +11,13 @@
     <version_command>polypolish --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
         #if $short_reads.sr_type == 'paired'
-            ln -s '$short_read.R1' reads_1.fastq.gz
-            ln -s '$short_read.R2' reads_2.fastq.gz
+            ln -s '$short_read.R1' reads_1.fastq.gz &&
+            ln -s '$short_read.R2' reads_2.fastq.gz &&
+        #else if str($short_reads.sr_type) == "collection"
+            ln -s '$short_read.input1.forward' reads_1.fastq.gz &&
+            ln -s '$short_read.input1.reverse' reads_2.fastq.gz &&
         #end if
+        
         ln -s '${assembly}' draft.fa &&
         bwa index draft.fa &&
         bwa mem -t \${GALAXY_SLOTS:-4} -a draft.fa reads_1.fastq.gz > alignments_1.sam &&
