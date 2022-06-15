@@ -8,3 +8,6 @@ name: tatajuba
 owner: thanhlv
 remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/tatajuba
 type: unrestricted
+exclude:
+  - test-data
+  - singularity
