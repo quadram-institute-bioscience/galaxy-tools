@@ -1,5 +1,5 @@
 <tool id="tatajuba" name="tatajuba" version="@VERSION@">
-    <description> Polishing genome assemblies with short reads</description>
+    <description> Finding distribution of homopolymeric tracts</description>
     <macros>
         <token name="@VERSION@">1.0.4</token>
     </macros>
