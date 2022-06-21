@@ -47,6 +47,7 @@ tasks:
       source activate base
       python -m ipykernel install --user --name=base
       conda -V && python -V
+      python -m pip install planemo
 
 
 # NOTE: Plan for now is just to work in the conda base environment - could use a one or two other
