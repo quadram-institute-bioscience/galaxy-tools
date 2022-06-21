@@ -1,0 +1,78 @@
+# Download & install dependencies, run build scripts, you name it - tasks Gitpod takes care of before you start a new development environment 
+# so you don’t have to wait for any of that. With prebuilds enabled for your project, Gitpod runs the before, init and prebuild commands 
+# in your `.gitpod.yml` file every time code is pushed to your repository. The resulting snapshot of the development environment is called a prebuilt workspace.
+# When anyone starts a new workspace, all Gitpod needs to do is load the prebuilt workspace. 
+# Since the heavy-lifting happened during the prebuild phase, the workspace starts up quickly, allowing you to start your work right away.
+
+# Setup for GitHub.com -- Install the app here: https://github.com/apps/gitpod-io
+
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo (defaults to false)
+    branches: false
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: false
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: false
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: true
+
+# The prebuilds section in the `.gitpod.yml` file configures when prebuilds are run. 
+# By default, prebuilds are run on push to the default branch and for each pull request coming from the same repository. 
+# Additionally, you can enable prebuilds for all branches (branches) and for pull requests from forks (pullRequestsFromForks).
+
+# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+
+# Note: mamba is a drop-in replacement for conda which does faster package resolution
+
+tasks:
+  - name: setupconda
+  - before: |
+      curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh \
+        --output /workspace/Mambaforge3-Linux-x86_64.sh
+      bash /workspace/Mambaforge3-Linux-x86_64.sh -b -p /workspace/miniforge3
+      echo "PATH="/workspace/miniforge3/bin:$PATH"" >> ${HOME}/.bashrc
+      rm /workspace/Mambaforge3-Linux-x86_64.sh
+      /workspace/miniforge3/bin/conda init bash
+      source ~/.bashrc
+      # conda deactivate
+      conda config --set report_errors false
+      conda env update --name=base --file=environment-mamba.yml 
+      source activate base
+      python -m ipykernel install --user --name=base
+      conda -V && python -V
+
+
+# NOTE: Plan for now is just to work in the conda base environment - could use a one or two other
+#       conda envs if warranted -- this disposable Gitpod.io infrastructure sort of takes care
+#       of not getting too distracted with Docker / virtualenvs / conda envs.
+
+
+# List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
+
+#ports:
+#  - port: 8888
+#    onOpen: notify
+
+# VS Code extensions to install
+
+vscode:
+  extensions:
+    - "gitpod.gitpod-desktop"
+    - "eamodio.gitlens"
+    - "ms-toolsai.jupyter"
+    - "ms-toolsai.jupyter-keymap"
+    - "ms-vscode-remote.remote-ssh"
+    - "ms-vscode-remote.remote-ssh-edit"
+    - "github.vscode-pull-request-github"
+    - "ms-python.python"
+    - "ms-python.vscode-pylance"
+    - "redhat.vscode-yaml"
+    - "dotjoshjohnson.xml"
+#    - "ms-azuretools.vscode-docker"
