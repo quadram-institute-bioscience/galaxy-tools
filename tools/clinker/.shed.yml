@@ -1,0 +1,11 @@
+categories:
+- Sequence Analysis
+description: |
+    Gene cluster comparison figure generator
+long_description: |
+    Given a set of GenBank files, clinker will automatically extract protein translations, perform global alignments between sequences in each cluster, determine the optimal display order based on cluster similarity, and generate an interactive visualisation (using clustermap.js) that can be extensively tweaked before being exported as an SVG file.
+name: clinker
+owner: thanhlv
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/clinker
+homepage_url: https://github.com/gamcil/clinker
+type: unrestricted
