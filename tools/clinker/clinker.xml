@@ -11,8 +11,8 @@
         #import re
         mkdir gbk &&
         #for $counter, $input in enumerate($gbk):
-            #set $_input_file = re.sub(r'(\s|\(|\)|:|!)', '_', str($input.element_identifier))
-            ln -sf '$input' 'gbk/${$_input_file}' &&
+            #set $_input_file = re.sub(r'(\s|\(|\)|:|!)|\.gbk', '_', str($input.element_identifier))
+            ln -sf '$input' 'gbk/${$_input_file}.gbk' &&
         #end for
         clinker
         $no_align
