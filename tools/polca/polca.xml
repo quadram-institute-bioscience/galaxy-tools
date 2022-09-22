@@ -1,5 +1,5 @@
 <tool id="polca" name="polca" version="@VERSION@">
-    <description> Minimal but speedy quality control for nanopore reads</description>
+    <description> Improving the consensus accuracy in genome assemblies</description>
     <macros>
         <token name="@VERSION@">4.0.9</token>
     </macros>
