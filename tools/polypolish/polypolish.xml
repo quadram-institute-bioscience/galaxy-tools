@@ -52,7 +52,7 @@
         </conditional>
         <param argument="min_depth" type="integer" value="5" min="1" label="Minimum depth" />
         <param argument="fraction_invalid" type="float" value="0.2" min="0.0" max="1.0" label="Fraction value of the read depth to be considered invalid" />
-        <param argument="fraction_valid" type="integer" value="0.2" min="0.0" max="1.0" label="Ignore alignments with more than this many mismatches and indels" />
+        <param argument="fraction_valid" type="float" value="0.2" min="0.0" max="1.0" label="Ignore alignments with more than this many mismatches and indels" />
         <param argument="max_errors" type="integer" value="10" min="1" label="Fraction value of the read depth to be considered invalid" />
         <param argument="debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Debug output" />
     </inputs>
