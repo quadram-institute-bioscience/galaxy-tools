@@ -5,38 +5,38 @@
     </macros>
     <requirements>
         <requirement type="package" version="@VERSION@">polypolish</requirement>
-        <requirement type="package" version="1.15.1">samtools</requirement>
+        <!--<requirement type="package" version="1.15.1">samtools</requirement> -->
         <requirement type="package" version="0.7.17">bwa</requirement>
     </requirements>
     <version_command>polypolish --version</version_command>
     <command detect_errors="exit_code"><![CDATA[
         #if $short_reads.sr_type == 'paired'
-            ln -s '$short_read.R1' reads_1.fastq.gz &&
-            ln -s '$short_read.R2' reads_2.fastq.gz &&
+            ln -s '$short_reads.R1' reads_1.fastq.gz &&
+            ln -s '$short_reads.R2' reads_2.fastq.gz &&
         #else if str($short_reads.sr_type) == "collection"
-            ln -s '$short_read.input1.forward' reads_1.fastq.gz &&
-            ln -s '$short_read.input1.reverse' reads_2.fastq.gz &&
+            ln -s '$short_reads.input1.forward' reads_1.fastq.gz &&
+            ln -s '$short_reads.input1.reverse' reads_2.fastq.gz &&
         #end if
-        
+
         ln -s '${assembly}' draft.fa &&
         bwa index draft.fa &&
         bwa mem -t \${GALAXY_SLOTS:-4} -a draft.fa reads_1.fastq.gz > alignments_1.sam &&
         bwa mem -t \${GALAXY_SLOTS:-4} -a draft.fa reads_2.fastq.gz > alignments_2.sam &&
         polypolish_insert_filter.py --in1 alignments_1.sam --in2 alignments_2.sam --out1 filtered_1.sam --out2 filtered_2.sam &&
-        polypolish 
+        polypolish
         #if $debug
             $debug debug.tsv
         #end if
-        -d ${min_depth} 
-        -i ${fraction_invalid} 
-        -m ${max_errors} 
+        -d ${min_depth}
+        -i ${fraction_invalid}
+        -m ${max_errors}
         -v ${fraction_valid}
-        draft.fasta filtered_1.sam filtered_2.sam 
+        draft.fasta filtered_1.sam filtered_2.sam
         > polished.fasta
     ]]>    </command>
 
     <inputs>
-        <param name="basecalled" type="data" format="fastq,fastq.gz,fasta,fasta.gz" label="Basecalled data"/>
+        <param name="assembly" type="data" format="fastq,fastq.gz,fasta,fasta.gz" label="Assembly"/>
         <conditional name="short_reads">
             <param name="sr_type" type="select" label="Input reads type or collection" help="Select 'paired end' for a single library or 'collection' for a paired end collection">
                 <option value="paired" selected="true">Paired End</option>
@@ -52,13 +52,13 @@
         </conditional>
         <param argument="min_depth" type="integer" value="5" min="1" label="Minimum depth" />
         <param argument="fraction_invalid" type="float" value="0.2" min="0.0" max="1.0" label="Fraction value of the read depth to be considered invalid" />
-        <param argument="fraction_valid" type="integer" value="10" min="1" label="Ignore alignments with more than this many mismatches and indels" />
+        <param argument="fraction_valid" type="float" value="0.5" min="0.0" max="1.0" label="Ignore alignments with more than this many mismatches and indels" />
         <param argument="max_errors" type="integer" value="10" min="1" label="Fraction value of the read depth to be considered invalid" />
         <param argument="debug" type="boolean" truevalue="--debug" falsevalue="" checked="false" label="Debug output" />
     </inputs>
     <outputs>
     <data name="polished" format="fasta" from_work_dir="polished.fasta" label="${tool.name} on ${on_string} Polished assembly" />
-    <data name="debug" format="tabular" from_work_dir="debug.tsv" label="${tool.name} on ${on_string} Polished assembly" >
+    <data name="debug_tsv" format="tabular" from_work_dir="debug.tsv" label="${tool.name} on ${on_string} Polypolish debug" >
         <filter>debug is True</filter>
     </data>
     </outputs>
