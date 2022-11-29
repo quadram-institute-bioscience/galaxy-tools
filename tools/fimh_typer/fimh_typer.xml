@@ -1,0 +1,35 @@
+<tool id="fimh" name="fimh" version="1.1">
+    <description> identifies the FimH type in total or partial sequenced isolates of E. coli</description>
+    <requirements>
+        <container type="singularity">/home/ubuntu/galaxy-tools/tools/fimlh_typer/fimh_typer.sif</container>
+        <!-- <requirement type="package" version="1.1">fimh</requirement> -->
+    </requirements>
+    <version_command>fimtyper.pl -h | grep Current: | sed 's/Current://'</version_command>
+    <command detect_errors="exit_code">
+        <![CDATA[
+        ln -fs '$query' input.fasta &&
+        fimtyper.pl -d /opt/fimtyper_db -i input.fasta -o results
+    ]]>    </command>
+    <inputs>
+        <param name="query" type="data" format="fasta" multiple="false" label="Query sequences" />
+    </inputs>
+    <outputs>
+        <data name="fimtype" format="fasta" from_work_dir="./results/Fimtype_seq.fsa" label="${tool.name} on ${on_string} Fimtype Sequences"/>
+        <data name="hit" format="fasta" from_work_dir="./results/Hit_in_genome_seq.fsa" label="${tool.name} on ${on_string} Hit Sequences"/>
+        <data name="results" format="text" from_work_dir="./results/results.txt" label="${tool.name} on ${on_string} Blast Results"/>
+        <data name="tab_results" format="tabular" from_work_dir="./results/results_tab.txt" label="${tool.name} on ${on_string} Tabular Results "/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="query" value="test.fsa" />
+            <output name="fimtype" file="output/Fimtype_seq.fsa" compare="sim_size" />
+            <output name="tab_results" file="output/results_tab.txt" compare="sim_size" />
+        </test>
+    </tests>
+    <help><![CDATA[
+        FimTyper identifies the FimH type in total or partial sequenced isolates of E. coli.
+    ]]>    </help>
+    <citations>
+        <citation type="doi">10.1128/JCM.00737-17</citation>
+    </citations>
+</tool>
