@@ -1,0 +1,5 @@
+FimH type: fimH1
+
+FimH type - E.coli
+Fimtype	Identity	Query/HSP	Contig	Position in contig	Accession no.
+fimH1	100.00	489/489	fimH1_FJ865645.1	1..489	

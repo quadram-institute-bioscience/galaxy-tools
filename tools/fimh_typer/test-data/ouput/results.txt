@@ -1,0 +1,60 @@
+FimTyper result file
+
+*********************************************************************************
+FimH
+*********************************************************************************
+FimH TYPE      IDENTITY     QUERY/HSP     CONTIG  POSITION         ACC NO.         
+=================================================================================
+fimH1        100.00       489/489       1       1..489                           
+_________________________________________________________________________________
+
+
+Contig Table
+-----------
+Contig 1 is fimH1_FJ865645.1
+-----------
+
+
+Alignments as text
+_________________________________________________________________________________
+fimH1: PERFECT MATCH, ID: 100.00%, Query/HSP Length: 489/489, Contig name: fimH1_FJ865645.1, Position: 1..489
+
+Fimtype seq:         TTCGCCTGTAAAACCGCCAATGGTACTGCTATCCCTATTGGCGGTGGCAGCGCCAATGTT
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       TTCGCCTGTAAAACCGCCAATGGTACTGCTATCCCTATTGGCGGTGGCAGCGCCAATGTT
+
+Fimtype seq:         TATGTAAACCTTGCGCCTGCCGTGAATGTGGGGCAAAACCTGGTCGTGGATCTTTCGACG
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       TATGTAAACCTTGCGCCTGCCGTGAATGTGGGGCAAAACCTGGTCGTGGATCTTTCGACG
+
+Fimtype seq:         CAAATCTTTTGCCATAACGATTACCCGGAAACCATTACAGACTATGTCACACTGCAACGA
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       CAAATCTTTTGCCATAACGATTACCCGGAAACCATTACAGACTATGTCACACTGCAACGA
+
+Fimtype seq:         GGTTCGGCTTATGGCGGCGTGTTATCTAGTTTTTCCGGGACCGTAAAATATAATGGCAGT
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       GGTTCGGCTTATGGCGGCGTGTTATCTAGTTTTTCCGGGACCGTAAAATATAATGGCAGT
+
+Fimtype seq:         AGCTATCCTTTCCCTACTACCAGCGAAACGCCGCGGGTTGTTTATAATTCGAGAACGGAT
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       AGCTATCCTTTCCCTACTACCAGCGAAACGCCGCGGGTTGTTTATAATTCGAGAACGGAT
+
+Fimtype seq:         AAGCCGTGGCCGGTGGCGCTTTATTTGACGCCTGTGAGCAGTGCTGGCGGGGTGGCGATT
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       AAGCCGTGGCCGGTGGCGCTTTATTTGACGCCTGTGAGCAGTGCTGGCGGGGTGGCGATT
+
+Fimtype seq:         AAAGCTGGTTCATTAATTGCCGTGCTTATTTTGCGACAGACCAACAACTATAACAGCGAT
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       AAAGCTGGTTCATTAATTGCCGTGCTTATTTTGCGACAGACCAACAACTATAACAGCGAT
+
+Fimtype seq:         GATTTTCAGTTTGTGTGGAATATTTACGCCAATAATGATGTGGTGGTGCCCACTGGCGGC
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Hit in genome:       GATTTTCAGTTTGTGTGGAATATTTACGCCAATAATGATGTGGTGGTGCCCACTGGCGGC
+
+Fimtype seq:         TGTGATGTT
+                     |||||||||
+Hit in genome:       TGTGATGTT
+
+
+--------------------------------------------------------------------------------
+

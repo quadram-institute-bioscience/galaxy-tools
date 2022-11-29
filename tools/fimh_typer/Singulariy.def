@@ -1,0 +1,21 @@
+bootstrap: docker
+from: continuumio/miniconda3
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export PERL5LIB=/opt/conda/lib/perl5/site_perl/5.22.0/
+%post
+    export PATH=/opt/conda/bin:$PATH
+    apt-get update && apt-get install -y procps git
+    conda install -c conda-forge -c bioconda -c defaults mamba
+    mamba install -c conda-forge -c bioconda -c defaults blast perl-data-dump perl-file-temp perl-getopt-long perl-bioperl perl-try-tiny-retry
+    mamba clean --all -y
+
+    # Install FimTyper
+    # Database
+    git clone https://bitbucket.org/genomicepidemiology/fimtyper_db.git /opt/fimtyper_db
+    # Tools
+    git clone https://bitbucket.org/genomicepidemiology/fimtyper.git /opt/fimtyper
+    chmod +x /opt/fimtyper/fimtyper.pl
+    cp /opt/fimtyper/fimtyper.pl /opt/conda/bin/
+    
