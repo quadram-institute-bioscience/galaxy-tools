@@ -1,0 +1,24 @@
+name: metaphlan
+owner: thanhlv
+description: "MetaPhlAn for Metagenomic Phylogenetic Analysis"
+homepage_url: https://github.com/biobakery/MetaPhlAn
+long_description: |
+    Modified from iuc version for running on Galaxy < 20.01
+    MetaPhlAn is a computational tool for profiling the composition of microbial
+    communities (Bacteria, Archaea, Eukaryotes and Viruses) from metagenomic shotgun
+    sequencing data with species level resolution
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools/tree/master/tools/metaphlan/
+type: unrestricted
+categories:
+- Metagenomics
+auto_tool_repositories:
+  name_template: "{{ tool_id }}"
+  description_template: "Wrapper for the metaphlan tool suite: {{ tool_name }}"
+suite:
+  name: "suite_metaphlan"
+  description: "MetaPhlAn for Metagenomic Phylogenetic Analysis"
+  long_description: |
+    Modified from iuc version for running on Galaxy < 20.01
+    MetaPhlAn is a computational tool for profiling the composition of microbial
+    communities (Bacteria, Archaea, Eukaryotes and Viruses) from metagenomic shotgun
+    sequencing data with species level resolution
