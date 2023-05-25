@@ -5,8 +5,9 @@
     </macros>
     <expand macro="requirements" />
     <command detect_errors="exit_code"><![CDATA[
-    bracken \\ 
-    -i '$input' 
+    bracken 
+    -i '$input'
+    -r 'read_len'
     -d '$kmer_distr.fields.path' 
     -l $level 
     -t $threshold
