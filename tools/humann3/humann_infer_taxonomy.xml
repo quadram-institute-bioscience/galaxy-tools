@@ -62,7 +62,7 @@ humann_infer_taxonomy
                     <has_line line=""/>
                     <has_line_matching expression=""/>
                     <has_n_columns n=""/>
-                    <has_size value="" delta=""/>
+                    <has_size value="" />
                 </assert_contents>
             </output>
         </test>
