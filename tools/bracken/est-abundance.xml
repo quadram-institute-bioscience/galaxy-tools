@@ -5,19 +5,21 @@
     </macros>
     <expand macro="requirements" />
     <command detect_errors="exit_code"><![CDATA[
-    est_abundance.py 
-    -i '$input' 
-    -k '$kmer_distr.fields.path' 
+    bracken 
+    -i '$input'
+    -r 'read_len'
+    -d '$kmer_distr.fields.path' 
     -l $level 
-    -t $threshold 
+    -t $threshold
     -o '$report'
+    -w '$kreport'
     ]]>
     </command>
     
     <inputs>
         <param name="input" type="data" format="tabular" label="Kraken report file" />
         <param label="Select a Kmer distribution" name="kmer_distr" type="select">
-            <options from_data_table="bracken_databases">
+            <options from_data_table="new_bracken_databases">
                 <validator message="No database is available" type="no_options" />
             </options>
         </param>
@@ -30,20 +32,25 @@
             <option value="P">Phylum</option>
             <option value="D">Domain</option>
         </param>
+        <param name="read_len" type="select" label="Read length" help="Read length to get all classifications for">
+            <option value="150" selected="true">150</option>
+            <option value="200">200</option>
+            <option value="250">250</option>
+            <option value="300">300</option>
+        </param>
         <param name="threshold" type="integer" value="10" label="Number of mismatches allowed when matching tag" help="Threshold for the minimum number of reads kraken must
                         assign to a classification for that classification to
                         be considered in the final abundance estimation." />
-        
     </inputs>
 
     <outputs>
-        <data name="report" format="tabular" label="${tool.name} on ${on_string}: Report" />
+        <data name="report" format="tabular" label="${tool.name} on ${on_string}: Bracken Report" />
+        <data name="kreport" format="tabular" label="${tool.name} on ${on_string}: Kraken Report by Bracken" />
     </outputs>
 
     <expand macro="citations" />    
     <help>
     <![CDATA[
-
         Documentation can be found at `site <http://ccb.jhu.edu/software/bracken/index.shtml?t=manual>`_.
     ]]></help>
 
