@@ -1,6 +1,6 @@
-<tool id="metaphlan" name="MetaPhlAn3" version="0.1.0" python_template_version="3.5">
+<tool id="metaphlan3" name="MetaPhlAn3" version="@VERSION@+galaxy0">
 
-    <description>to profile the composition of microbial communities</description>
+    <description> profiles the composition of microbial communities</description>
 
     <macros>
         <import>metaphlan3_macros.xml</import>
@@ -11,32 +11,51 @@
     <version_command>metaphlan -v</version_command>
 
     <command detect_errors="exit_code"><![CDATA[
-        metaphlan 
-            --force 
-            --input_type fastq
-            --bowtie2db '/qib/platforms/Informatics/transfer/outgoing/gmh/databases/metaphlan_databases/'
-            --no_map
-            --index $db
-            --tax_lev $tax
-            $unknown 
-            #if $settings.advanced 
-                $settings.viruses
-                $settings.nobac
-                $settings.noarc
-                $settings.noeuk
-                --stat $settings.stat
-                -t $settings.analysis_type.analysis_type_select
-            #end if
-            --biom '$biom_output_file'
-            '$input' 
-            '$output'
-    ]]></command>
+        metaphlan
+        --force 
+        --input_type fastq
+        #if $db.db_selector == "cached"
+            #set $path = $db.cached_db.fields.path
+            #set $value = $db.cached_db.fields.value
+            --bowtie2db $path/$value
+            --mpa_pkl $path/$value'.pkl'
+        #else
+            --bowtie2db 'ref_db/ref_db'
+            --mpa_pkl 'ref_db/metadata.pkl'
+        #end if
+        --no_map
+        --index $db
+        --tax_lev $tax
+        $unknown 
+        #if $settings.advanced
+            $settings.viruses
+            $settings.nobac
+            $settings.noarc
+            $settings.noeuk
+            --stat $settings.stat
+            -t $settings.analysis_type.analysis_type_select
+        #end if
+        --biom '$biom_output_file'
+        '$input' 
+        '$output'
+    ]]>    </command>
     <inputs>
         <param name="input" type="data" format="fastq,fasta,sam" label="Input File!"/>
-        <param name="db" type="select" label="Select database version">
-            <option value="latest">latest</option>
-            <option value="mpa_v30_CHOCOPhlAn_201901">mpa_v30_CHOCOPhlAn_201901</option>
-        </param>
+        <conditional name="db">
+            <param name="db_selector" type="select" label="Database with clade-specific marker genes">
+                <option value="cached" selected="true">Locally cached</option>
+                <option value="history">From history</option>
+            </param>
+            <when value="cached">
+                <param name="cached_db" label="Cached database with clade-specific marker genes" type="select">
+                    <options from_data_table="metaphlan3_database"/>
+                </param>
+            </when>
+            <when value="history">
+                <param argument="--bowtie2db" type="data" format="fasta" label="Database with clade-specific marker genes from history"/>
+                <param argument="--mpa_pkl" type="data" format="json" label="Metadata associate to the database with clade-specific marker genes from history"/>
+            </when>
+        </conditional>
         <param name="unknown" type="boolean" label="Include unknown fraction?" checked="true" truevalue="--unknown_estimation" falsevalue=""/>
         <param name="tax" type="select" label="Taxonomic level to profile">
             <option value="a">all taxonomic levels</option>
@@ -47,18 +66,18 @@
             <option value="f">families only</option>
             <option value="g">genera only</option>
             <option value="s">species only</option>
-        </param> 
+        </param>
         <conditional name="settings">
             <param name="advanced" type="boolean" label="Specify advanced parameters?" checked="false">
             </param>
             <when value="false">
             </when>
-            <when value="true">       
+            <when value="true">
                 <param name="viruses" type="boolean" label="Include viruses" checked="false" truevalue="--add_viruses" falsevalue=""/>
                 <param name="nobac" type="boolean" label="Include bacterial organisms" checked="true" truevalue="" falsevalue="--ignore_bacteria"/>
                 <param name="noarc" type="boolean" label="Include archeal organisms" checked="true" truevalue="" falsevalue="--ignore_archaea"/>
                 <param name="noeuk" type="boolean" label="Include eukaryotic organisms" checked="true" truevalue="" falsevalue="--ignore_eukaryotes"/>
-                <param argument="--min_mapq_val MIN_MAPQ_VA" type="integer" value="5" label="Minimum mapping quality value (MAPQ)"/>
+                <param argument="--min_mapq_val" type="integer" value="5" label="Minimum mapping quality value (MAPQ)"/>
                 <param argument="--min_cu_len" type="integer" value="2000" label="Minimum total nucleotide length for the markers in a clade for estimating the abundance without considering sub-clade abundances"/>
                 <param argument="--min_alignment_len" type="integer" value="0" label="The sam records for aligned reads with the longest subalignment length smaller than this threshold will be discarded."/>
                 <param argument="--stat_q" type="float" value="0.2" label="Quantile value for the robust average"/>
@@ -87,7 +106,7 @@
                         <param argument="--nreads" type="integer" value="0" label="Total number of reads in the original metagenome" help="It is used for normalizing the length-normalized counts with the metagenome size as well. No normalization applied if the value is not specified"/>
                     </when>
                     <when value="marker_pres_table">
-                        <output argument="--pres_th" type="integer" value="0" label=" Threshold for calling a marker present"/>
+                        <param argument="--pres_th" type="integer" value="0" label=" Threshold for calling a marker present"/>
                     </when>
                 </conditional>
                 <param name="cami" type="boolean" label="Report the profiling using the CAMI output format" checked="false" truevalue="--CAMI_format_output" falsevalue=""/>
@@ -118,7 +137,7 @@ MetaPhlAn takes as input a sequence file in Fasta, FastQ, a SAM file.
 
 The main output file is a tab-separated file with the predicted taxon relative abundances.
 
-    ]]></help>
+    ]]>    </help>
 
     <expand macro="citations" />
 
