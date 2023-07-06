@@ -2,6 +2,6 @@
     <!-- Locations of ariba database in the required format -->
     <table name="metamlstdb" comment_char="#" allow_duplicate_entries="False">
         <columns>value, name, path</columns>
-        <file path="tool-data/metamlstdb.loc" />
+        <file path="tool-data/metamlstdb.loc"/>
     </table>
 </tables>
