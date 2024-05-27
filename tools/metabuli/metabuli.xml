@@ -121,6 +121,8 @@
                     </options>
                 </param>
             </when>
+            <when value="embed">
+            </when>
         </conditional>
         <param argument="--min-score" type="float" min="0" max="1" value="0.000" label="Min sequence similarity score." help="Value for precision mode: ONT(0.008), PacBio Sequel II (0.005), PacBio HiFi (0.07), Illumina (0.15)"/>
         <param argument="--min-sp-score" type="float" min="0" max="1" value="0.0" label="Min. score for species-level or lower-level classification." help="Value for precision mode: PacBio HiFi (0.3), Illumina (0.5)"/>
@@ -141,7 +143,7 @@
 
     <tests>
         <!-- PE Illumina -->
-        <test name="Illumina">
+        <test>
             <param name="lib_type" value="paired"/>
             <param name="R1" value="reads/input_R1.fastq.gz" ftype="fastqsanger.gz"/>
             <param name="R2" value="reads/input_R2.fastq.gz" ftype="fastqsanger.gz" />
@@ -205,8 +207,13 @@
     </tests>
 
     <help><![CDATA[
-           
-    ]]>    </help>
+        
+        Metabuli_ specific and sensitive metagenomic classification via joint analysis of DNA and amino acid.
+
+        .. _Metabuli: https://github.com/steineggerlab/Metabuli/tree/master?tab=readme-ov-file#classification
+
+    ]]>
+    </help>
 
     <expand macro="citations" />
 </tool>
