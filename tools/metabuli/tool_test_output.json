@@ -1,0 +1,466 @@
+{
+    "summary": {
+        "num_errors": 0,
+        "num_failures": 0,
+        "num_skips": 0,
+        "num_tests": 4
+    },
+    "tests": [
+        {
+            "data": {
+                "inputs": {
+                    "library|lib_type": "paired",
+                    "library|r1": {
+                        "id": "757660a73b0e75e7",
+                        "src": "hda"
+                    },
+                    "library|r2": {
+                        "id": "3a300f633b6a5bba",
+                        "src": "hda"
+                    },
+                    "metabuli_databases": "RefSeqTest",
+                    "taxonomy_options|taxonomy": "taxonomy",
+                    "taxonomy_options|taxonomy_path": "local"
+                },
+                "job": {
+                    "command_line": "if [ -z \"$GALAXY_MEMORY_MB\" ] ; then METABULI_GALAXY_MEMORY_GB=8 ; else METABULI_GALAXY_MEMORY_GB=$((GALAXY_MEMORY_MB / 1024) - 1) ; fi ; ln -s '/tmp/tmpbvxtty0i/files/2/2/d/dataset_22db1745-6453-461f-a481-c634dcf88144.dat' r1.fastq.gz && ln -s '/tmp/tmpbvxtty0i/files/6/8/9/dataset_6891b315-786a-483f-b5e7-6fe33db01e77.dat' r2.fastq.gz &&  metabuli classify  r1.fastq.gz r2.fastq.gz '/home/ubuntu/tools-iuc/tools/metabuli/test-data/RefSeqTest' out mtbl --taxonomy-path '/home/ubuntu/tools-iuc/tools/metabuli/test-data/taxonomy' --threads ${GALAXY_SLOTS:-4} --min-score 0.0 --min-cov 0.0 --min-cons-cnt 4 --min-cons-cnt-euk 9 --min-sp-score 0.0 --hamming-margin 0 --match-per-kmer 0 --max-ram ${METABULI_GALAXY_MEMORY_GB:-8} > '/tmp/tmpbvxtty0i/job_working_directory/000/3/outputs/dataset_38d5178a-c4aa-461d-950f-81f62692e0da.dat'",
+                    "command_version": "1.0.5",
+                    "copied_from_job_id": null,
+                    "create_time": "2024-06-04T07:33:23.582877",
+                    "dependencies": [],
+                    "exit_code": 0,
+                    "external_id": "31721",
+                    "galaxy_version": "24.0",
+                    "handler": null,
+                    "history_id": "757660a73b0e75e7",
+                    "id": "0fd223bc2bd10408",
+                    "inputs": {
+                        "library|r1": {
+                            "id": "757660a73b0e75e7",
+                            "src": "hda",
+                            "uuid": "22db1745-6453-461f-a481-c634dcf88144"
+                        },
+                        "library|r2": {
+                            "id": "3a300f633b6a5bba",
+                            "src": "hda",
+                            "uuid": "6891b315-786a-483f-b5e7-6fe33db01e77"
+                        }
+                    },
+                    "job_messages": [],
+                    "job_metrics": [],
+                    "job_runner_name": null,
+                    "job_stderr": "",
+                    "job_stdout": "",
+                    "model_class": "Job",
+                    "output_collections": {},
+                    "outputs": {
+                        "classification": {
+                            "id": "3258609b14674650",
+                            "src": "hda",
+                            "uuid": "62160c1d-5896-4e80-ad80-57ee4744fa55"
+                        },
+                        "krona": {
+                            "id": "6758d4203b8c0b2e",
+                            "src": "hda",
+                            "uuid": "b4c9b273-6004-48e9-8013-3521f07bcbce"
+                        },
+                        "log": {
+                            "id": "fce700ec652e7094",
+                            "src": "hda",
+                            "uuid": "38d5178a-c4aa-461d-950f-81f62692e0da"
+                        },
+                        "report": {
+                            "id": "0fd223bc2bd10408",
+                            "src": "hda",
+                            "uuid": "c89b840a-6472-4b4e-afde-0acd1e3e7e78"
+                        }
+                    },
+                    "params": {
+                        "__input_ext": "\"input\"",
+                        "accession_level": "false",
+                        "chromInfo": "\"/tmp/tmpbvxtty0i/galaxy-dev/tool-data/shared/ucsc/chrom/?.len\"",
+                        "dbkey": "\"?\"",
+                        "hamming_margin": "\"0\"",
+                        "library": "{\"__current_case__\": 0, \"lib_type\": \"paired\", \"r1\": {\"values\": [{\"id\": 1, \"src\": \"hda\"}]}, \"r2\": {\"values\": [{\"id\": 2, \"src\": \"hda\"}]}}",
+                        "match_per_kmer": "\"0\"",
+                        "metabuli_databases": "\"RefSeqTest\"",
+                        "min_cons_cnt": "\"4\"",
+                        "min_cons_cnt_euk": "\"9\"",
+                        "min_cov": "\"0.0\"",
+                        "min_score": "\"0.0\"",
+                        "min_sp_score": "\"0.0\"",
+                        "taxonomy_options": "{\"__current_case__\": 0, \"taxonomy\": \"taxonomy\", \"taxonomy_path\": \"local\"}"
+                    },
+                    "state": "ok",
+                    "stderr": "",
+                    "stdout": "",
+                    "tool_id": "metabuli_classify",
+                    "tool_stderr": "",
+                    "tool_stdout": "",
+                    "update_time": "2024-06-04T07:33:30.699353",
+                    "user_email": "planemo@galaxyproject.org"
+                },
+                "status": "success",
+                "test_index": 0,
+                "time_seconds": 18.66640615463257,
+                "tool_id": "metabuli_classify",
+                "tool_version": "1.0.5+galaxy0"
+            },
+            "has_data": true,
+            "id": "metabuli_classify-0"
+        },
+        {
+            "data": {
+                "inputs": {
+                    "library|lib_type": "single",
+                    "library|single": {
+                        "id": "70fa6246e51e3237",
+                        "src": "hda"
+                    },
+                    "metabuli_databases": "RefSeqTest",
+                    "taxonomy_options|taxonomy": "taxonomy",
+                    "taxonomy_options|taxonomy_path": "local"
+                },
+                "job": {
+                    "command_line": "if [ -z \"$GALAXY_MEMORY_MB\" ] ; then METABULI_GALAXY_MEMORY_GB=8 ; else METABULI_GALAXY_MEMORY_GB=$((GALAXY_MEMORY_MB / 1024) - 1) ; fi ; ln -s '/tmp/tmpbvxtty0i/files/8/9/d/dataset_89d4916c-876c-4db7-ad03-3a1fabfd294d.dat' sr.fastq.gz &&  metabuli classify  sr.fastq.gz --mask 0 '/home/ubuntu/tools-iuc/tools/metabuli/test-data/RefSeqTest' out mtbl --taxonomy-path '/home/ubuntu/tools-iuc/tools/metabuli/test-data/taxonomy' --threads ${GALAXY_SLOTS:-4} --min-score 0.0 --min-cov 0.0 --min-cons-cnt 4 --min-cons-cnt-euk 9 --min-sp-score 0.0 --hamming-margin 0 --match-per-kmer 0 --seq-mode 3 --max-ram ${METABULI_GALAXY_MEMORY_GB:-8} > '/tmp/tmpbvxtty0i/job_working_directory/000/5/outputs/dataset_0160ccd5-b47b-4ab0-b223-e248808281f8.dat'",
+                    "command_version": "1.0.5",
+                    "copied_from_job_id": null,
+                    "create_time": "2024-06-04T07:33:41.449445",
+                    "dependencies": [
+                        {
+                            "cacheable": false,
+                            "dependency_resolver": {
+                                "auto_init": true,
+                                "auto_install": true,
+                                "can_uninstall_dependencies": true,
+                                "ensure_channels": "conda-forge,bioconda,defaults",
+                                "model_class": "CondaDependencyResolver",
+                                "prefix": "/home/ubuntu/miniconda3",
+                                "read_only": false,
+                                "resolver_type": "conda",
+                                "resolves_simple_dependencies": true,
+                                "use_local": false,
+                                "versionless": false
+                            },
+                            "dependency_type": "conda",
+                            "environment_path": "/home/ubuntu/miniconda3/envs/__metabuli@1.0.5",
+                            "exact": true,
+                            "model_class": "MergedCondaDependency",
+                            "name": "metabuli",
+                            "version": "1.0.5"
+                        }
+                    ],
+                    "exit_code": 0,
+                    "external_id": "31861",
+                    "galaxy_version": "24.0",
+                    "handler": null,
+                    "history_id": "3a300f633b6a5bba",
+                    "id": "6758d4203b8c0b2e",
+                    "inputs": {
+                        "library|single": {
+                            "id": "70fa6246e51e3237",
+                            "src": "hda",
+                            "uuid": "89d4916c-876c-4db7-ad03-3a1fabfd294d"
+                        }
+                    },
+                    "job_messages": [],
+                    "job_metrics": [],
+                    "job_runner_name": null,
+                    "job_stderr": "",
+                    "job_stdout": "",
+                    "model_class": "Job",
+                    "output_collections": {},
+                    "outputs": {
+                        "classification": {
+                            "id": "de170ec875c72c8b",
+                            "src": "hda",
+                            "uuid": "d32cb13d-4c1c-48ce-b206-1d0a199d24f1"
+                        },
+                        "krona": {
+                            "id": "17e86d9bdb877829",
+                            "src": "hda",
+                            "uuid": "45a0e656-ace5-4fc5-8611-9935354753fb"
+                        },
+                        "log": {
+                            "id": "1543f000feb33974",
+                            "src": "hda",
+                            "uuid": "0160ccd5-b47b-4ab0-b223-e248808281f8"
+                        },
+                        "report": {
+                            "id": "bf13e649b418f273",
+                            "src": "hda",
+                            "uuid": "2afd098d-d958-456a-8518-8bea8a3f27ed"
+                        }
+                    },
+                    "params": {
+                        "__input_ext": "\"input\"",
+                        "accession_level": "false",
+                        "chromInfo": "\"/tmp/tmpbvxtty0i/galaxy-dev/tool-data/shared/ucsc/chrom/?.len\"",
+                        "dbkey": "\"?\"",
+                        "hamming_margin": "\"0\"",
+                        "library": "{\"__current_case__\": 1, \"lib_type\": \"single\", \"mask\": false, \"seq_mode\": \"3\", \"single\": {\"values\": [{\"id\": 7, \"src\": \"hda\"}]}}",
+                        "match_per_kmer": "\"0\"",
+                        "metabuli_databases": "\"RefSeqTest\"",
+                        "min_cons_cnt": "\"4\"",
+                        "min_cons_cnt_euk": "\"9\"",
+                        "min_cov": "\"0.0\"",
+                        "min_score": "\"0.0\"",
+                        "min_sp_score": "\"0.0\"",
+                        "taxonomy_options": "{\"__current_case__\": 0, \"taxonomy\": \"taxonomy\", \"taxonomy_path\": \"local\"}"
+                    },
+                    "state": "ok",
+                    "stderr": "",
+                    "stdout": "",
+                    "tool_id": "metabuli_classify",
+                    "tool_stderr": "",
+                    "tool_stdout": "",
+                    "update_time": "2024-06-04T07:33:47.890985",
+                    "user_email": "planemo@galaxyproject.org"
+                },
+                "status": "success",
+                "test_index": 1,
+                "time_seconds": 16.937713146209717,
+                "tool_id": "metabuli_classify",
+                "tool_version": "1.0.5+galaxy0"
+            },
+            "has_data": true,
+            "id": "metabuli_classify-1"
+        },
+        {
+            "data": {
+                "inputs": {
+                    "library|lib_type": "single",
+                    "library|single": {
+                        "id": "7c2cde8236027016",
+                        "src": "hda"
+                    },
+                    "metabuli_databases": "RefSeqTest",
+                    "min_score": "0.008",
+                    "taxonomy_options|taxonomy": "taxonomy",
+                    "taxonomy_options|taxonomy_path": "local"
+                },
+                "job": {
+                    "command_line": "if [ -z \"$GALAXY_MEMORY_MB\" ] ; then METABULI_GALAXY_MEMORY_GB=8 ; else METABULI_GALAXY_MEMORY_GB=$((GALAXY_MEMORY_MB / 1024) - 1) ; fi ; ln -s '/tmp/tmpbvxtty0i/files/6/3/3/dataset_63303c0d-1bc4-4faa-82c4-3fa4e665d9e4.dat' sr.fastq.gz &&  metabuli classify  sr.fastq.gz --mask 0 '/home/ubuntu/tools-iuc/tools/metabuli/test-data/RefSeqTest' out mtbl --taxonomy-path '/home/ubuntu/tools-iuc/tools/metabuli/test-data/taxonomy' --threads ${GALAXY_SLOTS:-4} --min-score 0.008 --min-cov 0.0 --min-cons-cnt 4 --min-cons-cnt-euk 9 --min-sp-score 0.0 --hamming-margin 0 --match-per-kmer 0 --seq-mode 3 --max-ram ${METABULI_GALAXY_MEMORY_GB:-8} > '/tmp/tmpbvxtty0i/job_working_directory/000/7/outputs/dataset_e686829c-1e5e-44ef-9cf1-a60a1a42f9d8.dat'",
+                    "command_version": "1.0.5",
+                    "copied_from_job_id": null,
+                    "create_time": "2024-06-04T07:33:58.542273",
+                    "dependencies": [
+                        {
+                            "cacheable": false,
+                            "dependency_resolver": {
+                                "auto_init": true,
+                                "auto_install": true,
+                                "can_uninstall_dependencies": true,
+                                "ensure_channels": "conda-forge,bioconda,defaults",
+                                "model_class": "CondaDependencyResolver",
+                                "prefix": "/home/ubuntu/miniconda3",
+                                "read_only": false,
+                                "resolver_type": "conda",
+                                "resolves_simple_dependencies": true,
+                                "use_local": false,
+                                "versionless": false
+                            },
+                            "dependency_type": "conda",
+                            "environment_path": "/home/ubuntu/miniconda3/envs/__metabuli@1.0.5",
+                            "exact": true,
+                            "model_class": "MergedCondaDependency",
+                            "name": "metabuli",
+                            "version": "1.0.5"
+                        }
+                    ],
+                    "exit_code": 0,
+                    "external_id": "32003",
+                    "galaxy_version": "24.0",
+                    "handler": null,
+                    "history_id": "0fd223bc2bd10408",
+                    "id": "70fa6246e51e3237",
+                    "inputs": {
+                        "library|single": {
+                            "id": "7c2cde8236027016",
+                            "src": "hda",
+                            "uuid": "63303c0d-1bc4-4faa-82c4-3fa4e665d9e4"
+                        }
+                    },
+                    "job_messages": [],
+                    "job_metrics": [],
+                    "job_runner_name": null,
+                    "job_stderr": "",
+                    "job_stdout": "",
+                    "model_class": "Job",
+                    "output_collections": {},
+                    "outputs": {
+                        "classification": {
+                            "id": "bdd404dd3ae5fb45",
+                            "src": "hda",
+                            "uuid": "e6a5b5b9-e89d-488e-b7ed-a1121aac2dca"
+                        },
+                        "krona": {
+                            "id": "2813544842907c26",
+                            "src": "hda",
+                            "uuid": "286f605a-c529-400a-b8bd-5c14fdaf027a"
+                        },
+                        "log": {
+                            "id": "0a66ac9d03291a77",
+                            "src": "hda",
+                            "uuid": "e686829c-1e5e-44ef-9cf1-a60a1a42f9d8"
+                        },
+                        "report": {
+                            "id": "3412068f9d5ffd7a",
+                            "src": "hda",
+                            "uuid": "0f806ceb-2a5e-49dc-bf02-ef77c4d9cbbf"
+                        }
+                    },
+                    "params": {
+                        "__input_ext": "\"input\"",
+                        "accession_level": "false",
+                        "chromInfo": "\"/tmp/tmpbvxtty0i/galaxy-dev/tool-data/shared/ucsc/chrom/?.len\"",
+                        "dbkey": "\"?\"",
+                        "hamming_margin": "\"0\"",
+                        "library": "{\"__current_case__\": 1, \"lib_type\": \"single\", \"mask\": false, \"seq_mode\": \"3\", \"single\": {\"values\": [{\"id\": 12, \"src\": \"hda\"}]}}",
+                        "match_per_kmer": "\"0\"",
+                        "metabuli_databases": "\"RefSeqTest\"",
+                        "min_cons_cnt": "\"4\"",
+                        "min_cons_cnt_euk": "\"9\"",
+                        "min_cov": "\"0.0\"",
+                        "min_score": "\"0.008\"",
+                        "min_sp_score": "\"0.0\"",
+                        "taxonomy_options": "{\"__current_case__\": 0, \"taxonomy\": \"taxonomy\", \"taxonomy_path\": \"local\"}"
+                    },
+                    "state": "ok",
+                    "stderr": "",
+                    "stdout": "",
+                    "tool_id": "metabuli_classify",
+                    "tool_stderr": "",
+                    "tool_stdout": "",
+                    "update_time": "2024-06-04T07:34:05.290243",
+                    "user_email": "planemo@galaxyproject.org"
+                },
+                "status": "success",
+                "test_index": 2,
+                "time_seconds": 17.40307879447937,
+                "tool_id": "metabuli_classify",
+                "tool_version": "1.0.5+galaxy0"
+            },
+            "has_data": true,
+            "id": "metabuli_classify-2"
+        },
+        {
+            "data": {
+                "inputs": {
+                    "library|lib_type": "single",
+                    "library|single": {
+                        "id": "680bf1effd8de511",
+                        "src": "hda"
+                    },
+                    "metabuli_databases": "RefSeqTest",
+                    "taxonomy_options|taxonomy": "taxonomy",
+                    "taxonomy_options|taxonomy_path": "local"
+                },
+                "job": {
+                    "command_line": "if [ -z \"$GALAXY_MEMORY_MB\" ] ; then METABULI_GALAXY_MEMORY_GB=8 ; else METABULI_GALAXY_MEMORY_GB=$((GALAXY_MEMORY_MB / 1024) - 1) ; fi ; ln -s '/tmp/tmpbvxtty0i/files/2/8/d/dataset_28df0520-2943-4fa4-a0cb-c34399b63ddc.dat' sr.fastq.gz &&  metabuli classify  sr.fastq.gz --mask 0 '/home/ubuntu/tools-iuc/tools/metabuli/test-data/RefSeqTest' out mtbl --taxonomy-path '/home/ubuntu/tools-iuc/tools/metabuli/test-data/taxonomy' --threads ${GALAXY_SLOTS:-4} --min-score 0.0 --min-cov 0.0 --min-cons-cnt 4 --min-cons-cnt-euk 9 --min-sp-score 0.0 --hamming-margin 0 --match-per-kmer 0 --seq-mode 3 --max-ram ${METABULI_GALAXY_MEMORY_GB:-8} > '/tmp/tmpbvxtty0i/job_working_directory/000/9/outputs/dataset_89b764c1-2a53-493a-abb4-3b3e2fffe9ff.dat'",
+                    "command_version": "1.0.5",
+                    "copied_from_job_id": null,
+                    "create_time": "2024-06-04T07:34:15.567694",
+                    "dependencies": [
+                        {
+                            "cacheable": false,
+                            "dependency_resolver": {
+                                "auto_init": true,
+                                "auto_install": true,
+                                "can_uninstall_dependencies": true,
+                                "ensure_channels": "conda-forge,bioconda,defaults",
+                                "model_class": "CondaDependencyResolver",
+                                "prefix": "/home/ubuntu/miniconda3",
+                                "read_only": false,
+                                "resolver_type": "conda",
+                                "resolves_simple_dependencies": true,
+                                "use_local": false,
+                                "versionless": false
+                            },
+                            "dependency_type": "conda",
+                            "environment_path": "/home/ubuntu/miniconda3/envs/__metabuli@1.0.5",
+                            "exact": true,
+                            "model_class": "MergedCondaDependency",
+                            "name": "metabuli",
+                            "version": "1.0.5"
+                        }
+                    ],
+                    "exit_code": 0,
+                    "external_id": "32126",
+                    "galaxy_version": "24.0",
+                    "handler": null,
+                    "history_id": "3258609b14674650",
+                    "id": "de170ec875c72c8b",
+                    "inputs": {
+                        "library|single": {
+                            "id": "680bf1effd8de511",
+                            "src": "hda",
+                            "uuid": "28df0520-2943-4fa4-a0cb-c34399b63ddc"
+                        }
+                    },
+                    "job_messages": [],
+                    "job_metrics": [],
+                    "job_runner_name": null,
+                    "job_stderr": "",
+                    "job_stdout": "",
+                    "model_class": "Job",
+                    "output_collections": {},
+                    "outputs": {
+                        "classification": {
+                            "id": "500f3212e3d03c21",
+                            "src": "hda",
+                            "uuid": "30e9cf2e-0b5b-4c53-8a8f-5ea88b313a67"
+                        },
+                        "krona": {
+                            "id": "238564ed63e80bef",
+                            "src": "hda",
+                            "uuid": "bbd3d5af-b383-4811-b2a3-5856365e6db0"
+                        },
+                        "log": {
+                            "id": "27106b411e01071d",
+                            "src": "hda",
+                            "uuid": "89b764c1-2a53-493a-abb4-3b3e2fffe9ff"
+                        },
+                        "report": {
+                            "id": "17f4ca594898e9ee",
+                            "src": "hda",
+                            "uuid": "3dcaa340-f01a-40b6-96b0-ad81e498ccdd"
+                        }
+                    },
+                    "params": {
+                        "__input_ext": "\"input\"",
+                        "accession_level": "false",
+                        "chromInfo": "\"/tmp/tmpbvxtty0i/galaxy-dev/tool-data/shared/ucsc/chrom/?.len\"",
+                        "dbkey": "\"?\"",
+                        "hamming_margin": "\"0\"",
+                        "library": "{\"__current_case__\": 1, \"lib_type\": \"single\", \"mask\": false, \"seq_mode\": \"3\", \"single\": {\"values\": [{\"id\": 17, \"src\": \"hda\"}]}}",
+                        "match_per_kmer": "\"0\"",
+                        "metabuli_databases": "\"RefSeqTest\"",
+                        "min_cons_cnt": "\"4\"",
+                        "min_cons_cnt_euk": "\"9\"",
+                        "min_cov": "\"0.0\"",
+                        "min_score": "\"0.0\"",
+                        "min_sp_score": "\"0.0\"",
+                        "taxonomy_options": "{\"__current_case__\": 0, \"taxonomy\": \"taxonomy\", \"taxonomy_path\": \"local\"}"
+                    },
+                    "state": "ok",
+                    "stderr": "",
+                    "stdout": "",
+                    "tool_id": "metabuli_classify",
+                    "tool_stderr": "",
+                    "tool_stdout": "",
+                    "update_time": "2024-06-04T07:34:21.598608",
+                    "user_email": "planemo@galaxyproject.org"
+                },
+                "status": "success",
+                "test_index": 3,
+                "time_seconds": 16.03801441192627,
+                "tool_id": "metabuli_classify",
+                "tool_version": "1.0.5+galaxy0"
+            },
+            "has_data": true,
+            "id": "metabuli_classify-3"
+        }
+    ],
+    "version": "0.1"
+}
