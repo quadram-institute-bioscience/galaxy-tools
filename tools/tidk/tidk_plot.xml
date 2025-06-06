@@ -1,0 +1,78 @@
+<tool id="tidk_plot" name="tidk plot" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <requirements>
+        <requirement type="package" version="0.2.65">tidk</requirement>
+    </requirements>
+
+    <command detect_errors="exit_code"><![CDATA[
+        tidk plot
+            --tsv '$input_tsv'
+            --height $height
+            --width $width
+            --fontsize $fontsize
+            --strokewidth $strokewidth
+            --output plot
+    ]]></command>
+
+    <inputs>
+        <param name="input_tsv" type="data" format="tabular" label="Input TSV file" help="TSV file generated from tidk search"/>
+        <param name="height" type="integer" value="200" min="50" max="2000" label="Height of subplots (px)" help="The height of subplots in pixels"/>
+        <param name="width" type="integer" value="1000" min="100" max="5000" label="Width of plot (px)" help="The width of plot in pixels"/>
+        <param name="fontsize" type="integer" value="12" min="6" max="48" label="Font size" help="The font size of the axis labels in the plot"/>
+        <param name="strokewidth" type="integer" value="2" min="1" max="10" label="Stroke width" help="The stroke width of the line graph in the plot"/>
+    </inputs>
+
+    <outputs>
+        <data name="output_svg" format="svg" label="${tool.name} on ${on_string}" from_work_dir="plot.svg"/>
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="input_tsv" value="expected_search_output.tsv"/>
+            <param name="height" value="200"/>
+            <param name="width" value="1000"/>
+            <param name="fontsize" value="12"/>
+            <param name="strokewidth" value="2"/>
+            <output name="output_svg" file="expected_plot_output.svg"/>
+        </test>
+    </tests>
+
+    <help><![CDATA[
+**tidk plot**
+
+SVG plot of TSV generated from tidk search.
+
+**Usage:** 
+::
+
+    tidk plot [OPTIONS] --tsv <TSV>
+
+**Options:**
+::
+
+    -t, --tsv <TSV>                     The input TSV file
+        --height [<HEIGHT>]             The height of subplots (px). [default: 200]
+    -w, --width [<WIDTH>]               The width of plot (px) [default: 1000]
+    -o, --output [<OUTPUT>]             Output filename for the SVG (without extension) [default: tidk-plot]
+        --fontsize [<FONT_SIZE>]        The font size of the axis labels in the plot [default: 12]
+        --strokewidth [<STROKE_WIDTH>]  The stroke width of the line graph in the plot [default: 2]
+    ]]></help>
+
+    <citations>
+        <citation type="bibtex">
+@article{10.1093/bioinformatics/btaf049,
+    author = {Brown, Max R and Manuel Gonzalez de La Rosa, Pablo and Blaxter, Mark},
+    title = {tidk: a toolkit to rapidly identify telomeric repeats from genomic datasets},
+    journal = {Bioinformatics},
+    volume = {41},
+    number = {2},
+    pages = {btaf049},
+    year = {2025},
+    month = {01},
+    abstract = {“tidk” (short for telomere identification toolkit) uses a simple, fast algorithm to scan long DNA reads for the presence of short tandemly repeated DNA in runs, and to aggregate them based on canonical DNA string representation. These are telomeric repeat candidates. Our algorithm is shown to be accurate in genomes for which the telomeric repeat unit is known and is tested across a wide variety of newly assembled genomes to uncover new telomeric repeat units. Tools are provided to identify telomeric repeats de novo, scan genomes for known telomeric repeats, and to visualize telomeric repeats on the assembly. “tidk” is implemented in Rust and is available as a command line tool which can be compiled using the Rust toolchain or downloaded as a binary from bioconda.The “tidk” Rust crate is freely available under the MIT license (https://crates.io/crates/tidk), and the source code is available at https://github.com/tolkit/telomeric-identifier.},
+    issn = {1367-4811},
+    doi = {10.1093/bioinformatics/btaf049},
+    url = {https://doi.org/10.1093/bioinformatics/btaf049},
+    eprint = {https://academic.oup.com/bioinformatics/article-pdf/41/2/btaf049/61722871/btaf049.pdf},
+}</citation>
+    </citations>
+</tool>

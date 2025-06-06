@@ -1,0 +1,94 @@
+<tool id="tidk_explore" name="tidk explore" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <requirements>
+        <requirement type="package" version="0.2.65">tidk</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        tidk explore
+            #if $length_mode.mode == "range"
+                --minimum '$length_mode.minimum'
+                --maximum '$length_mode.maximum'
+            #else
+                --length '$length_mode.length'
+            #end if
+            --threshold '$threshold'
+            --distance '$distance'
+            '$input_fasta' > '$output_tsv'
+    ]]></command>
+    <inputs>
+        <param name="input_fasta" type="data" format="fasta" label="Input FASTA file" help="Genome sequence file to analyse for telomeric repeats"/>
+        <conditional name="length_mode">
+            <param name="mode" type="select" label="Length specification mode" help="Choose how to specify repeat length to search for">
+                <option value="range" selected="true">Range (minimum to maximum)</option>
+                <option value="single">Single specific length</option>
+            </param>
+            <when value="range">
+                <param name="minimum" type="integer" value="5" min="1" label="Minimum length of substring" help="Minimum length of substring [default: 5]"/>
+                <param name="maximum" type="integer" value="12" min="1" label="Maximum length of substring" help="Maximum length of substring [default: 12]"/>
+            </when>
+            <when value="single">
+                <param name="length" type="integer" value="6" min="1" label="Length of substring" help="Length of substring"/>
+            </when>
+        </conditional>
+        <param name="threshold" type="integer" value="100" min="1" label="Threshold" help="Positions of repeats are only reported if they occur sequentially in a greater number than the threshold [default: 100]"/>
+        <param name="distance" type="float" value="0.01" min="0.0" max="0.5" label="Distance" help="The distance from the end of the chromosome as a proportion of chromosome length. Must range from 0-0.5 [default: 0.01]"/>
+    </inputs>
+    <outputs>
+        <data name="output_tsv" format="tabular" label="${tool.name} on ${on_string}"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input_fasta" value="test_genome.fasta"/>
+            <conditional name="length_mode">
+                <param name="mode" value="range"/>
+                <param name="minimum" value="5"/>
+                <param name="maximum" value="12"/>
+            </conditional>
+            <param name="threshold" value="10"/>
+            <param name="distance" value="0.5"/>
+            <output name="output_tsv" file="expected_explore_output.tsv"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+**tidk explore**
+
+Use a range of kmer sizes to find potential telomeric repeats.
+One of either length, or minimum and maximum must be specified.
+
+**Usage:**
+::
+
+    tidk explore [OPTIONS] <FASTA>
+
+**Arguments:**
+::
+
+    <FASTA>  The input fasta file
+
+**Options:**
+::
+
+    -l, --length [<LENGTH>]        Length of substring
+    -m, --minimum [<MINIMUM>]      Minimum length of substring [default: 5]
+    -x, --maximum [<MAXIMUM>]      Maximum length of substring [default: 12]
+    -t, --threshold [<THRESHOLD>]  Positions of repeats are only reported if they occur sequentially in a greater number than the threshold [default: 100]
+        --distance [<DISTANCE>]    The distance from the end of the chromosome as a proportion of chromosome length. Must range from 0-0.5. [default: 0.01]
+    ]]></help>
+    <citations>
+        <citation type="bibtex">
+@article{10.1093/bioinformatics/btaf049,
+    author = {Brown, Max R and Manuel Gonzalez de La Rosa, Pablo and Blaxter, Mark},
+    title = {tidk: a toolkit to rapidly identify telomeric repeats from genomic datasets},
+    journal = {Bioinformatics},
+    volume = {41},
+    number = {2},
+    pages = {btaf049},
+    year = {2025},
+    month = {01},
+    abstract = {“tidk” (short for telomere identification toolkit) uses a simple, fast algorithm to scan long DNA reads for the presence of short tandemly repeated DNA in runs, and to aggregate them based on canonical DNA string representation. These are telomeric repeat candidates. Our algorithm is shown to be accurate in genomes for which the telomeric repeat unit is known and is tested across a wide variety of newly assembled genomes to uncover new telomeric repeat units. Tools are provided to identify telomeric repeats de novo, scan genomes for known telomeric repeats, and to visualize telomeric repeats on the assembly. “tidk” is implemented in Rust and is available as a command line tool which can be compiled using the Rust toolchain or downloaded as a binary from bioconda.The “tidk” Rust crate is freely available under the MIT license (https://crates.io/crates/tidk), and the source code is available at https://github.com/tolkit/telomeric-identifier.},
+    issn = {1367-4811},
+    doi = {10.1093/bioinformatics/btaf049},
+    url = {https://doi.org/10.1093/bioinformatics/btaf049},
+    eprint = {https://academic.oup.com/bioinformatics/article-pdf/41/2/btaf049/61722871/btaf049.pdf},
+}</citation>
+    </citations>
+</tool>
