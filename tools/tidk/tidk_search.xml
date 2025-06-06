@@ -1,0 +1,84 @@
+<tool id="tidk_search" name="tidk search" version="0.1.0+galaxy0" python_template_version="3.5" profile="21.05">
+    <requirements>
+        <requirement type="package" version="0.2.65">tidk</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        tidk search
+            --string '$string'
+            --window '$window'
+            --output output
+            --dir .
+            #if $extension != 'tsv'
+                --extension '$extension'
+            #end if
+            '$input_fasta'
+    ]]></command>
+    <inputs>
+        <param name="input_fasta" type="data" format="fasta,fasta.gz" label="Input FASTA file" help="The input genome sequence in FASTA format"/>
+        <param name="string" type="text" optional="false" label="Telomeric repeat string" help="The DNA string to query the genome with (e.g., TTAGGG)">
+            <validator type="regex" message="Please enter a valid DNA sequence">^[ATCGatcg]+$</validator>
+        </param>
+        <param name="window" type="integer" value="10000" min="1" label="Window size" help="Window size to calculate telomeric repeat counts in"/>
+        <param name="extension" type="select" label="Output format" help="The output file format">
+            <option value="tsv" selected="true">TSV</option>
+            <option value="bedgraph">BedGraph</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="output_tsv" format="tabular" label="${tool.name} TSV on ${on_string}" from_work_dir="output_telomeric_repeat_windows.tsv">
+            <filter>extension == 'tsv'</filter>
+        </data>
+        <data name="output_bedgraph" format="bedgraph" label="${tool.name} BedGraph on ${on_string}" from_work_dir="output_telomeric_repeat_windows.bedgraph">
+            <filter>extension == 'bedgraph'</filter>
+        </data>
+    </outputs>
+    <tests>
+        <test expect_num_outputs="1">
+            <param name="input_fasta" value="test_genome.fasta" ftype="fasta"/>
+            <param name="string" value="AACCCC"/>
+            <param name="window" value="50"/>
+            <param name="extension" value="tsv"/>
+            <output name="output_tsv" file="expected_search_output.tsv"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+**tidk search**
+
+Search the input genome with a specific telomeric repeat search string.
+
+**Usage:**
+::
+
+  tidk search [OPTIONS] --string <STRING> --output <OUTPUT> --dir <DIR> <FASTA>
+
+**Arguments:**
+::
+
+  <FASTA>  The input fasta file
+
+**Options:**
+::
+
+  -s, --string <STRING>          The DNA string to query the genome with
+  -w, --window [<WINDOW>]        Window size to calculate telomeric repeat counts in [default: 10000]
+  -e, --extension [<EXTENSION>]  The extension, defining the output type of the file [default: tsv] [possible values: tsv, bedgraph]
+    ]]></help>
+    <citations>
+        <citation type="bibtex">
+@article{10.1093/bioinformatics/btaf049,
+    author = {Brown, Max R and Manuel Gonzalez de La Rosa, Pablo and Blaxter, Mark},
+    title = {tidk: a toolkit to rapidly identify telomeric repeats from genomic datasets},
+    journal = {Bioinformatics},
+    volume = {41},
+    number = {2},
+    pages = {btaf049},
+    year = {2025},
+    month = {01},
+    abstract = {“tidk” (short for telomere identification toolkit) uses a simple, fast algorithm to scan long DNA reads for the presence of short tandemly repeated DNA in runs, and to aggregate them based on canonical DNA string representation. These are telomeric repeat candidates. Our algorithm is shown to be accurate in genomes for which the telomeric repeat unit is known and is tested across a wide variety of newly assembled genomes to uncover new telomeric repeat units. Tools are provided to identify telomeric repeats de novo, scan genomes for known telomeric repeats, and to visualize telomeric repeats on the assembly. “tidk” is implemented in Rust and is available as a command line tool which can be compiled using the Rust toolchain or downloaded as a binary from bioconda.The “tidk” Rust crate is freely available under the MIT license (https://crates.io/crates/tidk), and the source code is available at https://github.com/tolkit/telomeric-identifier.},
+    issn = {1367-4811},
+    doi = {10.1093/bioinformatics/btaf049},
+    url = {https://doi.org/10.1093/bioinformatics/btaf049},
+    eprint = {https://academic.oup.com/bioinformatics/article-pdf/41/2/btaf049/61722871/btaf049.pdf},
+}</citation>
+    </citations>
+</tool>
