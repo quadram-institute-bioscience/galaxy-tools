@@ -1,0 +1,18 @@
+categories:
+- Sequence Analysis
+description: Collection of tidk utility tools for telomere identification in genomic datasets
+name: tidk
+owner: wel24kif
+long_description: |
+  tidk is a toolkit to identify and visualise telomeric repeats for the Darwin Tree of Life genomes. tidk works especially well on chromosomal genomes, but can also work on PacBio HiFi reads as well (see the telomeric repeat database for many examples). 
+remote_repository_url: https://github.com/quadram-institute-bioscience/galaxy-tools
+homepage_url: https://github.com/tolkit/telomeric-identifier
+type: unrestricted
+auto_tool_repositories:
+    name_template: "{{ tool_id }}"
+    description_template: "Wrapper for tidk tools: {{ tool_name }}."
+suite:
+    name: "suite_tidk"
+    description: "Collections of tidk utility tools for telomere identification in genomic datasets"
+    long_description: |
+      tidk is a toolkit to identify and visualise telomeric repeats for the Darwin Tree of Life genomes. tidk works especially well on chromosomal genomes, but can also work on PacBio HiFi reads as well (see the telomeric repeat database for many examples). 
