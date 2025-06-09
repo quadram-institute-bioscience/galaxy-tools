@@ -1,0 +1,13 @@
+id	window	forward_repeat_number	reverse_repeat_number	telomeric_repeat
+chr1	50	8	0	AACCCC
+chr1	100	7	0	AACCCC
+chr1	150	8	0	AACCCC
+chr1	200	8	0	AACCCC
+chr1	250	7	0	AACCCC
+chr1	300	8	0	AACCCC
+chr1	350	8	0	AACCCC
+chr1	400	7	0	AACCCC
+chr1	450	8	0	AACCCC
+chr1	500	8	0	AACCCC
+chr1	550	7	0	AACCCC
+chr1	570	3	0	AACCCC
